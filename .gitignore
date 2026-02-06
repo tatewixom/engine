@@ -1,0 +1,17 @@
+# ignore build folder
+build/
+
+# ignore libs
+*.so
+*.a
+*.dll
+*.lib
+
+# ignore log files
+*.log
+
+# ignore large assets (need to be downloaded seperately
+assets/
+
+#ignore vscode settings
+.vscode
