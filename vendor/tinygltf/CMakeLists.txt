@@ -1,10 +1,20 @@
 cmake_minimum_required(VERSION 3.16)
 
+include(nuketargets)
+
+# source
+set(
+  TINYGLTF_SOURCE_FILES
+  private/tiny_gltf.cc
+)
+
 add_library(
   tinygltf
   STATIC
-  private/tiny_gltf.cc
+  ${TINYGLTF_SOURCE_FILES}
 )
+
+setup_target(tinygltf)
 
 target_include_directories(
   tinygltf
@@ -12,14 +22,14 @@ target_include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/public
 )
 
-target_link_libraries(
-  tinygltf
-  PUBLIC
+# dependencies
+set(
+  TINYGLTF_DEPENDENCIES
   stb
 )
 
-target_compile_features(
+target_link_libraries(
   tinygltf
   PUBLIC
-  cxx_std_23
+  ${TINYGLTF_DEPENDENCIES}
 )

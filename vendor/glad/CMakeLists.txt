@@ -1,8 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
 
+set(
+  GLAD_SOURCE_FILES
+  private/glad.c
+)
+
 add_library(
   glad
-  private/glad.c
+  STATIC
+  ${GLAD_SOURCE_FILES}
 )
 
 target_include_directories(

@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 
-add_library(
-  nuke_core
+include(nuketargets)
+
+set(
+  NUKE_SOURCE_FILES 
   private/Callback.cpp
   private/Camera.cpp
   private/File.cpp
@@ -11,15 +13,22 @@ add_library(
   private/Window.cpp
 )
 
+add_library(
+  nuke_core
+  STATIC
+  ${NUKE_SOURCE_FILES}
+)
+
+setup_target(nuke_core)
+
 target_include_directories(
   nuke_core
   PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/public
 )
 
-target_link_libraries(
-  nuke_core
-  PRIVATE
+set(
+  NUKE_DEPENDENCIES
   glad
   glm
   glfw
@@ -29,8 +38,8 @@ target_link_libraries(
   nuke_state
 )
 
-target_compile_features(
+target_link_libraries(
   nuke_core
-  PUBLIC 
-  cxx_std_23
+  PRIVATE
+  ${NUKE_DEPENDENCIES}
 )
