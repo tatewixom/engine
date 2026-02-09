@@ -40,6 +40,6 @@ set(
 
 target_link_libraries(
   nuke_core
-  PRIVATE
+  PUBLIC
   ${NUKE_DEPENDENCIES}
 )

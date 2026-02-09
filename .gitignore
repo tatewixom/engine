@@ -13,5 +13,5 @@ build/
 # ignore large assets (need to be downloaded seperately
 assets/
 
-#ignore vscode settings
+# ignore vscode settings
 .vscode

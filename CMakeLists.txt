@@ -9,14 +9,23 @@ project(
   LANGUAGES CXX C
 )
 
+# allows for vscode to make a "compile_commands.json" file for 
+# correct intellisense integration
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# making sure to enforce c++23 
 set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# I don't like the lib prefixes or suffixes
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
 add_subdirectory(vendor)
 
 add_subdirectory(event)
+add_subdirectory(graphics)
+add_subdirectory(model)
 add_subdirectory(state)
 add_subdirectory(time)
 add_subdirectory(core)
