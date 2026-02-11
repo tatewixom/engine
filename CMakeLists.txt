@@ -29,3 +29,5 @@ add_subdirectory(model)
 add_subdirectory(state)
 add_subdirectory(time)
 add_subdirectory(core)
+
+add_subdirectory(tests)

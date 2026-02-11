@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 
+# doctest
+enable_testing()
+add_subdirectory(doctest)
+
 # glad
 add_subdirectory(glad)
 
