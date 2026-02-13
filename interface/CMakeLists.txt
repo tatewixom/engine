@@ -3,36 +3,34 @@ cmake_minimum_required(VERSION 3.16)
 include(nuketargets)
 
 set(
-  NUKE_SOURCE_FILES 
-  private/State.cpp
-  private/World.cpp
+  NUKE_SOURCE_FILES
+  private/Interface.cpp
 )
 
 add_library(
-  nuke_state
+  nuke_interface
   STATIC
   ${NUKE_SOURCE_FILES}
 )
 
-setup_target(nuke_state)
+setup_target(nuke_interface)
 
 target_include_directories(
-  nuke_state
+  nuke_interface
   PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/public
 )
 
 set(
   NUKE_DEPENDENCIES
-  random
-  nuke_interface
-  nuke_core
+  glm
+  nuke_state
   nuke_model
-  nuke_graphics
+  nuke_core
 )
 
 target_link_libraries(
-  nuke_state
+  nuke_interface
   PUBLIC
   ${NUKE_DEPENDENCIES}
 )
