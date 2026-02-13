@@ -13,6 +13,8 @@ public:
     BACKWARD,
     LEFT,
     RIGHT,
+    UP,
+    DOWN
   };
 
   Camera(Mouse& mouse, float vfov, glm::vec3 vposition, float vspeed, float vsensitivity);

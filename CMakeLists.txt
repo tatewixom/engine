@@ -25,9 +25,12 @@ add_subdirectory(vendor)
 
 add_subdirectory(event)
 add_subdirectory(graphics)
+add_subdirectory(interface)
 add_subdirectory(model)
 add_subdirectory(state)
 add_subdirectory(time)
 add_subdirectory(core)
+
+add_subdirectory(entry)
 
 add_subdirectory(tests)

@@ -10,8 +10,22 @@
 
 Window::Window(const char* title, const char* path_to_icon, float widthRatio, float heightRatio, GLFWmonitor* screenMode, GLFWwindow* share)
 {
+
+  /*
+    FIX ME!!
+
+    Currently, the engine works with singletons, when it really doesn't need them.
+    The GLFW callback system works off of this, but is getting segfaulted.
+
+    Need to use: glfwSetWindowUserPointer(), set it to the engine class, and create
+    everything inside of main to make sure it there isn't global singleton issues.
+  */
+
   //glfw init
-  glfwInit();
+  if (!glfwInit())
+  {
+    std::cerr << "GLFW Failed to initialize\n";
+  }
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -19,6 +33,8 @@ Window::Window(const char* title, const char* path_to_icon, float widthRatio, fl
   glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
   const GLFWvidmode* monitor{ glfwGetVideoMode(glfwGetPrimaryMonitor()) };
+
+  std::cout << "Monitor pointer: " << monitor << '\n';
 
   //finding ratio related to screen width
   int windowWidth{ static_cast<int>(monitor->width / widthRatio) };
