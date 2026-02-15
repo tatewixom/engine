@@ -1,10 +1,12 @@
 #include "Callback.h"
-#include "Game.h"
+#include "Engine.h"
 #include "Mouse.h"
 #include "Window.h"
 
+#include <iostream>
+
 #include <glad/glad.h>
-#include <glfw3.h>
+#include <GLFW/glfw3.h>
 
 namespace Callback
 {
@@ -34,20 +36,20 @@ namespace Callback
 
   void framebuffer(GLFWwindow* window, int width, int height)
   {
-    Window& windo{ Game::getInstance().getWindow() };
-    windo.size(Window::Dimensions{ width, height });
+    Engine* engine{ static_cast<Engine*>(glfwGetWindowUserPointer(window)) };
+    engine->getWindow().size(Window::Dimensions{ width, height });
   }
 
   void mouse(GLFWwindow* window, double xposIn, double yposIn)
   {
-    Mouse& mouse{ Game::getInstance().getMouse() };
-    mouse.position(Mouse::Position{ xposIn, yposIn });
+    Engine* engine{ static_cast<Engine*>(glfwGetWindowUserPointer(window)) };
+    engine->getMouse().position(Mouse::Position{ xposIn, yposIn });
   }
 
   void scroll(GLFWwindow* window, double xoffset, double yoffset)
   {
-    Mouse& mouse{ Game::getInstance().getMouse() };
-    mouse.soffset(Mouse::Position{ xoffset, yoffset });
+    Engine* engine{ static_cast<Engine*>(glfwGetWindowUserPointer(window)) };
+    engine->getMouse().soffset(Mouse::Position{ xoffset, yoffset });
   }
 
   void refresh(GLFWwindow* window)
@@ -57,7 +59,7 @@ namespace Callback
 
   void mouseButton(GLFWwindow* window, int button, int action, int mods)
   {
-    Mouse& mouse{ Game::getInstance().getMouse() };
-    mouse.button(Mouse::Button{ button, action });
+    Engine* engine{ static_cast<Engine*>(glfwGetWindowUserPointer(window)) };
+    engine->getMouse().button(Mouse::Button{ button, action });
   }
 }

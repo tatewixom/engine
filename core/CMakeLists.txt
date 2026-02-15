@@ -6,8 +6,8 @@ set(
   NUKE_SOURCE_FILES 
   private/Callback.cpp
   private/Camera.cpp
+  private/Engine.cpp
   private/File.cpp
-  private/Game.cpp
   private/Keyboard.cpp
   private/Mouse.cpp
   private/Window.cpp
@@ -29,12 +29,12 @@ target_include_directories(
 
 set(
   NUKE_DEPENDENCIES
+  ${OPENGL_LIBRARIES}
   glad
   glm
   glfw
   stb
   nuke_time
-  nuke_event
   nuke_state
 )
 

@@ -31,23 +31,15 @@ private:
 class Camera;
 class Window;
 
-class Spaces
+struct Spaces
 {
 public:
-  static Spaces& getInstance()
-  {
-    static Spaces spaces{};
-    return spaces;
-  }
-
-  static void update(Camera& camera, Window& window);
+  Spaces() = default;
+  void update(Camera& camera, Window& window);
 
   glm::mat4 model{ 1.0f };
   glm::mat4 projection{ 1.0f };
   glm::mat4 view{ 1.0f };
   glm::mat4 mvp{ 1.0f };
-
-private:
-  Spaces() = default;
 };
 

@@ -27,11 +27,11 @@ public:
   ~Shader();
 
   //implicity converts shader object to GLuint m_program when used in glUseProgram function (and like functions)
-  operator GLuint() const { return m_program; }
+  operator GLuint() const { return program_; }
 
   void initialize(std::string_view vertex, std::string_view fragment);
 
-  void destroyProgram() const { glDeleteProgram(m_program); }
+  void destroyProgram() const { glDeleteProgram(program_); }
 
   void compile(const GLuint shader, const char* contents);
   void link(GLuint program, GLuint vertex, GLuint fragment);
@@ -50,13 +50,13 @@ public:
 
   void set(std::string_view var, const glm::mat4& mat) const;
 
-  constexpr void activate() const { glUseProgram(m_program); }
-  constexpr void deactivate() const { glUseProgram(0); }
+  void activate() const { glUseProgram(program_); }
+  void deactivate() const { glUseProgram(0); }
 
   private:
-  GLuint m_program{};
-  GLuint m_vertex{};
-  GLuint m_fragment{};
+  GLuint program_{};
+  GLuint vertex_{};
+  GLuint fragment_{};
 };
 
 template<typename T>

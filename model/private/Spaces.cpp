@@ -15,14 +15,14 @@ Rotation::Rotation(const glm::vec3& axis, float angle)
 
 void Spaces::update(Camera& camera, Window& window)
 {
-  const Window::Dimensions dimensions{ window.dimensions() };
+  Window::Dimensions dimensions{ window.dimensions() };
   
-  getInstance().projection = glm::perspective(
+  projection = glm::perspective(
     glm::radians(camera.fov), 
-    static_cast<float>(dimensions.height / dimensions.width), 
+    static_cast<float>(dimensions.height) / static_cast<float>(dimensions.width), 
     camera.nearPlane, camera.farPlane
   );
 
-  getInstance().view = camera.getViewMatrix();
+  view = camera.getViewMatrix();
 }
 

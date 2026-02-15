@@ -9,6 +9,9 @@ project(
   LANGUAGES CXX C
 )
 
+find_package(OpenGL REQUIRED)
+include_directories( ${OPENGL_INCLUDE_DIRS} )
+
 # allows for vscode to make a "compile_commands.json" file for 
 # correct intellisense integration
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -16,10 +19,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # making sure to enforce c++23 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # I don't like the lib prefixes or suffixes
-set(CMAKE_STATIC_LIBRARY_PREFIX "")
-set(CMAKE_SHARED_LIBRARY_PREFIX "")
+# set(CMAKE_STATIC_LIBRARY_PREFIX "")
+# set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
 add_subdirectory(vendor)
 

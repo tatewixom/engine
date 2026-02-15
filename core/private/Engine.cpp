@@ -1,40 +1,44 @@
-#include "Game.h"
+#include "Engine.h"
 #include "Window.h"
 #include "Camera.h"
 #include "Mouse.h"
 #include "State.h"
 #include "Phase.h"
-#include "Event.h"
-#include "KeyEvent.h"
+#include "Ground.h"
 
 #include <glad/glad.h>
-#include <glfw3.h>
+#include <GLFW/glfw3.h>
 
 #include <stb_image.h>
 
 #include <string>
 #include <iostream>
 
-Game::Game()
+Engine::Engine(Window& window)
+  : window_{ window }
 {
+  //setting pointer to engine for callbacks
+  glfwSetWindowUserPointer(window_, this);
+
   //stbi init
   stbi_set_flip_vertically_on_load(true);
 
   //initially setting user to view mode
   //that is, using the mouse to control the camera
+  //mouse_.selectionMode();
   mouse_.viewMode();
 
   glEnable(GL_DEPTH_TEST);
 }
 
-void Game::initialize()
+void Engine::initialize()
 {
   //pushing initial state
-  //state_.push<World>(getInstance());
+  state_.push<Ground>(state_, *this);
   /* openGL context MUST be valid by this point */
 }
 
-void Game::run()
+void Engine::run()
 {
   //initializing trivial matters
   initialize();
@@ -50,8 +54,8 @@ void Game::run()
     glfwPollEvents();
 
     //process events
-
     mouse_.update();
+    spaces_.update(camera_, window_);
     camera_.update();
 
     //looping one time through the state's loop function

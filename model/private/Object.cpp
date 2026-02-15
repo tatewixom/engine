@@ -44,7 +44,7 @@ void Object::update(const Camera& camera, const Window& window)
   s_spaces.projection = glm::perspective
   (
     glm::radians(camera.fov), 
-    static_cast<float>(dimensions.height / dimensions.width), 
+    static_cast<float>(dimensions.height) / static_cast<float>(dimensions.width), 
     camera.nearPlane, camera.farPlane
   );
 

@@ -3,17 +3,13 @@
 #include "Window.h"
 #include "Camera.h"
 #include "Mouse.h"
-#include "Event.h"
 #include "State.h"
+#include "Spaces.h"
 
-class Game
+class Engine
 {
 public:
-  static Game& getInstance()
-  {
-    static Game game{};
-    return game;
-  }
+  Engine(Window& window);
 
   void initialize();
   void run();
@@ -21,14 +17,13 @@ public:
   Window& getWindow() noexcept { return window_; }
   Mouse& getMouse() noexcept { return mouse_; }
   Camera& getCamera() noexcept { return camera_; }
+  Spaces& getSpaces() noexcept { return spaces_; }
 
 private:
-  Game();
-
-  Window window_{ "LearnOpenGL", "assets/icon/container.jpg" };
+  Window& window_;
   Mouse mouse_{ window_ }; //mouse depends on window
   Camera camera_{ mouse_ }; //camera depends on mouse
   State state_{};
-  Events::Bus eventBus_{};
+  Spaces spaces_{};
 };
 

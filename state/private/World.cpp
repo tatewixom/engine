@@ -53,11 +53,9 @@ namespace
   //glm::vec3 randomColor{ Random::get(10, 90), Random::get(10, 90), Random::get(10, 90), };
 }
 
-World::World(State& state, Window& window, Camera& camera, Mouse& mouse)
+World::World(State& state, Engine& engine)
   : IState{ state }
-  , m_window{ window }
-  , m_camera{ camera }
-  , m_mouse{ mouse }
+  , engine_{ engine }
 {
   initialize();
 }
@@ -141,11 +139,11 @@ void World::initialize()
     }
   );
 
-  blender_monkey.initialize_t("assets/monkey/glb/basic_monkey_00.glb", glm::vec3{ 0.f, 0.f, 0.f });
+  //blender_monkey.initialize_t("assets/monkey/glb/basic_monkey_00.glb", glm::vec3{ 0.f, 0.f, 0.f });
   blender_torus.initialize_t("assets/torus/basic_torus_00.gltf", glm::vec3{ 20.f, 0.f, 0.f });
-  blender_cube.initialize_t("assets/vehicle/tiger_russian_military_vehicle.glb", glm::vec3{ 40.f, 0.f, 0.f });
+  //blender_cube.initialize_t("assets/vehicle/tiger_russian_military_vehicle.glb", glm::vec3{ 40.f, 0.f, 0.f });
   blender_metacubemonkey.initialize_t("assets/alien/t7t_terapod.glb", glm::vec3{ -20.f, 0.f, 0.f });
-  sketchfab_backpack.initialize_t("assets/backpack/backpack_01.glb", glm::vec3{ -40.f, 0.f, 0.f });
+  //sketchfab_backpack.initialize_t("assets/backpack/backpack_01.glb", glm::vec3{ -40.f, 0.f, 0.f });
  
   //shader init
   basic.initialize("basic.vs", "basic.fs");
@@ -237,7 +235,8 @@ void World::initialize()
 
 void World::input()
 {
-  Keyboard::processWindowEscape(m_window);
+  Window& window{ engine_.getWindow() };
+  Keyboard::processWindowEscape(window);
 
   //delta time
   float currentFrame{ static_cast<float>(glfwGetTime()) };
@@ -245,47 +244,49 @@ void World::input()
   lastFrame = currentFrame;
 
   //moving camera
+  Camera& camera{ engine_.getCamera() };
+
   const float cameraSpeed = 20.f * deltaTime; // adjust accordingly
-  if (Keyboard::isKeyPressed(m_window, GLFW_KEY_W))
-    m_camera.position += cameraSpeed * m_camera.front;
-  if (Keyboard::isKeyPressed(m_window, GLFW_KEY_S))
-    m_camera.position -= cameraSpeed * m_camera.front;
-  if (Keyboard::isKeyPressed(m_window, GLFW_KEY_A))
-    m_camera.position -= glm::normalize(glm::cross(m_camera.front, m_camera.up)) * cameraSpeed;
-  if (Keyboard::isKeyPressed(m_window, GLFW_KEY_D))
-    m_camera.position += glm::normalize(glm::cross(m_camera.front, m_camera.up)) * cameraSpeed;
-  if (Keyboard::isKeyPressed(m_window, GLFW_KEY_SPACE))
-    m_camera.position += m_camera.up * cameraSpeed;
-  if (Keyboard::isKeyPressed(m_window, GLFW_KEY_LEFT_SHIFT))
-    m_camera.position -= m_camera.up * cameraSpeed;
+  if (Keyboard::isKeyPressed(window, GLFW_KEY_W))
+    camera.position += cameraSpeed * camera.front;
+  if (Keyboard::isKeyPressed(window, GLFW_KEY_S))
+    camera.position -= cameraSpeed * camera.front;
+  if (Keyboard::isKeyPressed(window, GLFW_KEY_A))
+    camera.position -= glm::normalize(glm::cross(camera.front, camera.up)) * cameraSpeed;
+  if (Keyboard::isKeyPressed(window, GLFW_KEY_D))
+    camera.position += glm::normalize(glm::cross(camera.front, camera.up)) * cameraSpeed;
+  if (Keyboard::isKeyPressed(window, GLFW_KEY_SPACE))
+    camera.position += camera.up * cameraSpeed;
+  if (Keyboard::isKeyPressed(window, GLFW_KEY_LEFT_SHIFT))
+    camera.position -= camera.up * cameraSpeed;
 
   //cubes manipulation
-  if (Keyboard::isKeyJustPressed(m_window, GLFW_KEY_G))
+  if (Keyboard::isKeyJustPressed(window, GLFW_KEY_G))
     cubes.add(5);
-  if (Keyboard::isKeyJustPressed(m_window, GLFW_KEY_9))
+  if (Keyboard::isKeyJustPressed(window, GLFW_KEY_9))
     std::cout << cubes.size() << '\n';
 
   //moving light position
   const float objectSpeed{ 5.f * deltaTime };
-  if (Keyboard::isKeyPressed(m_window, GLFW_KEY_UP))
+  if (Keyboard::isKeyPressed(window, GLFW_KEY_UP))
     lights.position(lights.position() - glm::vec3{ 0.0f, 0.0f, 1.0f } * objectSpeed);
-  if (Keyboard::isKeyPressed(m_window, GLFW_KEY_RIGHT))
+  if (Keyboard::isKeyPressed(window, GLFW_KEY_RIGHT))
     lights.position(lights.position() + glm::vec3{ 1.0f, 0.0f, 0.0f } * objectSpeed);
-  if (Keyboard::isKeyPressed(m_window, GLFW_KEY_LEFT))
+  if (Keyboard::isKeyPressed(window, GLFW_KEY_LEFT))
     lights.position(lights.position() - glm::vec3{ 1.0f, 0.0f, 0.0f } * objectSpeed);
-  if (Keyboard::isKeyPressed(m_window, GLFW_KEY_DOWN))
+  if (Keyboard::isKeyPressed(window, GLFW_KEY_DOWN))
     lights.position(lights.position() + glm::vec3{ 0.0f, 0.0f, 1.0f } * objectSpeed);
-  if (Keyboard::isKeyPressed(m_window, GLFW_KEY_R))
+  if (Keyboard::isKeyPressed(window, GLFW_KEY_R))
     lights.position(lights.position() + glm::vec3{ 0.0f, 1.0f, 0.0f } * objectSpeed);
-  if (Keyboard::isKeyPressed(m_window, GLFW_KEY_F))
+  if (Keyboard::isKeyPressed(window, GLFW_KEY_F))
     lights.position(lights.position() - glm::vec3{ 0.0f, 1.0f, 0.0f } * objectSpeed);
 
   //states
   //if (Keyboard::isKeyJustPressed(m_window, GLFW_KEY_1))
     //state_.push(std::make_unique<World>(state_, m_window, m_camera, m_mouse));
-  if (Keyboard::isKeyJustPressed(m_window, GLFW_KEY_2))
+  if (Keyboard::isKeyJustPressed(window, GLFW_KEY_2))
     state_.pop();
-  if (Keyboard::isKeyJustPressed(m_window, GLFW_KEY_3))
+  if (Keyboard::isKeyJustPressed(window, GLFW_KEY_3))
     state_.loopBelow();
 }
 
@@ -300,9 +301,12 @@ void World::clear()
 
 void World::update()
 {
-  Object::update(m_camera, m_window);
-  Ditto::update(m_camera, m_window);
-  Spaces::update(m_camera, m_window);
+  Window& window{ engine_.getWindow() };
+  Camera& camera{ engine_.getCamera() };
+
+  Object::update(camera, window);
+  Ditto::update(camera, window);
+  Spaces::update(camera, window);
 
   model_loader.activate();
   Spaces& spaces{ Spaces::getInstance() };
@@ -318,13 +322,13 @@ void World::update()
   //color.set("viewPos", m_camera.position);
 
   instancing_spotlight.activate();
-  instancing_spotlight.set("spotlight.position", m_camera.position);
-  instancing_spotlight.set("spotlight.direction", m_camera.front);
-  instancing_spotlight.set("viewPos", m_camera.position);
+  instancing_spotlight.set("spotlight.position", camera.position);
+  instancing_spotlight.set("spotlight.direction", camera.front);
+  instancing_spotlight.set("viewPos", camera.position);
 
   //color.set("objectColor", glm::vec3{sin(randomColor.x + time), sin(randomColor.y + time), sin(randomColor.z + time)});
 
-  cubes.sort(m_camera);
+  cubes.sort(camera);
 
   for (auto& cube : cubes)
   {
@@ -344,11 +348,12 @@ void World::render()
   blender_metacubemonkey.draw(model_loader);
   sketchfab_backpack.draw(model_loader);
 
-  m_interface->input();
-  m_interface->loop();
+  //m_interface->input();
+  //m_interface->loop();
 
   //swaping buffers
-  glfwSwapBuffers(m_window);
+  Window& window{ engine_.getWindow() };
+  glfwSwapBuffers(window);
 }
 
 /*

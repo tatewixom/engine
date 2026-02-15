@@ -14,7 +14,7 @@ public:
     LEFT,
     RIGHT,
     UP,
-    DOWN
+    DOWN,
   };
 
   Camera(Mouse& mouse, float vfov, glm::vec3 vposition, float vspeed, float vsensitivity);

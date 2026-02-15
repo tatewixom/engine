@@ -4,8 +4,8 @@ include(nuketargets)
 
 set(
   NUKE_SOURCE_FILES 
+  private/Ground.cpp
   private/State.cpp
-  private/World.cpp
 )
 
 add_library(
@@ -25,6 +25,7 @@ target_include_directories(
 set(
   NUKE_DEPENDENCIES
   random
+  glm
   nuke_interface
   nuke_core
   nuke_model

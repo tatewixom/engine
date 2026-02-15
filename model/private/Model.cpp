@@ -556,6 +556,9 @@ void Model::initialize_t(std::string_view gltf_file_path, glm::vec3&& position)
   /* import */
   tinygltf::Model model{ make_gltf_model(gltf_file_path) };
 
+  if (model.meshes.size() < 1)
+    return;
+
   /* convert */
   loadMeshes(model);
   loadNodes(model);

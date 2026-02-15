@@ -7,6 +7,7 @@
 #include "Object.h"
 #include "Shader.h"
 #include "Buffer.h"
+#include "Engine.h"
 
 class Window;
 class Camera;
@@ -15,7 +16,7 @@ class Mouse;
 class World final : public IState
 {
 public:
-  World(State& state, Window& window, Camera& camera, Mouse& mouse);
+  World(State& state, Engine& engine);
 
   ~World() override
   {
@@ -31,9 +32,7 @@ public:
   void clean();
 
 private:
-  Window& m_window;
-  Camera& m_camera;
-  Mouse& m_mouse;
+  Engine& engine_;
 
-  std::unique_ptr<Interface> m_interface{ std::make_unique<Interface>(state_, m_window, m_camera, m_mouse) };
+  //std::unique_ptr<Interface> m_interface{ std::make_unique<Interface>(state_, m_window, m_camera, m_mouse) };
 };

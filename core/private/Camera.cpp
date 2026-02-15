@@ -56,14 +56,11 @@ void Camera::update()
     pitch += static_cast<float>(cameraMovement.y * sensitivity);
 
     //constexpr static min and max values for pitch
-    static constexpr float min_pitch{ 89.f };
-    static constexpr float max_pitch{ -89.f };
+    static constexpr float min_pitch{ -89.f };
+    static constexpr float max_pitch{ 89.f };
 
     //constraining the amount you can look up and look down
-    if (pitch > max_pitch)
-      pitch = max_pitch;
-    if (pitch < min_pitch)
-      pitch = min_pitch;
+    pitch = glm::clamp(pitch, min_pitch, max_pitch);
 
     //calculating camera direction vector
     glm::vec3 frontDirection{};
@@ -72,16 +69,18 @@ void Camera::update()
     frontDirection.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     front = glm::normalize(frontDirection);
 
+    right = glm::normalize(glm::cross(front, worldUp));
+    up = glm::normalize(cross(right, front));
+
     //constexpr static min and max values for fov
     static constexpr float min_fov{ 30.f };
     static constexpr float max_fov{ 120.f };
 
     //constraining camera fov based off mouse scroll wheel
     fov -= static_cast<float>(mouse_.soffset().y);
-    if (fov < min_fov)
-      fov = min_fov;
-    if (fov > max_fov)
-      fov = max_fov;
+    
+    //keep fov within 30 and 120
+    fov = glm::clamp(fov, min_fov, max_fov);
   }
 }
 

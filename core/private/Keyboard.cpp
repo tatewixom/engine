@@ -1,7 +1,7 @@
 #include "Keyboard.h"
 
 #include <glad/glad.h>
-#include <glfw3.h>
+#include <GLFW/glfw3.h>
 #include <unordered_map>
 
 namespace Keyboard
