@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <filesystem>
+#include <string>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -53,26 +55,30 @@ Window::Window(const char* title, const char* path_to_icon, float widthRatio, fl
   //setting current context to window
   glfwMakeContextCurrent(window_);
 
-  //v-sync turned off
-  glfwSwapInterval(0);
+  //turning on v-sync by default
+  glfwSwapInterval(1);
 
   //loading GLAD
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
   {
     std::cerr << "ERROR::WINDOW.CPP::WINDOW()::FAILURE_IN_INITIALIZING_GLAD\n";
     glfwTerminate();
+    return;
   }
 
   //setting window icon
-  GLFWimage images[1]{};
-  images[0].pixels = stbi_load(path_to_icon, &images[0].width, &images[0].height, 0, 4); //rgba channels 
-  if (images[0].pixels)
+  std::string root{ std::filesystem::current_path().string() + '/' };
+  std::string path{ root + std::string{ path_to_icon } };
+
+  GLFWimage icon{};
+  icon.pixels = stbi_load(path.c_str(), &icon.width, &icon.height, 0, 4); //rgba channels 
+  if (icon.pixels)
   {
-    glfwSetWindowIcon(window_, 1, images);
-    stbi_image_free(images[0].pixels);
+    glfwSetWindowIcon(window_, 1, &icon);
+    stbi_image_free(icon.pixels);
   }
   
-  //setting callbacks
+  //setting window callbacks
   glfwSetFramebufferSizeCallback(window_, Callback::framebuffer);
   glfwSetWindowRefreshCallback(window_, Callback::refresh);
 }
@@ -86,4 +92,12 @@ void Window::size(Dimensions dimensions)
 {
   dimensions_ = dimensions;
   glViewport(0, 0, dimensions.width, dimensions.height);
+}
+
+void Window::vsync(bool val)
+{
+  if (val)
+    glfwSwapInterval(1);
+  else
+    glfwSwapInterval(0);
 }

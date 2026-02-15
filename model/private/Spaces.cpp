@@ -17,11 +17,10 @@ void Spaces::update(Camera& camera, Window& window)
 {
   Window::Dimensions dimensions{ window.dimensions() };
   
-  projection = glm::perspective(
-    glm::radians(camera.fov), 
-    static_cast<float>(dimensions.height) / static_cast<float>(dimensions.width), 
-    camera.nearPlane, camera.farPlane
-  );
+  //aspect ratio = width / height
+  float aspect{ static_cast<float>(dimensions.width) / static_cast<float>(dimensions.height) };
+
+  projection = glm::perspective(glm::radians(camera.fov), aspect, camera.nearPlane, camera.farPlane);
 
   view = camera.getViewMatrix();
 }

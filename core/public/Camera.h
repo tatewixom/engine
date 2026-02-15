@@ -37,11 +37,11 @@ public:
   float farPlane{ 1000.0f };
 
   //camera rotation
-  float yaw{ -90.0f };	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a
+  float yaw{ -120.0f };	// yaw is initialized to -120.0 degrees since a yaw of 0.0 results in a
   float pitch{ 0.0f };  // direction vector pointing to the right so we initially rotate a bit to the left.
 
   //misc camera attributes
-  float fov{ 120.f };
+  float fov{ 90.f };
   float speed{ 5.f };
   float sensitivity{ 0.1f };
   float zoom{};

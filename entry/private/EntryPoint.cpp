@@ -12,6 +12,7 @@ int main()
 
   //window is responsible for initializing GLAD
   Window window{ "LearnOpenGL", "assets/icon/container.jpg" };
+  window.vsync(false);
 
   //Engine MUST have a window object in order to run
   Engine engine{ window };

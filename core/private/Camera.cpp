@@ -9,7 +9,7 @@ Camera::Camera(Mouse & mouse)
   : mouse_{ mouse }
 { }
 
-Camera::Camera(Mouse& mouse, float vfov, glm::vec3 vposition, float vspeed = 5.0f, float vsensitivity = 0.1f)
+Camera::Camera(Mouse& mouse, float vfov = 120.f, glm::vec3 vposition = glm::vec3{ 0.0f, 0.0f, 3.f }, float vspeed = 5.0f, float vsensitivity = 0.1f)
   : position{ vposition }
   , fov{ vfov }
   , speed{ vspeed }
@@ -24,10 +24,10 @@ void Camera::move(Movement movement, float deltaTime)
   switch (movement)
   {
   case FORWARD:
-    position += front * velocity;
+    position += glm::normalize(glm::vec3{ front.x, 0.f, front.z }) * velocity;
     break;
   case BACKWARD:
-    position -= front * velocity;
+    position -= glm::normalize(glm::vec3{ front.x, 0.f, front.z }) * velocity;
     break;
   case LEFT:
     position -= right * velocity;
@@ -36,10 +36,10 @@ void Camera::move(Movement movement, float deltaTime)
     position += right * velocity;
     break;
   case UP:
-    position += up * velocity;
+    position += worldUp * velocity;
     break;
   case DOWN:
-    position -= up * velocity;
+    position -= worldUp * velocity;
     break;
   default:
     break;

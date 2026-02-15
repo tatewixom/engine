@@ -26,6 +26,8 @@ public:
   void title(const char* title);
   void size(Dimensions dimensions); 
 
+  void vsync(bool val);
+
 private:
   GLFWwindow* window_{};
   Dimensions dimensions_{};

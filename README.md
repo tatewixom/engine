@@ -40,3 +40,7 @@ Now that you have configured the project, build the project by running:
 #### Done
 
 Now you have successfully configured and built the engine!
+
+## Other
+
+if you are interested in the internals or are wanting to learn more about how to use the engine, head over to the **docs** directory! Start with the **introduction** file to get an idea of where to navigate. Thanks for using _Nuke Engine_!

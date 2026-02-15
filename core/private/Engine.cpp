@@ -17,7 +17,7 @@
 Engine::Engine(Window& window)
   : window_{ window }
 {
-  //setting pointer to engine for callbacks
+  //setting glfw pointer to engine for callbacks
   glfwSetWindowUserPointer(window_, this);
 
   //stbi init
@@ -25,7 +25,6 @@ Engine::Engine(Window& window)
 
   //initially setting user to view mode
   //that is, using the mouse to control the camera
-  //mouse_.selectionMode();
   mouse_.viewMode();
 
   glEnable(GL_DEPTH_TEST);
@@ -33,14 +32,12 @@ Engine::Engine(Window& window)
 
 void Engine::initialize()
 {
-  //pushing initial state
   state_.push<Ground>(state_, *this);
   /* openGL context MUST be valid by this point */
 }
 
 void Engine::run()
 {
-  //initializing trivial matters
   initialize();
 
   //vars for fps count
