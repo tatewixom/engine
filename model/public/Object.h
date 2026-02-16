@@ -77,28 +77,28 @@ namespace Nuke
     void draw(const Shader &shader) const;
 
     // getting/setting position
-    glm::vec3 position() const { return m_position; }
-    void position(const glm::vec3 &position) { m_position = position; }
+    glm::vec3 position() const { return position_; }
+    void position(const glm::vec3 &position) { position_ = position; }
 
     // getting/setting dimensions
-    Dimension &dimensions() { return m_dimensions; }
+    Dimension &dimensions() { return dimensions_; }
 
     // spaces access function
     Spaces &spaces() { return s_spaces; }
 
     // scaling
-    glm::vec3 &scalar() { return m_dimensions.scalar; }
+    glm::vec3 &scalar() { return dimensions_.scalar; }
 
     // material
     void material(const Material &material);
-    Material material() const { return m_material; }
+    Material material() const { return material_; }
 
   protected:
-    glm::vec3 m_position{};
-    Material m_material{};
-    GLuint m_VAO{};
-    Dimension m_dimensions{};
-    Rotation m_rotation{};
+    glm::vec3 position_{};
+    Material material_{};
+    GLuint VAO_{};
+    Dimension dimensions_{};
+    Rotation rotation_{};
 
   protected:
     // forward declaration

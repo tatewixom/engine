@@ -8,33 +8,37 @@ namespace Nuke
   Object::Spaces Object::s_spaces{};
 
   Object::Object(const Buffer &buffer, glm::vec3 position, const Material &material)
-      : m_position{position}, m_material{material}, m_VAO{buffer.getVAO()}
+      : position_{ position }
+      , material_{ material }
+      , VAO_{ buffer.getVAO() }
   {
   }
 
   Object::Object(const GLuint VAO, glm::vec3 position, const Material &material)
-      : m_position{position}, m_material{material}, m_VAO{VAO}
+      : position_{position}
+      , material_{material}
+      , VAO_{ VAO }
   {
   }
 
   void Object::initialize(const Buffer &buffer)
   {
-    m_VAO = buffer.getVAO();
+    VAO_ = buffer.getVAO();
   }
 
   void Object::move(const glm::vec3 &position)
   {
-    m_position = position;
+    position_ = position;
   }
 
   void Object::rotate(const Rotation &rotation)
   {
-    m_rotation = rotation;
+    rotation_ = rotation;
   }
 
   void Object::scale(const glm::vec3 &scalar)
   {
-    m_dimensions.scalar = scalar;
+    dimensions_.scalar = scalar;
   }
 
   void Object::update(const Camera &camera, const Window &window)
@@ -53,9 +57,9 @@ namespace Nuke
   {
     s_spaces.model = glm::mat4{1.f};
 
-    s_spaces.model = glm::translate(s_spaces.model, m_position);
-    s_spaces.model = glm::rotate(s_spaces.model, m_rotation.angle(), m_rotation.axis());
-    s_spaces.model = glm::scale(s_spaces.model, m_dimensions.scalar);
+    s_spaces.model = glm::translate(s_spaces.model, position_);
+    s_spaces.model = glm::rotate(s_spaces.model, rotation_.angle(), rotation_.axis());
+    s_spaces.model = glm::scale(s_spaces.model, dimensions_.scalar);
 
     s_spaces.mvp = glm::mat4{s_spaces.projection * s_spaces.view * s_spaces.model};
 
@@ -67,13 +71,13 @@ namespace Nuke
     // glBindVertexArray(m_VAO);
     // glDrawArrays(GL_TRIANGLES, 0, 36); // 36 is the amount of vertices
 
-    glBindVertexArray(m_VAO);
+    glBindVertexArray(VAO_);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
   }
 
   void Object::material(const Material &material)
   {
-    m_material = material;
+    material_ = material;
   }
 
   Object::Rotation::Rotation(const glm::vec3 &axis, float angle)

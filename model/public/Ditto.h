@@ -16,9 +16,9 @@ namespace Nuke
   public:
     struct Spaces
     {
-      glm::mat4 projection{1.f};
-      glm::mat4 view{1.f};
-      glm::mat4 mvp{1.f};
+      glm::mat4 projection{ 1.f };
+      glm::mat4 view{ 1.f };
+      glm::mat4 mvp{ 1.f };
     };
 
     class Rotation
@@ -28,21 +28,21 @@ namespace Nuke
 
       Rotation(const glm::vec3 &axis, float angle);
 
-      auto angle() const { return glm::radians(m_angle); }
-      void angle(const float angle) { m_angle = angle; }
+      auto angle() const { return glm::radians(angle_); }
+      void angle(const float angle) { angle_ = angle; }
 
-      auto axis() const { return glm::normalize(m_axis); }
-      void axis(const glm::vec3 &axis) { m_axis = axis; }
+      auto axis() const { return glm::normalize(axis_); }
+      void axis(const glm::vec3 &axis) { axis_ = axis; }
 
     private:
-      glm::vec3 m_axis{0.f, 1.f, 0.f};
-      float m_angle{0.f};
+      glm::vec3 axis_{ 0.f, 1.f, 0.f };
+      float angle_{ 0.f };
     };
 
     struct Motions
     {
       glm::vec3 position{};
-      glm::vec3 scale{1.f};
+      glm::vec3 scale{ 1.f };
       Rotation rotation{};
     };
 
@@ -54,7 +54,7 @@ namespace Nuke
 
     void sendInstances(std::vector<glm::mat4> matrices, const std::vector<Motions> &motions, unsigned int location);
 
-    void setShader(Shader &shader) { m_shader = shader; };
+    void setShader(Shader &shader) { shader_ = shader; };
 
     void draw();
 
@@ -62,9 +62,9 @@ namespace Nuke
     static void update(const Camera &camera, const Window &window);
 
   private:
-    VertexBuffer m_instanceBuffer{};
-    Shader m_shader;
-    std::size_t m_instanceCount{};
+    VertexBuffer instanceBuffer_{};
+    Shader shader_;
+    std::size_t instanceCount_{};
 
   private:
     static Spaces s_spaces;

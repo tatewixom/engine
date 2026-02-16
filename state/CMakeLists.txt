@@ -26,7 +26,6 @@ set(
   NUKE_DEPENDENCIES
   random
   glm
-  nuke_interface
   nuke_core
   nuke_model
   nuke_graphics

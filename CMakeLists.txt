@@ -29,7 +29,7 @@ add_subdirectory(vendor)
 
 add_subdirectory(event)
 add_subdirectory(graphics)
-add_subdirectory(interface)
+# add_subdirectory(interface) # this needs serious rework. 
 add_subdirectory(model)
 add_subdirectory(state)
 add_subdirectory(time)

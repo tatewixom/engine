@@ -34,7 +34,7 @@ namespace Nuke
 
   void Engine::initialize()
   {
-    state_.push<Ground>(state_, *this);
+    states_.push<Ground>(states_, *this);
     /* openGL context MUST be valid by this point */
   }
 
@@ -58,7 +58,7 @@ namespace Nuke
       camera_.update();
 
       // looping one time through the state's loop function
-      state_.loop();
+      states_.loop();
       /*
         the state is responsible for initializing,
         making use of input classes, updating, and

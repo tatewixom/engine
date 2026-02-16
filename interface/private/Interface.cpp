@@ -6,187 +6,29 @@
 #include "Camera.h"
 #include "Shader.h"
 #include "Mouse.h"
+#include "Engine.h"
 
 namespace Nuke
 {
-  Interface::Element::Space Interface::Element::s_spaces{};
-
-  namespace Points
-  {
-    Object::Dimension bd{700.f, 400.f};
-
-    std::vector<float> backdrop{
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        -1.0f,
-        bd.x,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        1.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        -1.0f,
-        bd.x,
-        bd.y,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        1.0f,
-        1.0f,
-        0.0f,
-        0.0f,
-        -1.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        -1.0f,
-        bd.x,
-        bd.y,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        1.0f,
-        1.0f,
-        0.0f,
-        0.0f,
-        -1.0f,
-        0.0f,
-        bd.y,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        0.0f,
-        1.0f,
-        0.0f,
-        0.0f,
-        -1.0f,
-    };
-
-    Object::Dimension cb{500.f, 50.f};
-
-    std::vector<float> controlBar{
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        -1.0f,
-        cb.x,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        1.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        -1.0f,
-        cb.x,
-        cb.y,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        1.0f,
-        1.0f,
-        0.0f,
-        0.0f,
-        -1.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        -1.0f,
-        cb.x,
-        cb.y,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        1.0f,
-        1.0f,
-        0.0f,
-        0.0f,
-        -1.0f,
-        0.0f,
-        cb.y,
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f,
-        0.0f,
-        1.0f,
-        0.0f,
-        0.0f,
-        -1.0f,
-    };
-  }
+  Space Element::s_spaces{};
 
   namespace
   {
     Buffer backgroundBuffer;
 
     Shader shader{};
-
-    Interface::Element background{glm::vec2{0.0f}, Interface::Element::Dimension{Points::bd.x, Points::bd.y}};
-    Interface::Element grabBar{glm::vec2{0.0f}, Interface::Element::Dimension{Points::bd.x, Points::bd.y}};
   }
 
-  Interface::Interface(State &state, Window &window, Camera &camera, Mouse &mouse)
-      : IState{state}, m_window{window}, m_camera{camera}, m_mouse{mouse}
+  Interface(State& state, Engine& engine)
+      : IState{ state }
+      , engine_{ engine }
   {
     initialize();
   }
 
   void Interface::initialize()
   {
-    backgroundBuffer.initialize(Points::backdrop); // initializing buffer
+    backgroundBuffer.initialize(); // initializing buffer
     background.setVAO(backgroundBuffer);           // setting VAO's
     grabBar.setVAO(backgroundBuffer);
 
@@ -299,7 +141,7 @@ namespace Nuke
   {
     m_position = position;
 
-    m_hitbox.area = Hitbox::Area{m_position.x, m_position.y, m_position.x + m_dimensions.width(), m_position.y + m_dimensions.height()};
+    m_hitbox.area = Hitbox::Area{ m_position.x, m_position.y, m_position.x + m_dimensions.width(), m_position.y + m_dimensions.height() };
   }
 
   void Interface::Element::position(Element &element, const glm::vec2 &relativePosition)

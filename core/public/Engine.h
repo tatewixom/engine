@@ -25,7 +25,7 @@ namespace Nuke
     Window &window_;
     Mouse mouse_{window_};  // mouse depends on window
     Camera camera_{mouse_}; // camera depends on mouse
-    State state_{};
+    States states_{};
     Spaces spaces_{};
   };
 }

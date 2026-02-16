@@ -8,10 +8,11 @@
 namespace Nuke
 {
   Rotation::Rotation(const glm::vec3 &axis, float angle)
-      : m_axis{axis}, m_angle{angle}
+      : axis_{axis}
+      , angle_{angle}
   {
-    if (m_axis == glm::vec3{0.f, 0.f, 0.f})
-      m_axis = glm::vec3{0.f, 1.f, 0.f};
+    if (axis_ == glm::vec3{ 0.f, 0.f, 0.f })
+      axis_ = glm::vec3{ 0.f, 1.f, 0.f };
   }
 
   void Spaces::update(Camera &camera, Window &window)

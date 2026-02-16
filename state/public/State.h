@@ -6,27 +6,27 @@
 
 namespace Nuke
 {
-  class State;
-
-  class IState
-  {
-  public:
-    explicit IState(State& state)
-      : state_{ state }
-    { }
-
-    virtual ~IState() = default;
-
-    virtual void loop() = 0;
-
-  protected:
-    State& state_;
-  };
+  class States;
 
   class State
   {
   public:
-    State() = default;
+    explicit State(States& states)
+      : state_{ states }
+    { }
+
+    virtual ~State() = default;
+
+    virtual void loop() = 0;
+
+  protected:
+    States& state_;
+  };
+
+  class States
+  {
+  public:
+    States() = default;
 
     //base functions
     void loop();
@@ -34,7 +34,7 @@ namespace Nuke
     template <typename S, typename... Args>
     void push(Args&&... args)
     {
-      static_assert(std::is_base_of_v<IState, S>);
+      static_assert(std::is_base_of_v<State, S>);
       states_.emplace_back(std::make_unique<S>(std::forward<Args>(args)...));
     }
 
@@ -43,14 +43,14 @@ namespace Nuke
     //specialty functions
     void loopBelow();
   private:
-    std::deque<std::unique_ptr<IState>> states_{};
+    std::deque<std::unique_ptr<State>> states_{};
   };
 
-  class Temporary final : public IState
+  class Temporary final : public State
   {
   public:
-    Temporary(State& state)
-      : IState{ state }
+    Temporary(States& states)
+      : State{ states }
     { }
 
     ~Temporary() override = default;

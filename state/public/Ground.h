@@ -9,10 +9,10 @@ class Mouse;
 
 namespace Nuke
 {
-  class Ground final : public IState
+  class Ground final : public State
   {
   public:
-    Ground(State &state, Engine &engine);
+    Ground(States &states, Engine &engine);
 
     ~Ground() override;
 

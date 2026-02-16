@@ -23,8 +23,8 @@ namespace Nuke
     void initialize(const unsigned char *data, int width, int height, std::string_view format, Type type);
 
     // returns id of texture assigned by gl
-    GLint id() const noexcept { return m_id; }
-    Type type() const noexcept { return m_type; }
+    GLint id() const noexcept { return id_; }
+    Type type() const noexcept { return type_; }
 
     // function that makes sure texture is valid and returns assigned unit
     int use();
@@ -38,13 +38,13 @@ namespace Nuke
     GLint getMaxUnits() const;
 
   private:
-    GLuint m_id{}; // texture object id
-    int m_assignedUnit{0};
-    Type m_type{};
+    GLuint id_{}; // texture object id
+    int assignedUnit_{0};
+    Type type_{};
 
   private:
-    static std::deque<Texture *> s_textureQueue;
+    static std::deque<Texture*> s_textureQueue;
     static int s_activeUnits;
-    static constexpr int s_null_tex{0};
+    static constexpr int s_null_tex{ 0 };
   };
 }

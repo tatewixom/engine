@@ -20,8 +20,8 @@ namespace Nuke
   float deltaTime{};
   float lastFrame{};
 
-  Ground::Ground(State &state, Engine &engine)
-      : IState{state}, engine_{engine}
+  Ground::Ground(States &states, Engine &engine)
+      : State{ states }, engine_{engine}
   {
     initialize();
   }

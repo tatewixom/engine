@@ -206,13 +206,13 @@ namespace Nuke
       }
     }
 
-    m_layout.bind();
-    if (m_element.indiceCount >= 0)
-      glDrawElements(GL_TRIANGLES, m_element.indiceCount, GL_UNSIGNED_SHORT, 0); // using short because of
+    layout_.bind();
+    if (element_.indiceCount >= 0)
+      glDrawElements(GL_TRIANGLES, element_.indiceCount, GL_UNSIGNED_SHORT, 0); // using short because of
     else                                                                         // lack of option to return different vector types
-      glDrawArrays(GL_TRIANGLES, 0, m_buffer.vertexCount);
+      glDrawArrays(GL_TRIANGLES, 0, buffer_.vertexCount);
 
-    m_layout.unbind();
+    layout_.unbind();
     shader.deactivate();
   }
 }

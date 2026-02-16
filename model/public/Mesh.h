@@ -108,14 +108,14 @@ namespace Nuke
       initialize EBO
       */
 
-      m_layout.initialize(std::move(attributes)); // initialize & bind VAO
+      layout_.initialize(std::move(attributes)); // initialize & bind VAO
 
-      m_buffer.initialize(vertices); // initialize & bind VBO
+      buffer_.initialize(vertices); // initialize & bind VBO
 
-      m_element.initialize(indices); // initialize & bind EBO
+      element_.initialize(indices); // initialize & bind EBO
 
       /* this MUST be interpreted AFTER the VBO has been initialized */
-      m_layout.interpret(); // interpret attributes
+      layout_.interpret(); // interpret attributes
     }
 
     template <typename T>
@@ -131,24 +131,24 @@ namespace Nuke
       initialize EBO
       */
 
-      m_layout.initialize(std::move(attributes)); // initialize & bind VAO
+      layout_.initialize(std::move(attributes)); // initialize & bind VAO
 
-      m_buffer.initialize(vertices); // initialize & bind VBO
+      buffer_.initialize(vertices); // initialize & bind VBO
 
-      m_element.initialize(indices); // initialize & bind EBO
+      element_.initialize(indices); // initialize & bind EBO
 
       /* this MUST be interpreted AFTER the VBO has been initialized */
-      m_layout.interpret(); // interpret attributes
+      layout_.interpret(); // interpret attributes
     }
 
-    void changeIndexType(GLenum e) { m_element.indexType = e; }
+    void changeIndexType(GLenum e) { element_.indexType = e; }
 
     void draw(Shader &shader);
 
   protected:
-    Layout m_layout{};
-    VertexBuffer m_buffer{};
-    Element m_element{};
+    Layout layout_{};
+    VertexBuffer buffer_{};
+    Element element_{};
     std::vector<Texture> textures_{};
   };
 }

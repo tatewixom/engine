@@ -8,7 +8,7 @@ namespace Nuke
   void Texture::initialize(std::string_view path, Type type)
   {
     // assigning type
-    m_type = type;
+    type_ = type;
 
     // look into adding a guard for double initialization
     // or perhaps make another initialization perceived as changing texture to new one
@@ -16,16 +16,16 @@ namespace Nuke
     if (s_textureQueue.size() < getMaxUnits())
     {
       // assigning current texture to current units active + 1
-      m_assignedUnit = static_cast<int>(GL_TEXTURE0) + s_activeUnits;
+      assignedUnit_ = static_cast<int>(GL_TEXTURE0) + s_activeUnits;
       ++s_activeUnits;
     }
     else
     {
       // assigning current texture to back-of-queue's texture unit
-      m_assignedUnit = s_textureQueue.back()->m_assignedUnit;
+      assignedUnit_ = s_textureQueue.back()->assignedUnit_;
 
       // nullifying back-of-queue's texture
-      s_textureQueue.back()->m_assignedUnit = s_null_tex;
+      s_textureQueue.back()->assignedUnit_ = s_null_tex;
 
       // removing unused texture from queue
       s_textureQueue.pop_back();
@@ -41,7 +41,7 @@ namespace Nuke
   void Texture::initialize(const unsigned char *data, int width, int height, std::string_view format, Type type)
   {
     // assigning type
-    m_type = type;
+    type_ = type;
 
     // look into adding a guard for double initialization
     // or perhaps make another initialization perceived as changing texture to new one
@@ -49,16 +49,16 @@ namespace Nuke
     if (s_textureQueue.size() < getMaxUnits())
     {
       // assigning current texture to current units active + 1
-      m_assignedUnit = static_cast<int>(GL_TEXTURE0) + s_activeUnits;
+      assignedUnit_ = static_cast<int>(GL_TEXTURE0) + s_activeUnits;
       ++s_activeUnits;
     }
     else
     {
       // assigning current texture to back-of-queue's texture unit
-      m_assignedUnit = s_textureQueue.back()->m_assignedUnit;
+      assignedUnit_ = s_textureQueue.back()->assignedUnit_;
 
       // nullifying back-of-queue's texture
-      s_textureQueue.back()->m_assignedUnit = s_null_tex;
+      s_textureQueue.back()->assignedUnit_ = s_null_tex;
 
       // removing unused texture from queue
       s_textureQueue.pop_back();
@@ -74,24 +74,24 @@ namespace Nuke
   int Texture::use()
   {
     // check to see if texture is currently tied to a unit
-    if (m_assignedUnit != s_null_tex)
+    if (assignedUnit_ != s_null_tex)
     {
-      glActiveTexture(static_cast<GLenum>(m_assignedUnit));
-      glBindTexture(GL_TEXTURE_2D, m_id);                    // bind texture just in case
-      return m_assignedUnit - static_cast<int>(GL_TEXTURE0); // return if not null
+      glActiveTexture(static_cast<GLenum>(assignedUnit_));
+      glBindTexture(GL_TEXTURE_2D, id_);                    // bind texture just in case
+      return assignedUnit_ - static_cast<int>(GL_TEXTURE0); // return if not null
     }
     else
     {
       // assigning current texture the back-of-queue's texture unit
-      m_assignedUnit = s_textureQueue.back()->m_assignedUnit;
+      assignedUnit_ = s_textureQueue.back()->assignedUnit_;
 
       // binding current textures id to new unit
-      glActiveTexture(static_cast<GLenum>(m_assignedUnit));
-      glBindTexture(GL_TEXTURE_2D, m_id);
+      glActiveTexture(static_cast<GLenum>(assignedUnit_));
+      glBindTexture(GL_TEXTURE_2D, id_);
       glActiveTexture(GL_TEXTURE0); // setting to default
 
       // nullifying back-of-queue's texture
-      s_textureQueue.back()->m_assignedUnit = s_null_tex;
+      s_textureQueue.back()->assignedUnit_ = s_null_tex;
 
       // popping null texture at back of queue
       s_textureQueue.pop_back();
@@ -100,7 +100,7 @@ namespace Nuke
       s_textureQueue.push_front(this);
 
       // reuturning assigned texture unit
-      return m_assignedUnit - static_cast<int>(GL_TEXTURE0);
+      return assignedUnit_ - static_cast<int>(GL_TEXTURE0);
     }
   }
 
@@ -140,11 +140,11 @@ namespace Nuke
   void Texture::load(const std::string_view format)
   {
     // activating assigned texture unit
-    glActiveTexture(static_cast<GLenum>(m_assignedUnit));
+    glActiveTexture(static_cast<GLenum>(assignedUnit_));
 
     // generating texture, assigning texture id, and binding texture
-    glGenTextures(1, &m_id);
-    glBindTexture(GL_TEXTURE_2D, m_id);
+    glGenTextures(1, &id_);
+    glBindTexture(GL_TEXTURE_2D, id_);
 
     // specifying image wrapping to gl
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
@@ -181,11 +181,11 @@ namespace Nuke
   void Texture::loadFromGLTF(const unsigned char *data, int width, int height, std::string_view format)
   {
     // activating assigned texture unit
-    glActiveTexture(static_cast<GLenum>(m_assignedUnit));
+    glActiveTexture(static_cast<GLenum>(assignedUnit_));
 
     // generating texture, assigning texture id, and binding texture
-    glGenTextures(1, &m_id);
-    glBindTexture(GL_TEXTURE_2D, m_id);
+    glGenTextures(1, &id_);
+    glBindTexture(GL_TEXTURE_2D, id_);
 
     // specifying image wrapping to gl
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
