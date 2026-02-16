@@ -14,68 +14,71 @@
 #include <string>
 #include <iostream>
 
-Engine::Engine(Window& window)
-  : window_{ window }
+namespace Nuke
 {
-  //setting glfw pointer to engine for callbacks
-  glfwSetWindowUserPointer(window_, this);
-
-  //stbi init
-  stbi_set_flip_vertically_on_load(true);
-
-  //initially setting user to view mode
-  //that is, using the mouse to control the camera
-  mouse_.viewMode();
-
-  glEnable(GL_DEPTH_TEST);
-}
-
-void Engine::initialize()
-{
-  state_.push<Ground>(state_, *this);
-  /* openGL context MUST be valid by this point */
-}
-
-void Engine::run()
-{
-  initialize();
-
-  //vars for fps count
-  Phase::Timer frameTimer{};
-  int fps = 0;
-
-  //check if window should close
-  while (!glfwWindowShouldClose(window_))
+  Engine::Engine(Window &window)
+      : window_{window}
   {
-    //go through all linked callback events
-    glfwPollEvents();
+    // setting glfw pointer to engine for callbacks
+    glfwSetWindowUserPointer(window_, this);
 
-    //process events
-    mouse_.update();
-    spaces_.update(camera_, window_);
-    camera_.update();
+    // stbi init
+    stbi_set_flip_vertically_on_load(true);
 
-    //looping one time through the state's loop function
-    state_.loop();
-    /*
-      the state is responsible for initializing,
-      making use of input classes, updating, and
-      rendering itself to the screen.
-    */
+    // initially setting user to view mode
+    // that is, using the mouse to control the camera
+    mouse_.viewMode();
 
-    //one total frame has occured
-    ++fps;
+    glEnable(GL_DEPTH_TEST);
+  }
 
-    //checking when a second has elapsed
-    constexpr double second{ 1.0 };
-    if (frameTimer.elapsed() >= second) //assuming elapsed returns time in seconds
+  void Engine::initialize()
+  {
+    state_.push<Ground>(state_, *this);
+    /* openGL context MUST be valid by this point */
+  }
+
+  void Engine::run()
+  {
+    initialize();
+
+    // vars for fps count
+    Phase::Timer frameTimer{};
+    int fps = 0;
+
+    // check if window should close
+    while (!glfwWindowShouldClose(window_))
     {
-      //set window title to fps count
-      window_.title(std::to_string(fps).data());
+      // go through all linked callback events
+      glfwPollEvents();
 
-      //reset frames and timer
-      fps = 0;
-      frameTimer.reset();
+      // process events
+      mouse_.update();
+      spaces_.update(camera_, window_);
+      camera_.update();
+
+      // looping one time through the state's loop function
+      state_.loop();
+      /*
+        the state is responsible for initializing,
+        making use of input classes, updating, and
+        rendering itself to the screen.
+      */
+
+      // one total frame has occured
+      ++fps;
+
+      // checking when a second has elapsed
+      constexpr double second{1.0};
+      if (frameTimer.elapsed() >= second) // assuming elapsed returns time in seconds
+      {
+        // set window title to fps count
+        window_.title(std::to_string(fps).data());
+
+        // reset frames and timer
+        fps = 0;
+        frameTimer.reset();
+      }
     }
   }
 }

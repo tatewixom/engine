@@ -7,17 +7,20 @@
 #include <iostream>
 #include <expected>
 
-namespace File
+namespace Nuke
 {
-  std::expected<std::string, std::string> retrieve(std::string_view fileName)
+  namespace File
   {
-    std::ifstream in_file(fileName.data());
+    std::expected<std::string, std::string> retrieve(std::string_view fileName)
+    {
+      std::ifstream in_file(fileName.data());
 
-    if (!in_file.is_open())
-      return std::unexpected{ "ERROR::FILE.CPP::RETRIEVE()::FAILURE_IN_OPENING_FILE" };
+      if (!in_file.is_open())
+        return std::unexpected{"ERROR::FILE.CPP::RETRIEVE()::FAILURE_IN_OPENING_FILE"};
 
-    std::ostringstream buffer;
-    buffer << in_file.rdbuf();
-    return buffer.str();
+      std::ostringstream buffer;
+      buffer << in_file.rdbuf();
+      return buffer.str();
+    }
   }
 }

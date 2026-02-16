@@ -35,38 +35,41 @@ std::vector<float> texture
   };
 */
 
-class Buffer
+namespace Nuke
 {
-public:
-  struct Attribute
+  class Buffer
   {
-    unsigned int location{};
-    int size{};
-    int offset{};
+  public:
+    struct Attribute
+    {
+      unsigned int location{};
+      int size{};
+      int offset{};
+    };
+
+    Buffer() = default;
+    ~Buffer();
+
+    void initialize(const std::vector<float> &vertices, const std::vector<unsigned int> &indices);
+    void initialize(const std::vector<float> &vertices);
+
+    constexpr GLuint getVAO() const { return VAO_; }
+    constexpr GLuint getEBO() const { return EBO_; }
+    constexpr GLsizei getStride() const { return 12 * sizeof(float); }
+    template <typename T>
+    constexpr std::size_t getSize(const std::vector<T> &vec) const { return vec.size() * sizeof(T); }
+
+    void remoteVAO(GLuint &VAO) const;
+    GLuint remoteVAO() const;
+
+  private:
+    static constexpr Attribute position_{0u, 3, 0};
+    static constexpr Attribute color_{1u, 4, (sizeof(float) * 3)};
+    static constexpr Attribute texture_{2u, 2, (sizeof(float) * 7)};
+    static constexpr Attribute normal_{3u, 3, (sizeof(float) * 9)};
+
+    GLuint VBO_{};
+    GLuint VAO_{};
+    GLuint EBO_{};
   };
-
-  Buffer() = default;
-  ~Buffer();
-
-  void initialize(const std::vector<float>& vertices, const std::vector<unsigned int>& indices);
-  void initialize(const std::vector<float>& vertices);
-
-  constexpr GLuint getVAO() const { return VAO_; }
-  constexpr GLuint getEBO() const { return EBO_; }
-  constexpr GLsizei getStride() const { return 12 * sizeof(float); }
-  template <typename T>
-  constexpr std::size_t getSize(const std::vector<T>& vec) const { return vec.size() * sizeof(T); }
-
-  void remoteVAO(GLuint& VAO) const;
-  GLuint remoteVAO() const;
-private:
-  static constexpr Attribute position_{ 0u, 3, 0 };
-  static constexpr Attribute color_{ 1u, 4, (sizeof(float) * 3) };
-  static constexpr Attribute texture_{ 2u, 2, (sizeof(float) * 7) };
-  static constexpr Attribute normal_{ 3u, 3, (sizeof(float) * 9) };
-
-  GLuint VBO_{};
-  GLuint VAO_{};
-  GLuint EBO_{};
-};
-
+}

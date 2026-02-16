@@ -13,26 +13,29 @@ class Window;
 class Camera;
 class Mouse;
 
-class World final : public IState
+namespace Nuke
 {
-public:
-  World(State& state, Engine& engine);
-
-  ~World() override
+  class World final : public IState
   {
-    clean();
-  }
+  public:
+    World(State& state, Engine& engine);
 
-  void initialize();
-  void input();
-  void clear();
-  void update();
-  void render();
-  void loop() override;
-  void clean();
+    ~World() override
+    {
+      clean();
+    }
 
-private:
-  Engine& engine_;
+    void initialize();
+    void input();
+    void clear();
+    void update();
+    void render();
+    void loop() override;
+    void clean();
 
-  //std::unique_ptr<Interface> m_interface{ std::make_unique<Interface>(state_, m_window, m_camera, m_mouse) };
-};
+  private:
+    Engine& engine_;
+
+    //std::unique_ptr<Interface> m_interface{ std::make_unique<Interface>(state_, m_window, m_camera, m_mouse) };
+  };
+}

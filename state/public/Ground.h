@@ -7,22 +7,25 @@ class Window;
 class Camera;
 class Mouse;
 
-class Ground final : public IState
+namespace Nuke
 {
-public:
-  Ground(State& state, Engine& engine);
+  class Ground final : public IState
+  {
+  public:
+    Ground(State &state, Engine &engine);
 
-  ~Ground() override;
+    ~Ground() override;
 
-  void initialize();
-  void input();
-  void clear();
-  void update();
-  void render();
-  void clean();
+    void initialize();
+    void input();
+    void clear();
+    void update();
+    void render();
+    void clean();
 
-  void loop() override;
+    void loop() override;
 
-private:
-  Engine& engine_;
-};
+  private:
+    Engine &engine_;
+  };
+}

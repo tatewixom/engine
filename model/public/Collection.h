@@ -2,37 +2,39 @@
 
 #include "Object.h"
 
-class Camera;
-
-class Collection
+namespace Nuke
 {
-public:
-  Collection(int count, const Object& object);
+  class Camera;
 
-  Object& operator[](int i) { return m_container[i]; }
+  class Collection
+  {
+  public:
+    Collection(int count, const Object &object);
 
-  void add();
-  void add(int amount);
+    Object &operator[](int i) { return m_container[i]; }
 
-  void sort(const Camera& camera);
+    void add();
+    void add(int amount);
 
-  glm::vec3 getRandomPosition(int min, int max);
+    void sort(const Camera &camera);
 
-  auto begin() { return m_container.begin(); }
-  auto end() { return m_container.end(); }
+    glm::vec3 getRandomPosition(int min, int max);
 
-  int size() const { return static_cast<int>(m_container.size()); }
+    auto begin() { return m_container.begin(); }
+    auto end() { return m_container.end(); }
 
-  void draw(const Shader& shader);
+    int size() const { return static_cast<int>(m_container.size()); }
 
-  //object manipulation
-  void object(const Object& object);
-  Object object() const { return m_object; }
+    void draw(const Shader &shader);
 
-private:
-  Object createObject();
+    // object manipulation
+    void object(const Object &object);
+    Object object() const { return m_object; }
 
-  Object m_object{};
-  std::vector<Object> m_container{};
-};
+  private:
+    Object createObject();
 
+    Object m_object{};
+    std::vector<Object> m_container{};
+  };
+}

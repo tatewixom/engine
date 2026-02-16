@@ -1,7 +1,9 @@
 #include "Event.h"
 
-namespace Events
+namespace Nuke
 {
-  
-}
+  namespace Events
+  {
 
+  }
+}

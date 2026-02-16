@@ -2,78 +2,81 @@
 #include "Window.h"
 #include "Callback.h"
 
-Mouse::Mouse(Window& window)
-  : window_{ window }
+namespace Nuke
 {
-  glfwSetCursorPosCallback(window_, Callback::mouse);
-  glfwSetScrollCallback(window_, Callback::scroll);
-  glfwSetMouseButtonCallback(window_, Callback::mouseButton);
-}
-
-void Mouse::update()
-{
-  static bool firstMouse{ true };
-
-  if (firstMouse)
+  Mouse::Mouse(Window &window)
+      : window_{window}
   {
-    center();
-    Window::Dimensions window{ window_.dimensions() };
-    position_ = Mouse::Position{ window.width / 2.0f, window.height / 2.0f }; //preventing mouse "snapping" into position
-    lastPosition_ = position_;
-    firstMouse = false;
+    glfwSetCursorPosCallback(window_, Callback::mouse);
+    glfwSetScrollCallback(window_, Callback::scroll);
+    glfwSetMouseButtonCallback(window_, Callback::mouseButton);
   }
 
-  offset_.x = position_.x - lastPosition_.x; //calculating offset
-  offset_.y = lastPosition_.y - position_.y;
+  void Mouse::update()
+  {
+    static bool firstMouse{true};
 
-  lastPosition_ = position_; //setting last position
-}
+    if (firstMouse)
+    {
+      center();
+      Window::Dimensions window{window_.dimensions()};
+      position_ = Mouse::Position{window.width / 2.0f, window.height / 2.0f}; // preventing mouse "snapping" into position
+      lastPosition_ = position_;
+      firstMouse = false;
+    }
 
-void Mouse::center()
-{
-  Window::Dimensions window{ window_.dimensions() };
-  glfwSetCursorPos(window_, static_cast<double>(window.width) / 2.0, static_cast<double>(window.height) / 2.0);
-}
+    offset_.x = position_.x - lastPosition_.x; // calculating offset
+    offset_.y = lastPosition_.y - position_.y;
 
-void Mouse::viewMode()
-{
-  position_ = lastPosition_;
+    lastPosition_ = position_; // setting last position
+  }
 
-  glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-}
+  void Mouse::center()
+  {
+    Window::Dimensions window{window_.dimensions()};
+    glfwSetCursorPos(window_, static_cast<double>(window.width) / 2.0, static_cast<double>(window.height) / 2.0);
+  }
 
-void Mouse::selectionMode()
-{
-  lastPosition_ = position_;
+  void Mouse::viewMode()
+  {
+    position_ = lastPosition_;
 
-  center();
-  glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-}
+    glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  }
 
-bool Mouse::isButtonPressed(int mouseButton) const
-{
-  if (button_.button == mouseButton && button_.action == GLFW_PRESS)
-    return true;
+  void Mouse::selectionMode()
+  {
+    lastPosition_ = position_;
 
-  return false;
-}
+    center();
+    glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+  }
 
-bool Mouse::isDisabled() const
-{
-  return glfwGetInputMode(window_, GLFW_CURSOR) == GLFW_CURSOR_DISABLED;
-}
+  bool Mouse::isButtonPressed(int mouseButton) const
+  {
+    if (button_.button == mouseButton && button_.action == GLFW_PRESS)
+      return true;
 
-void Mouse::setLastPosition()
-{
-  position_ = lastPosition_;
-}
+    return false;
+  }
 
-bool operator==(const Mouse::Position& pos1, const Mouse::Position& pos2)
-{
-  return (pos1.x == pos2.x) && (pos1.y == pos2.y);
-}
+  bool Mouse::isDisabled() const
+  {
+    return glfwGetInputMode(window_, GLFW_CURSOR) == GLFW_CURSOR_DISABLED;
+  }
 
-Mouse::Position operator-(const Mouse::Position& pos1, const Mouse::Position& pos2)
-{
-  return Mouse::Position{ pos1.x - pos2.x, pos1.y - pos2.y };
+  void Mouse::setLastPosition()
+  {
+    position_ = lastPosition_;
+  }
+
+  bool operator==(const Mouse::Position &pos1, const Mouse::Position &pos2)
+  {
+    return (pos1.x == pos2.x) && (pos1.y == pos2.y);
+  }
+
+  Mouse::Position operator-(const Mouse::Position &pos1, const Mouse::Position &pos2)
+  {
+    return Mouse::Position{pos1.x - pos2.x, pos1.y - pos2.y};
+  }
 }

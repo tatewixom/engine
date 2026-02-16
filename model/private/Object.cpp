@@ -3,85 +3,83 @@
 #include "Shader.h"
 #include "Window.h"
 
-Object::Spaces Object::s_spaces{};
-
-Object::Object(const Buffer& buffer, glm::vec3 position, const Material& material)
-  : m_position{ position }
-  , m_material{ material }
-  , m_VAO{ buffer.getVAO() }
-{ }
-
-Object::Object(const GLuint VAO, glm::vec3 position, const Material & material)
-  : m_position{ position }
-  , m_material{ material }
-  , m_VAO{ VAO }
-{ }
-
-void Object::initialize(const Buffer & buffer)
+namespace Nuke
 {
-  m_VAO = buffer.getVAO();
-}
+  Object::Spaces Object::s_spaces{};
 
-void Object::move(const glm::vec3& position)
-{
-  m_position = position;
-}
+  Object::Object(const Buffer &buffer, glm::vec3 position, const Material &material)
+      : m_position{position}, m_material{material}, m_VAO{buffer.getVAO()}
+  {
+  }
 
-void Object::rotate(const Rotation& rotation)
-{
-  m_rotation = rotation;
-}
+  Object::Object(const GLuint VAO, glm::vec3 position, const Material &material)
+      : m_position{position}, m_material{material}, m_VAO{VAO}
+  {
+  }
 
-void Object::scale(const glm::vec3& scalar)
-{
-  m_dimensions.scalar = scalar;
-}
+  void Object::initialize(const Buffer &buffer)
+  {
+    m_VAO = buffer.getVAO();
+  }
 
-void Object::update(const Camera& camera, const Window& window)
-{
-  const Window::Dimensions dimensions{ window.dimensions() };
+  void Object::move(const glm::vec3 &position)
+  {
+    m_position = position;
+  }
 
-  s_spaces.projection = glm::perspective
-  (
-    glm::radians(camera.fov), 
-    static_cast<float>(dimensions.height) / static_cast<float>(dimensions.width), 
-    camera.nearPlane, camera.farPlane
-  );
+  void Object::rotate(const Rotation &rotation)
+  {
+    m_rotation = rotation;
+  }
 
-  s_spaces.view = camera.getViewMatrix();
-}
+  void Object::scale(const glm::vec3 &scalar)
+  {
+    m_dimensions.scalar = scalar;
+  }
 
-void Object::draw(const Shader& shader) const
-{
-  s_spaces.model = glm::mat4{ 1.f };
+  void Object::update(const Camera &camera, const Window &window)
+  {
+    const Window::Dimensions dimensions{window.dimensions()};
 
-  s_spaces.model = glm::translate(s_spaces.model, m_position);
-  s_spaces.model = glm::rotate(s_spaces.model, m_rotation.angle(), m_rotation.axis());
-  s_spaces.model = glm::scale(s_spaces.model, m_dimensions.scalar);
+    s_spaces.projection = glm::perspective(
+        glm::radians(camera.fov),
+        static_cast<float>(dimensions.height) / static_cast<float>(dimensions.width),
+        camera.nearPlane, camera.farPlane);
 
-  s_spaces.mvp = glm::mat4{ s_spaces.projection * s_spaces.view * s_spaces.model };
+    s_spaces.view = camera.getViewMatrix();
+  }
 
-  shader.activate();
+  void Object::draw(const Shader &shader) const
+  {
+    s_spaces.model = glm::mat4{1.f};
 
-  shader.set("mvp", s_spaces.mvp);
-  shader.set(Shader::model, s_spaces.model);
-  
-  //glBindVertexArray(m_VAO);
-  //glDrawArrays(GL_TRIANGLES, 0, 36); // 36 is the amount of vertices
+    s_spaces.model = glm::translate(s_spaces.model, m_position);
+    s_spaces.model = glm::rotate(s_spaces.model, m_rotation.angle(), m_rotation.axis());
+    s_spaces.model = glm::scale(s_spaces.model, m_dimensions.scalar);
 
-  glBindVertexArray(m_VAO);
-  glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-}
+    s_spaces.mvp = glm::mat4{s_spaces.projection * s_spaces.view * s_spaces.model};
 
-void Object::material(const Material& material)
-{
-  m_material = material;
-}
+    shader.activate();
 
-Object::Rotation::Rotation(const glm::vec3& axis, float angle)
-  : m_axis{ axis }
-  , m_angle{ angle }
-{
-  if (m_axis == glm::vec3{ 0.f, 0.f, 0.f })
-    m_axis = glm::vec3{ 0.f, 1.f, 0.f };
+    shader.set("mvp", s_spaces.mvp);
+    shader.set(Shader::model, s_spaces.model);
+
+    // glBindVertexArray(m_VAO);
+    // glDrawArrays(GL_TRIANGLES, 0, 36); // 36 is the amount of vertices
+
+    glBindVertexArray(m_VAO);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+  }
+
+  void Object::material(const Material &material)
+  {
+    m_material = material;
+  }
+
+  Object::Rotation::Rotation(const glm::vec3 &axis, float angle)
+      : m_axis{axis}, m_angle{angle}
+  {
+    if (m_axis == glm::vec3{0.f, 0.f, 0.f})
+      m_axis = glm::vec3{0.f, 1.f, 0.f};
+  }
 }

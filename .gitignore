@@ -10,8 +10,9 @@ build/
 # ignore log files
 *.log
 
-# ignore large assets (need to be downloaded seperately
-# assets/
+# ignore large assets (need to be downloaded seperately) 
+# assets/ 
+# will ignore once assets become too large
 
 # ignore vscode settings
 .vscode/*

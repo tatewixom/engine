@@ -2,23 +2,25 @@
 
 #include <string>
 
-namespace Events
+namespace Nuke
 {
-  struct KeyPressed
+  namespace Events
   {
-    KeyPressed(const int id, bool isRepeat = false);
+    struct KeyPressed
+    {
+      KeyPressed(const int id, bool isRepeat = false);
 
-    std::string string() const;
+      std::string string() const;
 
-    int id{};
-    bool isRepeat{};
-  };
+      int id{};
+      bool isRepeat{};
+    };
 
-  struct KeyReleased
-  {
-    std::string string() const;
+    struct KeyReleased
+    {
+      std::string string() const;
 
-    int id{};
-  };
+      int id{};
+    };
+  }
 }
-

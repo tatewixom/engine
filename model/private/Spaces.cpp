@@ -5,23 +5,24 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 
-Rotation::Rotation(const glm::vec3& axis, float angle)
-  : m_axis{ axis }
-  , m_angle{ angle }
+namespace Nuke
 {
-  if (m_axis == glm::vec3{ 0.f, 0.f, 0.f })
-    m_axis = glm::vec3{ 0.f, 1.f, 0.f };
+  Rotation::Rotation(const glm::vec3 &axis, float angle)
+      : m_axis{axis}, m_angle{angle}
+  {
+    if (m_axis == glm::vec3{0.f, 0.f, 0.f})
+      m_axis = glm::vec3{0.f, 1.f, 0.f};
+  }
+
+  void Spaces::update(Camera &camera, Window &window)
+  {
+    Window::Dimensions dimensions{window.dimensions()};
+
+    // aspect ratio = width / height
+    float aspect{static_cast<float>(dimensions.width) / static_cast<float>(dimensions.height)};
+
+    projection = glm::perspective(glm::radians(camera.fov), aspect, camera.nearPlane, camera.farPlane);
+
+    view = camera.getViewMatrix();
+  }
 }
-
-void Spaces::update(Camera& camera, Window& window)
-{
-  Window::Dimensions dimensions{ window.dimensions() };
-  
-  //aspect ratio = width / height
-  float aspect{ static_cast<float>(dimensions.width) / static_cast<float>(dimensions.height) };
-
-  projection = glm::perspective(glm::radians(camera.fov), aspect, camera.nearPlane, camera.farPlane);
-
-  view = camera.getViewMatrix();
-}
-
