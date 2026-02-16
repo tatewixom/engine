@@ -2,7 +2,7 @@
 
 Welcome to the documentation of _Nuke Engine_! If you were searching for a place to learn, contribute, or are just curious about the engine, this is the right place.
 
-In case you didn't read the **README**, _Nuke Engine_ is a light-weight 3D game engine intended for the developement of a game I am personally making (_Stairs to Hell_), but is open source for other game developers to use. It is under an MIT license, which basically means you can do whatever you want with this code, but I am not liable for anything you do with it (read the LICENSE file in the root of the directory for wordy lawyer-language). 
+In case you didn't read the **README**, _Nuke Engine_ is a light-weight 3D and 2D game engine intended for the developement of a game I am personally making (_Stairs to Hell_), but is open source for other game developers to use. It is under an MIT license, which basically means you can do whatever you want with this code, but I am not liable for anything you do with it (read the LICENSE file in the root of the directory for wordy lawyer-language). 
 
 ### Platforms
 
@@ -32,13 +32,13 @@ With all the preliminary knowledge out of the way, why did I make this engine?
 
 ## Philosophy and Motivating Problem
 
-Many people have a different idea of what a game engine is. I.e., some people think having a graphical interface for an engine is critical, or perhaps having scripting functionality is non-negotiable. 
+Many people have a different idea of what a game engine is. I.e., some people think having a graphical interface for an engine is critical, having scripting functionality is non-negotiable, or some people generally confuse a game engine with a game (they want to make a game and don't care about, for example, how the models are stored and drawn, but decide to make a model renderer that something like Godot does perfectly fine). 
 
 My definition of what this engine is going to be, is simply a C++ library that acts as the structure to make your game work by providing important functionality that a game would entail. For example, some utilities would include an event system, window management system, state manager, etc.
 
-I do want to point out that I do not plan on making this engine remotely similar to what Unity, Unreal, Godot, and other engines offer in their suite of functionality. This is simply meant to be _bare bones_ in terms of 3D graphics. 
+I do want to point out that I do not plan on making this engine with the same rules as Unity and Unreal. Since this is under an MIT license, it is open source and any game made with this engine completely keeps the revenue they earn. We do not charge any hidden fees, royalties, or take any kind of cut. 
 
-Another thing I want to draw attention to is that this isn't meant to be general purpose. I am designing this with the sole-purpose of making _my_ game. I want this to be open-source though, so that other people who are facing the same problem as me can use it. My philosophy around general-purpose engines follows with the statements:
+Another thing I want to draw attention to is that this isn't meant to be general purpose. I am designing this with the sole-purpose of making _my_ game. However, I want this to be open-source so that other people who are facing the same problem as me can use it. My philosophy around general-purpose engines follows with the statements:
 
 >"If you design for everyone, you design for no one."
 
@@ -46,9 +46,9 @@ or
 
 >"Jack of all trades, master of none."
 
-These adages highlight that for engines like the aforementioned, they aren't particularly good at everything for the average user. Don't get me wrong, you can make amazing games with those engines, but you're completely locked within their environment, which is made for everyone, so it becomes very hard to fit your specific needs without bloat or restrictions.
+These adages highlight that for engines like the aforementioned, they aren't particularly good at everything for the average user. Don't get me wrong, you can make amazing games with those engines, but you're completely locked within their environment, which is made for everyone, so it becomes very hard to fit your specific needs without bloat or restrictions. Not to mention, Unreal and Unity take a cut of your game's revenue after a certain amount (I should note that Godot does not do this).
 
-So, this is the reason why I am making this light-weight engine. It combines the minimal functionality that I need for 3D graphics and model manipulation, but it keeps the control, power, and generality of C++.
+So, this is the reason why I am making this light-weight engine. It combines the minimal functionality that I need for 3D and 2D graphics, but it keeps the control, power, and generality of C++.
 
 Now knowing the philosophy behind the engine, what should you do now?
 
