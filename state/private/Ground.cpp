@@ -33,19 +33,19 @@ namespace Nuke
 
   void Ground::initialize()
   {
-    std::string root{std::filesystem::current_path().string() + '/'};
+    model_basic_loader.initialize("shaders/model_basic_loading.vs", "shaders/model_basic_loading.fs");
+    model_loader.initialize("shaders/model_loading.vs", "shaders/model_loading.fs");
+
+    std::string root{ std::filesystem::current_path().string() + '/' };
     std::cout << "File path: " << root << '\n';
 
-    model_basic_loader.initialize(root + "../shaders/model_basic_loading.vs", root + "../shaders/model_basic_loading.fs");
-    model_loader.initialize(root + "../shaders/model_loading.vs", root + "../shaders/model_loading.fs");
-
-    torus.initialize_t(root + "assets/models/torus/basic_torus_00.gltf", glm::vec3{20.f, 0.f, 0.f});
-    alien.initialize_t(root + "../assets/models/alien/t7t_terapod.glb", glm::vec3{40.f, 0.f, 0.f});
+    torus.initialize_t(root + "assets/models/torus/basic_torus_00.gltf", glm::vec3{ 20.f, 0.f, 0.f });
+    alien.initialize_t(root + "assets/models/alien/t7t_terapod.glb", glm::vec3{ 40.f, 0.f, 0.f });
   }
 
   void Ground::input()
   {
-    Window &window{engine_.getWindow()};
+    Window &window{ engine_.getWindow() };
     Keyboard::processWindowEscape(window);
 
     // delta time

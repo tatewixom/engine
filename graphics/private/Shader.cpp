@@ -43,19 +43,22 @@ namespace Nuke
     vertex_ = glCreateShader(GL_VERTEX_SHADER);
     fragment_ = glCreateShader(GL_FRAGMENT_SHADER);
 
-    std::expected<std::string, std::string> vertexFile{File::retrieve(vertex)};
-    std::expected<std::string, std::string> fragmentFile{File::retrieve(fragment)};
+    std::expected<std::string, std::string> vertexFile{ File::retrieve(vertex) };
+    std::expected<std::string, std::string> fragmentFile{ File::retrieve(fragment) };
 
     if ((!vertexFile.has_value()) || (!fragmentFile.has_value()))
-      ;
+    {
+      std::cerr << "Vertex error: " << vertexFile.error() << '\n';
+      std::cerr << "fragement error: " << fragmentFile.error() << '\n';
+    }
     else
     {
       // compile vertex shader
-      const char *vertContents{vertexFile.value().c_str()};
+      const char *vertContents{ vertexFile.value().c_str() };
       compile(vertex_, vertContents);
 
       // compile fragment shader
-      const char *fragContents{fragmentFile.value().c_str()};
+      const char *fragContents{ fragmentFile.value().c_str() };
       compile(fragment_, fragContents);
 
       // link shaders to program
