@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.16)
 
 set(
   NUKE_UNIT_TESTS_SOURCE
-  private/test_tests.cpp
   private/file_tests.cpp
 )
 

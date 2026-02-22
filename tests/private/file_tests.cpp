@@ -6,53 +6,80 @@
 
 #include "File.h"
 
-void set_temp_dir()
+TEST_CASE("File::create_file() works")
 {
-  //set temp dir
-  std::filesystem::current_path(std::filesystem::temp_directory_path());
+  auto val{ Nuke::File::create_file("example.txt") };
+  CHECK(val.has_value());
+
+  Nuke::File::remove_file("example.txt");
+}
+
+TEST_CASE("File::remove_file() works")
+{
+  auto val{ Nuke::File::create_file("example.txt") };
+  CHECK(val.has_value());
+
+  Nuke::File::remove_file("example.txt");
+  CHECK(!std::filesystem::exists(Nuke::File::get_executable_dir() / "example.txt"));
+}
+
+TEST_CASE("File::create_directory() works")
+{
+  Nuke::File::create_directory("nuke");
+  CHECK(std::filesystem::exists(Nuke::File::get_executable_dir() / "nuke"));
+
+  Nuke::File::remove_directory("nuke");
+}
+
+TEST_CASE("File::remove_directory() works")
+{
+  Nuke::File::create_directory("nuke");
+  CHECK(std::filesystem::exists(Nuke::File::get_executable_dir() / "nuke"));
+
+  Nuke::File::remove_directory("nuke");
+  CHECK(!std::filesystem::exists(Nuke::File::get_executable_dir() / "nuke"));
 }
 
 TEST_CASE("File::retrieve() works")
 {
-  set_temp_dir();
-
   //create file
-  std::ofstream file("example.txt");
+  std::ofstream file{ Nuke::File::get_executable_dir() / "example.txt" };
+
+  //make sure file opened
+  CHECK(file.is_open());
+  file.close();
 
   //retrieve existing file
   auto file_contents{ Nuke::File::retrieve("example.txt") };
-
   CHECK(file_contents.has_value());
-  CHECK(file_contents.value() == std::string{ "" });
+
+  //check if string is empty (as it should)
+  if (file_contents.has_value())
+    CHECK(file_contents.value() == std::string{ "" });
 
   //delete file
-  std::filesystem::remove("example.txt");
+  Nuke::File::remove_file("example.txt");
 }
 
 TEST_CASE("File::retrieve() rejecting nonexisting file")
 {
-  set_temp_dir();
-
   //attempt retrieving non-existing file
   auto file_contents{ Nuke::File::retrieve("example.txt") };
-
   CHECK(!file_contents.has_value());
 }
 
-TEST_CASE("Filesystem::retrieval() works")
+TEST_CASE("File::Seek::retrieval() works")
 {
-  set_temp_dir();
+  Nuke::File::Seek fsystem{};
 
-  Nuke::File::Filesystem fsystem{ std::filesystem::current_path() };
-
-  if (!std::filesystem::create_directory("nuke"))
+  if (!Nuke::File::create_directory("nuke"))
     std::cout << "failure in creating directory\n";
 
   //mount temp
   fsystem.mount("nuke");
 
   //create file
-  std::ofstream file{ "nuke/example.txt" };
+  std::ofstream file{ Nuke::File::create_file("nuke/example.txt").value() };
 
   if (file.is_open())
   {
@@ -63,21 +90,18 @@ TEST_CASE("Filesystem::retrieval() works")
     std::cout << "failure in opening file\n";
 
   auto contents{ fsystem.retrieve("example.txt") };
-
   CHECK(contents.has_value());
   CHECK(contents.value() == std::string{ "Hello, world!\n" });
 
   //remove temporary nuke directory
-  std::filesystem::remove_all("nuke");
+  Nuke::File::remove_directory("nuke");
 }
 
-TEST_CASE("Filesystem::retrieve() rejecting nonexistent file")
+TEST_CASE("File::Seek::retrieve() rejecting nonexistent file")
 {
-  set_temp_dir();
+  Nuke::File::Seek fsystem{};
 
-  Nuke::File::Filesystem fsystem{ std::filesystem::current_path() };
-
-  if (!std::filesystem::create_directory("nuke"))
+  if (!Nuke::File::create_directory("nuke"))
     std::cout << "failure in creating directory\n";
 
   //mount temp
@@ -85,63 +109,79 @@ TEST_CASE("Filesystem::retrieve() rejecting nonexistent file")
 
   //don't create file
 
+  //check if it returns an error
   auto contents{ fsystem.retrieve("example.txt") };
-
   CHECK(!contents.has_value());
 
   //remove temporary nuke directory
-  std::filesystem::remove_all("nuke");
+  Nuke::File::remove_directory("nuke");
 }
 
-TEST_CASE("Filesystem::retrieve() rejecting directory argument")
+TEST_CASE("File::Seek::retrieve() rejecting directory argument")
 {
-  set_temp_dir();
+  Nuke::File::Seek fsystem{};
 
-  Nuke::File::Filesystem fsystem{ std::filesystem::current_path() };
-
-  if (!std::filesystem::create_directory("nuke"))
+  if (!Nuke::File::create_directory("nuke"))
     std::cout << "failure in creating directory\n";
 
-  if (!std::filesystem::create_directory("nuke/test"))
+  if (!Nuke::File::create_directory("nuke/test"))
     std::cout << "failure in creating directory\n";
 
   //mount temp
   fsystem.mount("nuke");
-
   auto contents{ fsystem.retrieve("test") };
 
   CHECK(!contents.has_value());
 
   //remove temporary nuke directory
-  std::filesystem::remove_all("nuke");
+  Nuke::File::remove_directory("nuke");
 }
 
-TEST_CASE("Filesystem::mount() rejecting non-existing directory")
+TEST_CASE("File::Seek::retrieve() Ambiguous file name error works")
 {
-  set_temp_dir();
+  Nuke::File::Seek fsystem{};
 
-  Nuke::File::Filesystem fsystem{ std::filesystem::current_path() };
+  if (!Nuke::File::create_directory("nuke"))
+    std::cout << "failure in creating directory\n";
 
-  //mount existing 
+  if (!Nuke::File::create_directory("nuke/test"))
+    std::cout << "failure in creating directory\n";
+
+  Nuke::File::create_file("nuke/test/example.txt");
+  Nuke::File::create_file("nuke/example.txt");
+
+  fsystem.mount("nuke");
+  fsystem.mount("nuke/test");
+
+  auto contents{ fsystem.retrieve("example.txt") };
+  CHECK(!contents.has_value());
+
+  //remove temporary nuke directory
+  Nuke::File::remove_directory("nuke");
+}
+
+TEST_CASE("File::Seek::mount() rejecting non-existing directory")
+{
+  Nuke::File::Seek fsystem{};
+
+  //mount non-existing
   fsystem.mount("nuke");
 
-  CHECK(fsystem.get_mounts().size() == 0);
+  CHECK(!fsystem.mounted("nuke"));
 }
 
-TEST_CASE("Filesystem::mount() works")
+TEST_CASE("File::Seek::mount() works")
 {
-  set_temp_dir();
+  Nuke::File::Seek fsystem{};
 
-  Nuke::File::Filesystem fsystem{ std::filesystem::current_path() };
-
-  if (!std::filesystem::create_directory("nuke"))
+  if (!Nuke::File::create_directory("nuke"))
     std::cout << "failure in creating directory\n";
 
   //mount existing 
   fsystem.mount("nuke");
 
-  CHECK(fsystem.get_mounts().at(0) == "nuke");
+  CHECK(fsystem.mounted("nuke"));
 
   //remove temporary nuke directory
-  std::filesystem::remove_all("nuke");
+  Nuke::File::remove_directory("nuke");
 }

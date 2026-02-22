@@ -7,6 +7,83 @@
 #include <iostream>
 #include <expected>
 #include <filesystem>
+#include <vector>
+
+#ifdef __WIN32__
+#include <windows.h>
+
+namespace Nuke
+{
+  namespace File
+  {
+    std::filesystem::path get_executable_path()
+    {
+      wchar_t buffer[MAX_PATH];
+      GetModuleFileName(nullptr, buffer, MAX_PATH);
+      return std::filesystem::path{ buffer };
+    }
+
+    std::filesystem::path get_executable_dir()
+    {
+      wchar_t buffer[MAX_PATH];
+      GetModuleFileName(nullptr, buffer, MAX_PATH);
+      return std::filesystem::path{ buffer }.parent_path();
+    }
+  }
+}
+
+#elif __APPLE__
+#include <unistd.h>
+
+namespace Nuke
+{
+  namespace File
+  {
+    std::filesystem::path get_executable_path()
+    {
+      static std::filesystem::path path{};
+
+      //valid cache
+      if (path.empty() || !std::filesystem::exists(path))
+        path = std::filesystem::canonical("/proc/self/exe");
+      
+      return path;
+    }
+
+    std::filesystem::path get_executable_dir()
+    {
+      return get_executable_path().parent_path();
+    }
+  }
+}
+
+#elif __linux__
+#include <unistd.h>
+
+namespace Nuke
+{
+  namespace File
+  {
+    std::filesystem::path get_executable_path()
+    {
+      static std::filesystem::path path{};
+
+      //valid cache
+      if (path.empty() || !std::filesystem::exists(path))
+        path = std::filesystem::canonical("/proc/self/exe");
+      
+      return path;
+    }
+
+    std::filesystem::path get_executable_dir()
+    {
+      return get_executable_path().parent_path();
+    }
+  }
+}
+
+#endif
+
 
 namespace Nuke
 {
@@ -31,7 +108,7 @@ namespace Nuke
       if (!std::filesystem::exists(path))
         return false;
 
-      //check if a regular file
+      //check if its a directory
       if (!std::filesystem::is_directory(path))
         return false;
 
@@ -53,99 +130,124 @@ namespace Nuke
       return buffer.str();
     }
 
-    Filesystem::Filesystem(const std::filesystem::path &working)
-      : working_{ working }
-    { }
-
-    std::filesystem::path Filesystem::working() const noexcept
-    {
-      return working_;
-    }
-
-    void Filesystem::working(const std::filesystem::path& new_working) noexcept
-    {
-      working_ = new_working;
-    }
-
-    void Filesystem::mount(const std::filesystem::path& new_mount)
-    {
-      if (new_mount == std::filesystem::path{})
-      {
-        std::cout << sysmessage << "passed an empty mount path\n";
-        return;
-      }
-
-      if (!is_valid_directory(new_mount))
-      {
-        std::cout << sysmessage << "mount " << new_mount << " doesn't exist.\n";
-        return;
-      }
-
-      mounts_.push_back(new_mount);
-    }
-
-    void Filesystem::list_mounts() const
-    {
-      std::cout << sysmessage << "Filesystem mounts:\n";
-      for (const auto& mount : mounts_)
-        std::cout << mount << '\n';
-    }
-
-    const std::vector<std::filesystem::path>& Filesystem::get_mounts() const noexcept
-    {
-      return mounts_;
-    }
-
-    std::expected<std::string, std::string> Filesystem::retrieve(const std::filesystem::path& relative_file_path)
-    {
-      for (const auto& point : mounts_)
-      {
-        std::filesystem::path mount_path{ point / std::string{ relative_file_path } };
-
-        if (!is_valid_file(mount_path))
-          continue;
-
-        auto contents{ get_file_contents(mount_path) };
-        return contents;
-      }
-
-      std::cout << sysmessage << relative_file_path << " not found in mounted paths.\n";
-      std::cout << sysmessage << "Searching for " << relative_file_path << " in working directory...\n";
-
-      //check if there's a working directory
-      if (working_ == std::filesystem::path())
-        return std::unexpected{ "NO_CURRENT_WORKING_DIRECTORY" };
-
-      //combine root with filename
-      std::filesystem::path working_dir_file_path{ working_ / relative_file_path };
-
-      if (!is_valid_file(working_dir_file_path))
-      {
-        std::cout << sysmessage << "Couldn't find " << relative_file_path << '\n';
-          return std::unexpected{ "COULDN'T_FIND_FILE" };
-      }
-
-      auto contents{ get_file_contents(working_dir_file_path) };
-      return contents;
-    }
-
     std::expected<std::string, std::string> retrieve(const std::filesystem::path& relative_file_path)
     {
-      //getting root path of working directory
-      std::filesystem::path root{ std::filesystem::current_path() };
-
-      //check if it failed
-      if (root == std::filesystem::path())
-        return std::unexpected{ "FAILURE_IN_FINDING_CURRENT_DIRECTORY" };
-
       //combine root with filename
-      std::filesystem::path abs_file_path{ root / relative_file_path };
+      std::filesystem::path abs_file_path{ get_executable_dir() / relative_file_path };
 
       //check if valid file
       if (!is_valid_file(abs_file_path))
         return std::unexpected{ "FILE_DOESN'T_EXIST_OR_IS_DIRECTORY" };
 
       return get_file_contents(abs_file_path);
+    }
+
+    std::expected<std::ofstream, std::string> create_file(const std::filesystem::path& file_name)
+    {
+      std::filesystem::path abs_file_path{ get_executable_dir() / file_name };
+      std::ofstream file{ abs_file_path };
+
+      if (!file.is_open())
+        return std::unexpected{ "FAILED_TO_CREATE_FILE" };
+
+      return std::move(file);
+    }
+
+    bool create_directory(const std::filesystem::path& dir_name)
+    {
+      std::filesystem::path dir_path{ get_executable_dir() / dir_name };
+      return std::filesystem::create_directory(dir_path);
+    }
+
+    bool remove_file(const std::filesystem::path& file_name)
+    {
+      std::filesystem::path file_path{ get_executable_dir() / file_name };
+      return std::filesystem::remove(file_path);
+    }
+
+    bool remove_directory(const std::filesystem::path& dir_name)
+    {
+      std::filesystem::path file_path{ get_executable_dir() / dir_name };
+      return std::filesystem::remove_all(file_path);
+    }
+
+    Seek::Seek()
+    {
+      mounts_.insert(get_executable_dir());
+    }
+
+    void Seek::clear()
+    {
+      mounts_.clear();
+
+      mounts_.insert(get_executable_dir());
+    }
+
+    void Seek::remove(const std::filesystem::path& mount)
+    {
+      mounts_.erase(mount);
+    }
+
+    void Seek::mount(const std::filesystem::path& new_mount)
+    {
+      if (new_mount == std::filesystem::path{})
+        return;
+
+      std::filesystem::path abs_mount_path{ get_executable_dir() / new_mount };
+
+      if (!is_valid_directory(abs_mount_path))
+        return;
+
+      mounts_.insert(abs_mount_path);
+    }
+
+    void Seek::list_mounts() const
+    {
+      for (const auto& mount : mounts_)
+        std::cout << mount << '\n';
+    }
+
+    bool Seek::mounted(const std::filesystem::path& mount) const
+    {
+      if (mounts_.contains(std::filesystem::path{ get_executable_dir() / mount }))
+        return true;
+
+      return false;
+    }
+
+    std::expected<std::string, std::string> Seek::retrieve(const std::filesystem::path& relative_file_path)
+    {
+      std::vector<std::filesystem::path> file_paths{};
+      file_paths.reserve(3);
+
+      //check mounted directories for file
+      for (const auto& mount : mounts_)
+      {
+        std::filesystem::path path{ mount / relative_file_path };
+
+        if (!is_valid_file(path))
+          continue;
+
+        file_paths.push_back(path);
+      }
+
+      //found unique file
+      if (file_paths.size() == 1)
+      {
+        auto contents{ get_file_contents(file_paths.at(0)) };
+        return contents;
+      }
+
+      //didn't find file with matching name
+      if (file_paths.size() < 1)
+        return std::unexpected{ "FAILURE_IN_FINDING_FILE" };
+      
+      //found more than one file with same name
+      std::cout << "ERROR: Files with same name in different mounts:\n";
+      for (const auto& p : file_paths)
+        std::cout << p << '\n';
+      
+      return std::unexpected{ "AMBIGUOUS_FILE_RETRIEVAL" };
     }
   }
 }
