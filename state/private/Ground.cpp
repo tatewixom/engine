@@ -37,7 +37,6 @@ namespace Nuke
     model_loader.initialize("shaders/model_loading.vs", "shaders/model_loading.fs");
 
     std::string root{ std::filesystem::current_path().string() + '/' };
-    std::cout << "File path: " << root << '\n';
 
     torus.initialize_t("assets/models/torus/basic_torus_00.gltf", glm::vec3{ 0.f, 0.f, 0.f });
     alien.initialize_t("assets/models/alien/t7t_terapod.glb", glm::vec3{ 20.f, 0.f, 0.f });

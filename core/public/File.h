@@ -16,7 +16,6 @@ namespace Nuke
     bool is_valid_file(const std::filesystem::path& path);
     bool is_valid_directory(const std::filesystem::path& path);
 
-    std::expected<std::string, std::string> get_file_contents(const std::filesystem::path& path);
     std::expected<std::string, std::string> retrieve(const std::filesystem::path& relative_file_path);
 
     std::expected<std::ofstream, std::string> create_file(const std::filesystem::path& file_name);
@@ -28,7 +27,7 @@ namespace Nuke
     class Seek
     {
     public:
-      Seek();
+      Seek() = default;
       
       void clear();
       void remove(const std::filesystem::path& mount);

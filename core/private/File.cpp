@@ -96,12 +96,14 @@ namespace Nuke
   {
     bool is_valid_file(const std::filesystem::path& path)
     {
+      std::filesystem::path abs_path{ get_executable_dir() / path };
+
       //check if file exists
-      if (!std::filesystem::exists(path))
+      if (!std::filesystem::exists(abs_path))
         return false;
 
       //check if a regular file
-      if (!std::filesystem::is_regular_file(path))
+      if (!std::filesystem::is_regular_file(abs_path))
         return false;
 
       return true;
@@ -109,18 +111,20 @@ namespace Nuke
 
     bool is_valid_directory(const std::filesystem::path& path)
     {
+      std::filesystem::path abs_path{ get_executable_dir() / path };
+
       //check if file exists
-      if (!std::filesystem::exists(path))
+      if (!std::filesystem::exists(abs_path))
         return false;
 
       //check if its a directory
-      if (!std::filesystem::is_directory(path))
+      if (!std::filesystem::is_directory(abs_path))
         return false;
 
       return true;
     }
 
-    std::expected<std::string, std::string> get_file_contents(const std::filesystem::path& path)
+    static std::expected<std::string, std::string> get_file_contents(const std::filesystem::path& path)
     {
       //attempt opening file
       std::ifstream in_file(path);
@@ -137,19 +141,19 @@ namespace Nuke
 
     std::expected<std::string, std::string> retrieve(const std::filesystem::path& relative_file_path)
     {
-      //combine root with filename
-      std::filesystem::path abs_file_path{ get_executable_dir() / relative_file_path };
-
       //check if valid file
-      if (!is_valid_file(abs_file_path))
+      if (!is_valid_file(relative_file_path))
         return std::unexpected{ "FILE_DOESN'T_EXIST_OR_IS_DIRECTORY" };
 
-      return get_file_contents(abs_file_path);
+      return get_file_contents(get_executable_dir() / relative_file_path);
     }
 
     std::expected<std::ofstream, std::string> create_file(const std::filesystem::path& file_name)
     {
       std::filesystem::path abs_file_path{ get_executable_dir() / file_name };
+      if (std::filesystem::exists(abs_file_path))
+        return std::unexpected{ "FILE_ALREADY_EXISTS" };
+
       std::ofstream file{ abs_file_path };
 
       if (!file.is_open())
@@ -160,32 +164,28 @@ namespace Nuke
 
     bool create_directory(const std::filesystem::path& dir_name)
     {
-      std::filesystem::path dir_path{ get_executable_dir() / dir_name };
-      return std::filesystem::create_directory(dir_path);
+      return std::filesystem::create_directory(get_executable_dir() / dir_name);
     }
 
     bool remove_file(const std::filesystem::path& file_name)
     {
-      std::filesystem::path file_path{ get_executable_dir() / file_name };
-      return std::filesystem::remove(file_path);
+      if (!is_valid_file(file_name))
+        return false;
+
+      return std::filesystem::remove(get_executable_dir() / file_name);
     }
 
     bool remove_directory(const std::filesystem::path& dir_name)
     {
-      std::filesystem::path file_path{ get_executable_dir() / dir_name };
-      return std::filesystem::remove_all(file_path);
-    }
+      if (!is_valid_directory(dir_name))
+        return false;
 
-    Seek::Seek()
-    {
-      mounts_.insert(get_executable_dir());
+      return std::filesystem::remove_all(get_executable_dir() / dir_name);
     }
 
     void Seek::clear()
     {
       mounts_.clear();
-
-      mounts_.insert(get_executable_dir());
     }
 
     void Seek::remove(const std::filesystem::path& mount)
@@ -195,15 +195,13 @@ namespace Nuke
 
     void Seek::mount(const std::filesystem::path& new_mount)
     {
-      if (new_mount == std::filesystem::path{})
+      if (new_mount.empty())
         return;
 
-      std::filesystem::path abs_mount_path{ get_executable_dir() / new_mount };
-
-      if (!is_valid_directory(abs_mount_path))
+      if (!is_valid_directory(new_mount))
         return;
 
-      mounts_.insert(abs_mount_path);
+      mounts_.insert(new_mount);
     }
 
     void Seek::list_mounts() const
@@ -214,16 +212,18 @@ namespace Nuke
 
     bool Seek::mounted(const std::filesystem::path& mount) const
     {
-      if (mounts_.contains(std::filesystem::path{ get_executable_dir() / mount }))
-        return true;
-
-      return false;
+      return mounts_.contains(mount);
     }
 
     std::expected<std::string, std::string> Seek::retrieve(const std::filesystem::path& relative_file_path)
     {
       std::vector<std::filesystem::path> file_paths{};
       file_paths.reserve(3);
+
+      {
+        if (is_valid_file(relative_file_path))
+          file_paths.push_back(relative_file_path);
+      }
 
       //check mounted directories for file
       for (const auto& mount : mounts_)
@@ -239,8 +239,7 @@ namespace Nuke
       //found unique file
       if (file_paths.size() == 1)
       {
-        auto contents{ get_file_contents(file_paths.at(0)) };
-        return contents;
+        return get_file_contents(get_executable_dir() / file_paths[0]);
       }
 
       //didn't find file with matching name
@@ -250,7 +249,7 @@ namespace Nuke
       //found more than one file with same name
       std::cout << "ERROR: Files with same name in different mounts:\n";
       for (const auto& p : file_paths)
-        std::cout << p << '\n';
+        std::cout << (get_executable_dir() / p) << '\n';
       
       return std::unexpected{ "AMBIGUOUS_FILE_RETRIEVAL" };
     }
