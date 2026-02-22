@@ -16,15 +16,15 @@ So, these functions offer a strong guarantee that all file paths provided to the
 
 #### Motivating problem
 
-This class was made for the sole-intention of accessing files easier by mounting a directory location to be searched, and then when you want to access a file, you simply call the member function **retrieve()** as shown below: 
+The **Seek** class was made for the sole-intention of accessing files easier by mounting a directory location to be searched, and then when you want to access a file, you simply call the member function **retrieve()** as shown below: 
 
 > Seek seek{};
 > seek.mount("example");
 > auto contents{ seek.retrieve("stop_sign.png") };
 
-To explain what just happened here, we created an object, mounted a directory _relative to the executable_, and stored the contents of the file in the **contents** variable (I'll eleborate more what it returns in a later).
+To explain what just happened here, we created a **Seek** object, mounted a directory _relative to the executable_, and stored the contents of the file in the **contents** variable (I'll eleborate more what it returns in later).
 
-This makes it much easier to access a files contents by just specifying the name. You could easily get the contents within three lines and code and have a good amount of safety guaranteed when doing it.
+This makes it much easier to access a file's contents by just specifying the name. You could easily get the contents of a file within three lines of code and have a good amount of safety guaranteed when doing it.
 
 This will become useful when wanting to access models. You simply mount your models folder, specify the name, and the engine can easily find it. 
 
@@ -56,6 +56,12 @@ Lists all current mounts using **std::cout**.
 
 Returns a true or false value indicating whether the mount exists in the underlying **std::set** or not. If it's true, it exists. If it's false, it doesn't exist.
 
+##### retrieve()
+
+Searches through all mounted directory paths and returns the contents the specified file if successful. If two files are found in two mounts with the same name, the retrieve function returns an **std::unexpected**. It is then up to the caller, or engine-user, to decide what to do from there. 
+
+The reason **std::expected** was chosen as a return value instead of using, say, exceptions is because file system errors usually aren't fatal to the program, but do need some type of way to communicate to the caller that it failed. So, exceptions are overkill for this reason and, personally, I believe exceptions are a bad solution to things that aren't **truly** exceptional (an error that the program _cannot_ continue with afterwards);
+
 ## Free functions
 
 ### get_executable_path()
@@ -80,7 +86,7 @@ Returns whether a given path exists and if it is indeed a directory. if either o
 
 ### get_file_contents()
 
-**This function isn't recommended to use**, but is meant to be a helper function for retrieve. The reason this isn't statically linked is because it could be useful to have a function that quickly returns the contents of a file **not relative to the executable**. This is the only function in the **File** namespace that violates this guarantee and therefore should not be used unless you have a reason why.
+**This function isn't recommended to use**, but is meant to be a helper function for retrieve. The reason this isn't hidden is because it could be useful to have a function that quickly returns the contents of a file **not relative to the executable**. This is the only function in the **File** namespace that violates this guarantee and therefore should not be used unless you have a reason why.
 
 ### retrieve()
 

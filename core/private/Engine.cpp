@@ -16,8 +16,8 @@
 
 namespace Nuke
 {
-  Engine::Engine(Window &window)
-      : window_{window}
+  Engine::Engine(Window& window)
+    : window_{ window }
   {
     // setting glfw pointer to engine for callbacks
     glfwSetWindowUserPointer(window_, this);
@@ -69,7 +69,7 @@ namespace Nuke
       ++fps;
 
       // checking when a second has elapsed
-      constexpr double second{1.0};
+      constexpr double second{ 1.0 };
       if (frameTimer.elapsed() >= second) // assuming elapsed returns time in seconds
       {
         // set window title to fps count

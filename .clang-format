@@ -1,0 +1,16 @@
+BasedOnStyle: Microsoft
+Language: Cpp
+
+BreakBeforeBraces: Allman
+SpacesInBracedInitializers: true
+
+IndentWidth: 2
+TabWidth: 2
+UseTab: Never
+
+Cpp11BracedListStyle: false
+
+BreakConstructorInitializers: BeforeComma
+ConstructorInitializerIndentWidth: 4
+ContinuationIndentWidth: 4
+PackConstructorInitializers: Never

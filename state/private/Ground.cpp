@@ -20,8 +20,8 @@ namespace Nuke
   float deltaTime{};
   float lastFrame{};
 
-  Ground::Ground(States &states, Engine &engine)
-      : State{ states }, engine_{engine}
+  Ground::Ground(States& states, Engine& engine)
+    : State{ states }, engine_{ engine }
   {
     initialize();
   }
@@ -39,22 +39,22 @@ namespace Nuke
     std::string root{ std::filesystem::current_path().string() + '/' };
     std::cout << "File path: " << root << '\n';
 
-    torus.initialize_t(root + "assets/models/torus/basic_torus_00.gltf", glm::vec3{ 20.f, 0.f, 0.f });
-    alien.initialize_t(root + "assets/models/alien/t7t_terapod.glb", glm::vec3{ 40.f, 0.f, 0.f });
+    torus.initialize_t("assets/models/torus/basic_torus_00.gltf", glm::vec3{ 0.f, 0.f, 0.f });
+    alien.initialize_t("assets/models/alien/t7t_terapod.glb", glm::vec3{ 20.f, 0.f, 0.f });
   }
 
   void Ground::input()
   {
-    Window &window{ engine_.getWindow() };
+    Window& window{ engine_.getWindow() };
     Keyboard::processWindowEscape(window);
 
     // delta time
-    float currentFrame{static_cast<float>(glfwGetTime())};
+    float currentFrame{ static_cast<float>(glfwGetTime()) };
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
 
     // moving camera
-    Camera &camera{engine_.getCamera()};
+    Camera& camera{ engine_.getCamera() };
     camera.speed = 20.f; // adjust accordingly
 
     if (Keyboard::isKeyPressed(window, GLFW_KEY_W))
@@ -71,7 +71,7 @@ namespace Nuke
       camera.move(Camera::DOWN, deltaTime);
 
     // handling view mode
-    Mouse &mouse{engine_.getMouse()};
+    Mouse& mouse{ engine_.getMouse() };
 
     if (Keyboard::isKeyJustPressed(window, GLFW_KEY_0))
     {
@@ -92,10 +92,10 @@ namespace Nuke
 
   void Ground::update()
   {
-    Window &window{engine_.getWindow()};
-    Camera &camera{engine_.getCamera()};
+    Window& window{ engine_.getWindow() };
+    Camera& camera{ engine_.getCamera() };
 
-    Spaces &spaces{engine_.getSpaces()};
+    Spaces& spaces{ engine_.getSpaces() };
     model_basic_loader.activate();
     model_basic_loader.set("view", spaces.view);
     model_basic_loader.set("projection", spaces.projection);
