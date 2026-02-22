@@ -469,7 +469,8 @@ namespace Nuke
 
       // creating and initializing temporary Mesh object
       Mesh temp{};
-      temp.initialize(vertices,
+      temp.initialize(
+        vertices,
         indices,
         std::vector<Attribute>
       {

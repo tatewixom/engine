@@ -1,9 +1,8 @@
 {
   "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
-  "C_Cpp.loggingLevel": "Debug",
   "editor.tokenColorCustomizations": 
   {
-    "[Tokyo Night Storm]": 
+    "[Tokyo Night]": 
     { // or "[Tokyo Night Storm]"
         "textMateRules": [{
             "scope": [
