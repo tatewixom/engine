@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <vector>
 
-#ifdef __WIN32__
+#ifdef _WIN32
 #include <windows.h>
 
 namespace Nuke
@@ -18,16 +18,21 @@ namespace Nuke
   {
     std::filesystem::path get_executable_path()
     {
-      wchar_t buffer[MAX_PATH];
-      GetModuleFileName(nullptr, buffer, MAX_PATH);
-      return std::filesystem::path{ buffer };
+      static std::filesystem::path{};
+
+      if (path.empty() || !std::filesystem::exists(path))
+      {
+        char buffer[MAX_PATH];
+        GetModuleFileName(nullptr, buffer, MAX_PATH);
+        path = buffer;
+      }
+
+      return path;
     }
 
     std::filesystem::path get_executable_dir()
     {
-      wchar_t buffer[MAX_PATH];
-      GetModuleFileName(nullptr, buffer, MAX_PATH);
-      return std::filesystem::path{ buffer }.parent_path();
+      return get_executable_path().parent_path();
     }
   }
 }

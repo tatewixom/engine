@@ -17,6 +17,7 @@
                 "storage.modifier"
             ],
             "settings": {
+                "fontFamily": "Cascadia Code",
                 "fontStyle": ""
             }
         }]
