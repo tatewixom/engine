@@ -17,7 +17,6 @@
                 "storage.modifier"
             ],
             "settings": {
-                "fontFamily": "Cascadia Code",
                 "fontStyle": ""
             }
         }]
@@ -27,5 +26,6 @@
 "editor.formatOnType": true,
 "editor.formatOnSave": true,
 "editor.formatOnPaste": true,
-"editor.defaultFormatter": "ms-vscode.cpptools"
+"editor.defaultFormatter": "ms-vscode.cpptools",
+"editor.fontFamily": "Cascadia Code"
 }
