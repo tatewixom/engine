@@ -11,6 +11,11 @@ UseTab: Never
 Cpp11BracedListStyle: false
 
 BreakConstructorInitializers: BeforeComma
-ConstructorInitializerIndentWidth: 4
-ContinuationIndentWidth: 4
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
 PackConstructorInitializers: Never
+
+AccessModifierOffset: -2
+
+PointerAlignment: Left
+ReferenceAlignment: Left
