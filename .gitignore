@@ -15,5 +15,4 @@ build/
 # will ignore once assets become too large
 
 # ignore vscode settings
-.vscode/*
-!.vscode/settings.json
+.vscode/
