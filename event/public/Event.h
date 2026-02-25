@@ -20,7 +20,7 @@ namespace Nuke
       */
 
       template <typename Event>
-      using Listener = std::function<void(const Event &)>;
+      using Listener = std::function<void(const Event&)>;
 
       template <typename Event>
       void subscribe(Listener<Event> listener)
@@ -28,13 +28,13 @@ namespace Nuke
         // finds specific "bucket" that return vector of listeners for
         // that specific type of event.
         //(or creates new one and returns it)
-        auto &bucket = listeners_[typeid(Event)];
+        auto& bucket = listeners_[typeid(Event)];
 
         // pushes function call into lamba
-        bucket.push_back([listener](const void *e)                   // this is void as template
-                         {                                           // map-values are disallowed.
-                           listener(*static_cast<const Event *>(e)); // casted to correct event when
-                         });                                         // called later
+        bucket.push_back([listener](const void* e)                   // this is void as template
+          {                                           // map-values are disallowed.
+            listener(*static_cast<const Event*>(e)); // casted to correct event when
+          });                                         // called later
 
         /*
           this systems works by storing vectors of listeners of different types.
@@ -56,7 +56,7 @@ namespace Nuke
       }
 
       template <typename Event>
-      void emit(const Event &event)
+      void emit(const Event& event)
       {
         // find bucket type
         auto it = listeners_.find(typeid(Event));
@@ -66,18 +66,18 @@ namespace Nuke
           return;
 
         // go through each lambda and call listeners with event argument
-        for (auto &listener : it->second)
+        for (auto& listener : it->second)
           listener(&event);
       }
 
-      void push(std::any &&a)
+      void push(std::any&& a)
       {
         events_.emplace_back(std::move(a));
       }
 
     private:
       // accepting the overhead of std::function
-      std::unordered_map<std::type_index, std::vector<std::function<void(const void *)>>> listeners_{};
+      std::unordered_map<std::type_index, std::vector<std::function<void(const void*)>>> listeners_{};
       /*
          in the future, if the overhead is simply to much and is a bottleneck
          for performance, I might have to resort to "hot paths". hot paths are

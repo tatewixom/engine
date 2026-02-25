@@ -21,18 +21,18 @@
 
 namespace glm
 {
-	/// @addtogroup ext_matrix_int3x3
-	/// @{
+  /// @addtogroup ext_matrix_int3x3
+  /// @{
 
-	/// Signed integer 3x3 matrix.
-	///
-	/// @see ext_matrix_int3x3
-	typedef mat<3, 3, int, defaultp>	imat3x3;
+  /// Signed integer 3x3 matrix.
+  ///
+  /// @see ext_matrix_int3x3
+  typedef mat<3, 3, int, defaultp>	imat3x3;
 
-	/// Signed integer 3x3 matrix.
-	///
-	/// @see ext_matrix_int3x3
-	typedef mat<3, 3, int, defaultp>	imat3;
+  /// Signed integer 3x3 matrix.
+  ///
+  /// @see ext_matrix_int3x3
+  typedef mat<3, 3, int, defaultp>	imat3;
 
-	/// @}
+  /// @}
 }//namespace glm

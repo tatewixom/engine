@@ -26,10 +26,10 @@
 
 namespace glm
 {
-	/// @addtogroup gtx_wrap
-	/// @{
+  /// @addtogroup gtx_wrap
+  /// @{
 
-	/// @}
+  /// @}
 }// namespace glm
 
 #include "wrap.inl"

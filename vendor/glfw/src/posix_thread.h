@@ -35,15 +35,15 @@
 //
 typedef struct _GLFWtlsPOSIX
 {
-    GLFWbool        allocated;
-    pthread_key_t   key;
+  GLFWbool        allocated;
+  pthread_key_t   key;
 } _GLFWtlsPOSIX;
 
 // POSIX-specific mutex data
 //
 typedef struct _GLFWmutexPOSIX
 {
-    GLFWbool        allocated;
-    pthread_mutex_t handle;
+  GLFWbool        allocated;
+  pthread_mutex_t handle;
 } _GLFWmutexPOSIX;
 

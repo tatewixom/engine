@@ -22,28 +22,28 @@
 
 namespace glm
 {
-	/// @addtogroup ext_matrix_uint2x4_sized
-	/// @{
+  /// @addtogroup ext_matrix_uint2x4_sized
+  /// @{
 
-	/// 8 bit unsigned integer 2x4 matrix.
-	///
-	/// @see ext_matrix_uint2x4_sized
-	typedef mat<2, 4, uint8, defaultp>				u8mat2x4;
+  /// 8 bit unsigned integer 2x4 matrix.
+  ///
+  /// @see ext_matrix_uint2x4_sized
+  typedef mat<2, 4, uint8, defaultp>				u8mat2x4;
 
-	/// 16 bit unsigned integer 2x4 matrix.
-	///
-	/// @see ext_matrix_uint2x4_sized
-	typedef mat<2, 4, uint16, defaultp>				u16mat2x4;
+  /// 16 bit unsigned integer 2x4 matrix.
+  ///
+  /// @see ext_matrix_uint2x4_sized
+  typedef mat<2, 4, uint16, defaultp>				u16mat2x4;
 
-	/// 32 bit unsigned integer 2x4 matrix.
-	///
-	/// @see ext_matrix_uint2x4_sized
-	typedef mat<2, 4, uint32, defaultp>				u32mat2x4;
+  /// 32 bit unsigned integer 2x4 matrix.
+  ///
+  /// @see ext_matrix_uint2x4_sized
+  typedef mat<2, 4, uint32, defaultp>				u32mat2x4;
 
-	/// 64 bit unsigned integer 2x4 matrix.
-	///
-	/// @see ext_matrix_uint2x4_sized
-	typedef mat<2, 4, uint64, defaultp>				u64mat2x4;
+  /// 64 bit unsigned integer 2x4 matrix.
+  ///
+  /// @see ext_matrix_uint2x4_sized
+  typedef mat<2, 4, uint64, defaultp>				u64mat2x4;
 
-	/// @}
+  /// @}
 }//namespace glm

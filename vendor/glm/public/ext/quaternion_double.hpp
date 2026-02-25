@@ -28,12 +28,12 @@
 
 namespace glm
 {
-	/// @addtogroup ext_quaternion_double
-	/// @{
+  /// @addtogroup ext_quaternion_double
+  /// @{
 
-	/// Quaternion of double-precision floating-point numbers.
-	typedef qua<double, defaultp>		dquat;
+  /// Quaternion of double-precision floating-point numbers.
+  typedef qua<double, defaultp>		dquat;
 
-	/// @}
+  /// @}
 } //namespace glm
 

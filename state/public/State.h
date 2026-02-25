@@ -13,7 +13,8 @@ namespace Nuke
   public:
     explicit State(States& states)
       : state_{ states }
-    { }
+    {
+    }
 
     virtual ~State() = default;
 
@@ -51,7 +52,8 @@ namespace Nuke
   public:
     Temporary(States& states)
       : State{ states }
-    { }
+    {
+    }
 
     ~Temporary() override = default;
 

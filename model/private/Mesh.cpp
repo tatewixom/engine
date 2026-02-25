@@ -104,7 +104,7 @@ void Mesh_t::draw(Shader& shader)
 
 namespace Nuke
 {
-  void Layout::initialize(std::vector<Attribute> &&newAttributes)
+  void Layout::initialize(std::vector<Attribute>&& newAttributes)
   {
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
@@ -114,21 +114,21 @@ namespace Nuke
 
   void Layout::interpret()
   {
-    for (const auto &attrib : attributes)
+    for (const auto& attrib : attributes)
     {
       glEnableVertexAttribArray(attrib.location);
-      glVertexAttribPointer(attrib.location, attrib.size, GL_FLOAT, GL_FALSE, attrib.stride, reinterpret_cast<void *>(attrib.offset));
+      glVertexAttribPointer(attrib.location, attrib.size, GL_FLOAT, GL_FALSE, attrib.stride, reinterpret_cast<void*>(attrib.offset));
       glEnableVertexAttribArray(0); // disable
     }
   }
 
   void Layout::instance() // add attribute location here & make overloaded instance() for automatic location
   {
-    std::size_t vec4Size{sizeof(glm::vec4)};
-    for (GLuint i{0}; i < 4; ++i)
+    std::size_t vec4Size{ sizeof(glm::vec4) };
+    for (GLuint i{ 0 }; i < 4; ++i)
     {
       glEnableVertexAttribArray(4u + i);
-      glVertexAttribPointer(4u + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void *>(i * vec4Size));
+      glVertexAttribPointer(4u + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(i * vec4Size));
       glVertexAttribDivisor(4u + i, 1); // advance per instance
       glEnableVertexAttribArray(0);     // disable
     }
@@ -139,17 +139,17 @@ namespace Nuke
 
   void Layout::instance(unsigned int location)
   {
-    std::size_t vec4Size{sizeof(glm::vec4)};
-    for (GLuint i{0}; i < 4; ++i)
+    std::size_t vec4Size{ sizeof(glm::vec4) };
+    for (GLuint i{ 0 }; i < 4; ++i)
     {
       glEnableVertexAttribArray(location + i);
-      glVertexAttribPointer(location + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void *>(i * vec4Size));
+      glVertexAttribPointer(location + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), reinterpret_cast<void*>(i * vec4Size));
       glVertexAttribDivisor(location + i, 1); // advance per instance
       glEnableVertexAttribArray(0);           // disable
     }
   }
 
-  void VertexBuffer::initialize(const std::vector<Vertex> &vertices)
+  void VertexBuffer::initialize(const std::vector<Vertex>& vertices)
   {
     vertexCount = vertices.size();
 
@@ -158,7 +158,7 @@ namespace Nuke
     send(vertices);
   }
 
-  void VertexBuffer::send(const std::vector<Vertex> &vertices)
+  void VertexBuffer::send(const std::vector<Vertex>& vertices)
   {
     if (vertices.size() > 0)
       glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
@@ -166,7 +166,7 @@ namespace Nuke
       std::cerr << "ERROR::MESH.CPP::VERTEXBUFFER::SEND()::VERTICE_ARRAY_WITH_SIZE_BELOW_ONE\n";
   }
 
-  void VertexBuffer::send(const std::vector<glm::mat4> &matrices)
+  void VertexBuffer::send(const std::vector<glm::mat4>& matrices)
   {
     if (matrices.size() > 0)
       glBufferData(GL_ARRAY_BUFFER, matrices.size() * sizeof(*matrices.data()), matrices.data(), GL_STATIC_DRAW);
@@ -174,28 +174,28 @@ namespace Nuke
       std::cerr << "ERROR::MESH.CPP::VERTEXBUFFER::SEND()::MATRICE_ARRAY_WITH_SIZE_BELOW_ONE\n";
   }
 
-  void Mesh::draw(Shader &shader)
+  void Mesh::draw(Shader& shader)
   {
     shader.activate();
 
-    std::size_t baseNum{1};
-    std::size_t normNum{1};
-    for (auto &t : textures_)
+    std::size_t baseNum{ 1 };
+    std::size_t normNum{ 1 };
+    for (auto& t : textures_)
     {
-      int unit{t.use()};
+      int unit{ t.use() };
 
       switch (t.type())
       {
       case Texture::Type::base:
       {
-        std::string str{"texture_base_" + std::to_string(baseNum)};
+        std::string str{ "texture_base_" + std::to_string(baseNum) };
         shader.set(str, unit);
         ++baseNum;
         break;
       }
       case Texture::Type::normal:
       {
-        std::string str{"texture_norm_" + std::to_string(normNum)};
+        std::string str{ "texture_norm_" + std::to_string(normNum) };
         shader.set(str, unit);
         ++normNum;
         break;

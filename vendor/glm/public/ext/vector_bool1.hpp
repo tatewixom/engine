@@ -20,11 +20,11 @@
 
 namespace glm
 {
-	/// @addtogroup ext_vector_bool1
-	/// @{
+  /// @addtogroup ext_vector_bool1
+  /// @{
 
-	/// 1 components vector of boolean.
-	typedef vec<1, bool, defaultp>		bvec1;
+  /// 1 components vector of boolean.
+  typedef vec<1, bool, defaultp>		bvec1;
 
-	/// @}
+  /// @}
 }//namespace glm

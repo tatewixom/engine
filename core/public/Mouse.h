@@ -12,8 +12,8 @@ namespace Nuke
       double x{};
       double y{};
 
-      friend bool operator==(const Position &pos1, const Position &pos2);
-      friend Position operator-(const Position &pos1, const Position &pos2);
+      friend bool operator==(const Position& pos1, const Position& pos2);
+      friend Position operator-(const Position& pos1, const Position& pos2);
     };
 
     struct Button
@@ -22,15 +22,15 @@ namespace Nuke
       int action{};
     };
 
-    Mouse(Window &window);
+    Mouse(Window& window);
 
     void update();
 
-    const Position &position() const noexcept { return position_; }
-    const Position &poffset() const noexcept { return offset_; }
-    const Position &lposition() const noexcept { return lastPosition_; }
-    const Button &button() const noexcept { return button_; }
-    const Position &soffset() const noexcept { return scrollOffset_; }
+    const Position& position() const noexcept { return position_; }
+    const Position& poffset() const noexcept { return offset_; }
+    const Position& lposition() const noexcept { return lastPosition_; }
+    const Button& button() const noexcept { return button_; }
+    const Position& soffset() const noexcept { return scrollOffset_; }
 
     void position(Position p) noexcept { position_ = p; }
     void poffset(Position p) noexcept { offset_ = p; }
@@ -50,7 +50,7 @@ namespace Nuke
     bool isMoving() const noexcept { return position_ != lastPosition_; }
 
   private:
-    Window &window_;
+    Window& window_;
     Position position_{};
     Position offset_{};
     Position lastPosition_{};

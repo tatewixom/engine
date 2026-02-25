@@ -21,18 +21,18 @@
 
 namespace glm
 {
-	/// @addtogroup ext_matrix_uint4x4
-	/// @{
+  /// @addtogroup ext_matrix_uint4x4
+  /// @{
 
-	/// Unsigned integer 4x4 matrix.
-	///
-	/// @see ext_matrix_uint4x4
-	typedef mat<4, 4, uint, defaultp>	umat4x4;
+  /// Unsigned integer 4x4 matrix.
+  ///
+  /// @see ext_matrix_uint4x4
+  typedef mat<4, 4, uint, defaultp>	umat4x4;
 
-	/// Unsigned integer 4x4 matrix.
-	///
-	/// @see ext_matrix_uint4x4
-	typedef mat<4, 4, uint, defaultp>	umat4;
+  /// Unsigned integer 4x4 matrix.
+  ///
+  /// @see ext_matrix_uint4x4
+  typedef mat<4, 4, uint, defaultp>	umat4;
 
-	/// @}
+  /// @}
 }//namespace glm

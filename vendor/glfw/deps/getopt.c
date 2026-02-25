@@ -120,7 +120,8 @@ int getopt(int argc, char* const argv[], const char* optstring) {
           */
           if (++optind < argc) {
             optarg = argv[optind];
-          } else {
+          }
+          else {
             /* If it detects a missing option-argument, it shall return the
                colon character ( ':' ) if the first character of optstring
                was a colon, or a question-mark character ( '?' ) otherwise.
@@ -128,14 +129,16 @@ int getopt(int argc, char* const argv[], const char* optstring) {
             optarg = NULL;
             optchar = (optstring[0] == ':') ? ':' : '?';
           }
-        } else {
+        }
+        else {
           optarg = NULL;
         }
       }
 
       optcursor = NULL;
     }
-  } else {
+  }
+  else {
     /* If getopt() encounters an option character that is not contained in
        optstring, it shall return the question-mark ( '?' ) character. */
     optchar = '?';
@@ -187,7 +190,7 @@ int getopt_long(int argc, char* const argv[], const char* optstring,
     /* If longindex is not NULL, it points to a variable which is set to the
        index of the long option relative to longopts. */
     if (longindex)
-      *longindex = (int) (match - longopts);
+      *longindex = (int)(match - longopts);
 
     /* If flag is NULL, then getopt_long() shall return val.
        Otherwise, getopt_long() returns 0, and flag shall point to a variable
@@ -213,14 +216,16 @@ int getopt_long(int argc, char* const argv[], const char* optstring,
         if (optarg == NULL)
           retval = ':';
       }
-    } else if (strchr(argv[optind], '=')) {
+    }
+    else if (strchr(argv[optind], '=')) {
       /* An argument was provided to a non-argument option.
          I haven't seen this specified explicitly, but both GNU and BSD-based
          implementations show this behavior.
       */
       retval = '?';
     }
-  } else {
+  }
+  else {
     /* Unknown option or ambiguous match. */
     retval = '?';
   }

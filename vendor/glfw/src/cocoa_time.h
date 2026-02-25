@@ -30,6 +30,6 @@
 //
 typedef struct _GLFWtimerNS
 {
-    uint64_t        frequency;
+  uint64_t        frequency;
 } _GLFWtimerNS;
 

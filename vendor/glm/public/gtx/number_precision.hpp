@@ -24,22 +24,22 @@
 #	pragma message("GLM: GLM_GTX_number_precision extension included")
 #endif
 
-namespace glm{
-	/////////////////////////////
-	// Unsigned int vector types
+namespace glm {
+  /////////////////////////////
+  // Unsigned int vector types
 
-	/// @addtogroup gtx_number_precision
-	/// @{
+  /// @addtogroup gtx_number_precision
+  /// @{
 
-	//////////////////////
-	// Float matrix types
+  //////////////////////
+  // Float matrix types
 
-	typedef f32			f32mat1;	//!< \brief Single-qualifier floating-point scalar. (from GLM_GTX_number_precision extension)
-	typedef f32			f32mat1x1;	//!< \brief Single-qualifier floating-point scalar. (from GLM_GTX_number_precision extension)
-	typedef f64			f64mat1;	//!< \brief Double-qualifier floating-point scalar. (from GLM_GTX_number_precision extension)
-	typedef f64			f64mat1x1;	//!< \brief Double-qualifier floating-point scalar. (from GLM_GTX_number_precision extension)
+  typedef f32			f32mat1;	//!< \brief Single-qualifier floating-point scalar. (from GLM_GTX_number_precision extension)
+  typedef f32			f32mat1x1;	//!< \brief Single-qualifier floating-point scalar. (from GLM_GTX_number_precision extension)
+  typedef f64			f64mat1;	//!< \brief Double-qualifier floating-point scalar. (from GLM_GTX_number_precision extension)
+  typedef f64			f64mat1x1;	//!< \brief Double-qualifier floating-point scalar. (from GLM_GTX_number_precision extension)
 
-	/// @}
+  /// @}
 }//namespace glm
 
 #include "number_precision.inl"

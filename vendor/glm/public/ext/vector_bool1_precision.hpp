@@ -18,17 +18,17 @@
 
 namespace glm
 {
-	/// @addtogroup ext_vector_bool1_precision
-	/// @{
+  /// @addtogroup ext_vector_bool1_precision
+  /// @{
 
-	/// 1 component vector of bool values.
-	typedef vec<1, bool, highp>			highp_bvec1;
+  /// 1 component vector of bool values.
+  typedef vec<1, bool, highp>			highp_bvec1;
 
-	/// 1 component vector of bool values.
-	typedef vec<1, bool, mediump>		mediump_bvec1;
+  /// 1 component vector of bool values.
+  typedef vec<1, bool, mediump>		mediump_bvec1;
 
-	/// 1 component vector of bool values.
-	typedef vec<1, bool, lowp>			lowp_bvec1;
+  /// 1 component vector of bool values.
+  typedef vec<1, bool, lowp>			lowp_bvec1;
 
-	/// @}
+  /// @}
 }//namespace glm

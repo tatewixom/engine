@@ -4,8 +4,8 @@
 
 namespace Nuke
 {
-  Mouse::Mouse(Window &window)
-      : window_{window}
+  Mouse::Mouse(Window& window)
+    : window_{ window }
   {
     glfwSetCursorPosCallback(window_, Callback::mouse);
     glfwSetScrollCallback(window_, Callback::scroll);
@@ -14,13 +14,13 @@ namespace Nuke
 
   void Mouse::update()
   {
-    static bool firstMouse{true};
+    static bool firstMouse{ true };
 
     if (firstMouse)
     {
       center();
-      Window::Dimensions window{window_.dimensions()};
-      position_ = Mouse::Position{window.width / 2.0f, window.height / 2.0f}; // preventing mouse "snapping" into position
+      Window::Dimensions window{ window_.dimensions() };
+      position_ = Mouse::Position{ window.width / 2.0f, window.height / 2.0f }; // preventing mouse "snapping" into position
       lastPosition_ = position_;
       firstMouse = false;
     }
@@ -33,7 +33,7 @@ namespace Nuke
 
   void Mouse::center()
   {
-    Window::Dimensions window{window_.dimensions()};
+    Window::Dimensions window{ window_.dimensions() };
     glfwSetCursorPos(window_, static_cast<double>(window.width) / 2.0, static_cast<double>(window.height) / 2.0);
   }
 
@@ -70,13 +70,13 @@ namespace Nuke
     position_ = lastPosition_;
   }
 
-  bool operator==(const Mouse::Position &pos1, const Mouse::Position &pos2)
+  bool operator==(const Mouse::Position& pos1, const Mouse::Position& pos2)
   {
     return (pos1.x == pos2.x) && (pos1.y == pos2.y);
   }
 
-  Mouse::Position operator-(const Mouse::Position &pos1, const Mouse::Position &pos2)
+  Mouse::Position operator-(const Mouse::Position& pos1, const Mouse::Position& pos2)
   {
-    return Mouse::Position{pos1.x - pos2.x, pos1.y - pos2.y};
+    return Mouse::Position{ pos1.x - pos2.x, pos1.y - pos2.y };
   }
 }

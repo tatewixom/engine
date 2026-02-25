@@ -28,7 +28,7 @@ namespace Nuke
     {
     public:
       Seek() = default;
-      
+
       void clear();
       void remove(const std::filesystem::path& mount);
       void mount(const std::filesystem::path& new_mount);

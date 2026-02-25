@@ -54,11 +54,11 @@ namespace Nuke
     else
     {
       // compile vertex shader
-      const char *vertContents{ vertexFile.value().c_str() };
+      const char* vertContents{ vertexFile.value().c_str() };
       compile(vertex_, vertContents);
 
       // compile fragment shader
-      const char *fragContents{ fragmentFile.value().c_str() };
+      const char* fragContents{ fragmentFile.value().c_str() };
       compile(fragment_, fragContents);
 
       // link shaders to program
@@ -66,7 +66,7 @@ namespace Nuke
     }
   }
 
-  void Shader::compile(const GLuint shader, const char *contents)
+  void Shader::compile(const GLuint shader, const char* contents)
   {
     GLint success{};
 
@@ -128,11 +128,11 @@ namespace Nuke
     glUniform1i(glGetUniformLocation(program_, var.data()), x);
   }
 
-  void Shader::set(Shader::Variables var, const glm::mat4 &mat) const
+  void Shader::set(Shader::Variables var, const glm::mat4& mat) const
   {
     glUniformMatrix4fv(glGetUniformLocation(program_, getString(var).data()), 1, GL_FALSE, glm::value_ptr(mat));
   }
-  void Shader::set(std::string_view var, const glm::mat4 &mat) const
+  void Shader::set(std::string_view var, const glm::mat4& mat) const
   {
     glUniformMatrix4fv(glGetUniformLocation(program_, var.data()), 1, GL_FALSE, glm::value_ptr(mat));
   }

@@ -37,7 +37,7 @@ namespace
     10,
     Object
     {
-      buffer, 
+      buffer,
       glm::vec3{ 0.0f },
       Object::Material{ glm::vec3{ 1.0f, 0.5f, 0.31f }, glm::vec3{ 1.0f, 0.5f, 0.31f }, glm::vec3{ 0.5f, 0.5f, 0.5f }, 32.f }
     }
@@ -71,7 +71,7 @@ void World::initialize()
   //cubes init
   //for (auto& c : cubes)
     //c.initialize(buffer);
-  
+
   std::vector<Vertex> vertex
   {
     Vertex{ { -0.5f, -0.5f, -0.5f }, { 0.0f, 0.0f }, { 0.0f, 0.0f, -1.0f } },
@@ -132,11 +132,11 @@ void World::initialize()
     vertex,
     indices,
     std::vector<Attribute>
-    {
-      Attribute{ 0u, 3, sizeof(Vertex), offsetof(Vertex, Vertex::position) },
+  {
+    Attribute{ 0u, 3, sizeof(Vertex), offsetof(Vertex, Vertex::position) },
       Attribute{ 2u, 2, sizeof(Vertex), offsetof(Vertex, Vertex::texture) },
       Attribute{ 3u, 3, sizeof(Vertex), offsetof(Vertex, Vertex::normal) }
-    }
+  }
   );
 
   //blender_monkey.initialize_t("assets/monkey/glb/basic_monkey_00.glb", glm::vec3{ 0.f, 0.f, 0.f });
@@ -144,7 +144,7 @@ void World::initialize()
   //blender_cube.initialize_t("assets/vehicle/tiger_russian_military_vehicle.glb", glm::vec3{ 40.f, 0.f, 0.f });
   blender_metacubemonkey.initialize_t("assets/alien/t7t_terapod.glb", glm::vec3{ -20.f, 0.f, 0.f });
   //sketchfab_backpack.initialize_t("assets/backpack/backpack_01.glb", glm::vec3{ -40.f, 0.f, 0.f });
- 
+
   //shader init
   basic.initialize("basic.vs", "basic.fs");
   color.initialize("color.vs", "color.fs");
@@ -173,7 +173,7 @@ void World::initialize()
 
   color.activate();
   color.set("objectColor", glm::vec3{ 1.0f, 1.0f, 1.0f });
-  
+
   color.set("material.diffuse", steelbox.use());
   color.set("material.specular", steelbox_specular.use());
   color.set("material.shininess", cubes.object().material().shininess);
@@ -222,12 +222,12 @@ void World::initialize()
   for (std::size_t i{ 0 }; i < amount; ++i)
   {
     motions.push_back(
-    Ditto::Motions
-    {
-      glm::vec3{ Random::get(-10, 10), Random::get(-10, 10), Random::get(-10, 10) },
-      glm::vec3{ 1.f },
-      Ditto::Rotation{ glm::vec3{ Random::get(0, 10), Random::get(0, 10), Random::get(0, 10) }, static_cast<float>(Random::get(0, 36000)) / 100.f }
-    });
+      Ditto::Motions
+      {
+        glm::vec3{ Random::get(-10, 10), Random::get(-10, 10), Random::get(-10, 10) },
+        glm::vec3{ 1.f },
+        Ditto::Rotation{ glm::vec3{ Random::get(0, 10), Random::get(0, 10), Random::get(0, 10) }, static_cast<float>(Random::get(0, 36000)) / 100.f }
+      });
   }
 
   ditto.sendInstances(matrices, motions, 4u);
@@ -357,7 +357,7 @@ void World::render()
 }
 
 /*
-  should start working on textures asap. 
+  should start working on textures asap.
 */
 
 void World::loop()
@@ -370,5 +370,5 @@ void World::loop()
 
 void World::clean()
 {
-  
+
 }

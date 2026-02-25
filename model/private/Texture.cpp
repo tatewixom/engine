@@ -2,7 +2,7 @@
 
 namespace Nuke
 {
-  std::deque<Texture *> Texture::s_textureQueue{};
+  std::deque<Texture*> Texture::s_textureQueue{};
   int Texture::s_activeUnits{};
 
   void Texture::initialize(std::string_view path, Type type)
@@ -38,7 +38,7 @@ namespace Nuke
     s_textureQueue.push_front(this);
   }
 
-  void Texture::initialize(const unsigned char *data, int width, int height, std::string_view format, Type type)
+  void Texture::initialize(const unsigned char* data, int width, int height, std::string_view format, Type type)
   {
     // assigning type
     type_ = type;
@@ -107,7 +107,7 @@ namespace Nuke
   bool Texture::isRGBA(std::string_view sv) const
   {
     // initially look for '.' char
-    std::string_view::size_type sv_pos{sv.find_last_of('.')};
+    std::string_view::size_type sv_pos{ sv.find_last_of('.') };
 
     // check if it wasn't found
     if (sv_pos == std::string_view::npos)
@@ -119,7 +119,7 @@ namespace Nuke
       if (sv_pos == std::string_view::npos)
       {
         std::cerr << "ERROR::TEXTURE.CPP::ISRGBA()::UNABLE_TO_IDENTIFY_IMAGE_TYPE\n"
-                  << "WARNING::TEXTURE.CPP::ISRGBA()::RESORTING_TO_RGBA\n";
+          << "WARNING::TEXTURE.CPP::ISRGBA()::RESORTING_TO_RGBA\n";
 
         // resort to RGBA format
         return true;
@@ -127,10 +127,10 @@ namespace Nuke
     }
 
     // get string_view of characters after last of chosen chars ('.', '/')
-    std::string_view format{sv.substr(sv_pos + 1)};
+    std::string_view format{ sv.substr(sv_pos + 1) };
 
     // constant static "png" string for detecting RGBA format
-    static constexpr std::string_view png{"png"};
+    static constexpr std::string_view png{ "png" };
 
     // return whether its a .png or not
     return format == png;
@@ -155,7 +155,7 @@ namespace Nuke
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     int width{}, height{}, channels{};
-    unsigned char *data{stbi_load(format.data(), &width, &height, &channels, 0)};
+    unsigned char* data{ stbi_load(format.data(), &width, &height, &channels, 0) };
 
     if (!data)
       std::cerr << "ERROR::TEXTURE.CPP::LOAD()::DATA_CHAR_ARRAY_EMPTY\n";
@@ -178,7 +178,7 @@ namespace Nuke
     stbi_image_free(data);
   }
 
-  void Texture::loadFromGLTF(const unsigned char *data, int width, int height, std::string_view format)
+  void Texture::loadFromGLTF(const unsigned char* data, int width, int height, std::string_view format)
   {
     // activating assigned texture unit
     glActiveTexture(static_cast<GLenum>(assignedUnit_));

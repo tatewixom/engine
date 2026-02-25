@@ -42,87 +42,87 @@ static bool needs_update;
 
 static void window_close_callback(GLFWwindow* window)
 {
-    needs_update = true;
+  needs_update = true;
 }
 
 static void error_callback(int error, const char* description)
 {
-    fprintf(stderr, "Error: %s\n", description);
+  fprintf(stderr, "Error: %s\n", description);
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-        needs_update = true;
-    }
+  if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+  {
+    glfwSetWindowShouldClose(window, GLFW_TRUE);
+    needs_update = true;
+  }
 }
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    needs_update = true;
+  needs_update = true;
 }
 
 static float nrand(void)
 {
-    return (float) rand() / (float) RAND_MAX;
+  return (float)rand() / (float)RAND_MAX;
 }
 
 int main(void)
 {
-    GLFWwindow* window;
+  GLFWwindow* window;
 
-    srand((unsigned int) time(NULL));
+  srand((unsigned int)time(NULL));
 
-    glfwSetErrorCallback(error_callback);
+  glfwSetErrorCallback(error_callback);
 
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
+  if (!glfwInit())
+    exit(EXIT_FAILURE);
 
-    window = glfwCreateWindow(640, 480, "Event Wait Timeout Test", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(0);
-    gladLoadGL(glfwGetProcAddress);
-    glfwSetWindowCloseCallback(window, window_close_callback);
-    glfwSetKeyCallback(window, key_callback);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    while (!glfwWindowShouldClose(window))
-    {
-        int width, height;
-        float r = nrand(), g = nrand(), b = nrand();
-        float l = (float) sqrt(r * r + g * g + b * b);
-
-        glfwGetFramebufferSize(window, &width, &height);
-
-        glViewport(0, 0, width, height);
-        glClearColor(r / l, g / l, b / l, 1.f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(window);
-        needs_update = false;
-
-        const double start = glfwGetTime();
-
-        while (!needs_update)
-        {
-            const double elapsed = glfwGetTime() - start;
-            if (elapsed >= 1.0)
-                needs_update = true;
-            else
-                glfwWaitEventsTimeout(1.0 - elapsed);
-        }
-    }
-
-    glfwDestroyWindow(window);
-
+  window = glfwCreateWindow(640, 480, "Event Wait Timeout Test", NULL, NULL);
+  if (!window)
+  {
     glfwTerminate();
-    exit(EXIT_SUCCESS);
+    exit(EXIT_FAILURE);
+  }
+
+  glfwMakeContextCurrent(window);
+  glfwSwapInterval(0);
+  gladLoadGL(glfwGetProcAddress);
+  glfwSetWindowCloseCallback(window, window_close_callback);
+  glfwSetKeyCallback(window, key_callback);
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+  while (!glfwWindowShouldClose(window))
+  {
+    int width, height;
+    float r = nrand(), g = nrand(), b = nrand();
+    float l = (float)sqrt(r * r + g * g + b * b);
+
+    glfwGetFramebufferSize(window, &width, &height);
+
+    glViewport(0, 0, width, height);
+    glClearColor(r / l, g / l, b / l, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glfwSwapBuffers(window);
+    needs_update = false;
+
+    const double start = glfwGetTime();
+
+    while (!needs_update)
+    {
+      const double elapsed = glfwGetTime() - start;
+      if (elapsed >= 1.0)
+        needs_update = true;
+      else
+        glfwWaitEventsTimeout(1.0 - elapsed);
+    }
+  }
+
+  glfwDestroyWindow(window);
+
+  glfwTerminate();
+  exit(EXIT_SUCCESS);
 }
 

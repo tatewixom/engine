@@ -22,11 +22,11 @@
 
 namespace glm
 {
-	/// @addtogroup ext_vector_packing
-	/// @{
+  /// @addtogroup ext_vector_packing
+  /// @{
 
 
-	/// @}
+  /// @}
 }// namespace glm
 
 #include "vector_packing.inl"

@@ -20,7 +20,7 @@ namespace Nuke
     };
 
     void initialize(std::string_view path, Type type);
-    void initialize(const unsigned char *data, int width, int height, std::string_view format, Type type);
+    void initialize(const unsigned char* data, int width, int height, std::string_view format, Type type);
 
     // returns id of texture assigned by gl
     GLint id() const noexcept { return id_; }
@@ -33,13 +33,13 @@ namespace Nuke
     bool isRGBA(std::string_view path) const;
 
     void load(const std::string_view path);
-    void loadFromGLTF(const unsigned char *data, int width, int height, std::string_view format);
+    void loadFromGLTF(const unsigned char* data, int width, int height, std::string_view format);
 
     GLint getMaxUnits() const;
 
   private:
     GLuint id_{}; // texture object id
-    int assignedUnit_{0};
+    int assignedUnit_{ 0 };
     Type type_{};
 
   private:

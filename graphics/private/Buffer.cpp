@@ -9,7 +9,7 @@ namespace Nuke
     glDeleteBuffers(1, &EBO_);
   }
 
-  void Buffer::initialize(const std::vector<float> &vertices, const std::vector<unsigned int> &indices)
+  void Buffer::initialize(const std::vector<float>& vertices, const std::vector<unsigned int>& indices)
   {
     // generating vertex array object
     glGenVertexArrays(1, &VAO_);
@@ -26,22 +26,22 @@ namespace Nuke
 
     // creating preferred settings for telling opengl how to connect data
     glEnableVertexAttribArray(position_.location);
-    glVertexAttribPointer(position_.location, position_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void *>(position_.offset)); // fix warning at last parameter
+    glVertexAttribPointer(position_.location, position_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void*>(position_.offset)); // fix warning at last parameter
 
     // telling opengl how to interpret colors
     glEnableVertexAttribArray(color_.location);
-    glVertexAttribPointer(color_.location, color_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void *>(color_.offset)); // fix warning at last parameter
+    glVertexAttribPointer(color_.location, color_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void*>(color_.offset)); // fix warning at last parameter
 
     // telling opengl how to interpret textures
     glEnableVertexAttribArray(texture_.location);
-    glVertexAttribPointer(texture_.location, texture_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void *>(texture_.offset));
+    glVertexAttribPointer(texture_.location, texture_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void*>(texture_.offset));
 
     glEnableVertexAttribArray(normal_.location);
-    glVertexAttribPointer(normal_.location, normal_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void *>(normal_.offset));
+    glVertexAttribPointer(normal_.location, normal_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void*>(normal_.offset));
     glEnableVertexAttribArray(0); // disable
   }
 
-  void Buffer::initialize(const std::vector<float> &vertices)
+  void Buffer::initialize(const std::vector<float>& vertices)
   {
     // generating vertex array object
     glGenVertexArrays(1, &VAO_);
@@ -53,25 +53,25 @@ namespace Nuke
 
     // creating preferred settings for telling opengl how to connect data
     glEnableVertexAttribArray(position_.location);
-    glVertexAttribPointer(position_.location, position_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void *>(position_.offset)); // fix warning at last parameter
+    glVertexAttribPointer(position_.location, position_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void*>(position_.offset)); // fix warning at last parameter
     glEnableVertexAttribArray(0);                                                                                                           // disable
 
     // telling opengl how to interpret colors
     glEnableVertexAttribArray(color_.location);
-    glVertexAttribPointer(color_.location, color_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void *>(color_.offset)); // fix warning at last parameter
+    glVertexAttribPointer(color_.location, color_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void*>(color_.offset)); // fix warning at last parameter
     glEnableVertexAttribArray(0);                                                                                                  // disable
 
     // telling opengl how to interpret textures
     glEnableVertexAttribArray(texture_.location);
-    glVertexAttribPointer(texture_.location, texture_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void *>(texture_.offset));
+    glVertexAttribPointer(texture_.location, texture_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void*>(texture_.offset));
     glEnableVertexAttribArray(0); // disable
 
     glEnableVertexAttribArray(normal_.location);
-    glVertexAttribPointer(normal_.location, normal_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void *>(normal_.offset));
+    glVertexAttribPointer(normal_.location, normal_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void*>(normal_.offset));
     glEnableVertexAttribArray(0); // disable
   }
 
-  void Buffer::remoteVAO(GLuint &VAO) const
+  void Buffer::remoteVAO(GLuint& VAO) const
   {
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
@@ -81,7 +81,7 @@ namespace Nuke
 
     // set the vertex attribute
     glEnableVertexAttribArray(position_.location);
-    glVertexAttribPointer(position_.location, position_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void *>(position_.offset));
+    glVertexAttribPointer(position_.location, position_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void*>(position_.offset));
     glEnableVertexAttribArray(0);
   }
 
@@ -97,7 +97,7 @@ namespace Nuke
 
     // set the vertex attribute
     glEnableVertexAttribArray(position_.location);
-    glVertexAttribPointer(position_.location, position_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void *>(position_.offset));
+    glVertexAttribPointer(position_.location, position_.size, GL_FLOAT, GL_FALSE, getStride(), reinterpret_cast<void*>(position_.offset));
     glEnableVertexAttribArray(0);
 
     return VAO;

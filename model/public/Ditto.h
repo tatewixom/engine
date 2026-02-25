@@ -26,13 +26,13 @@ namespace Nuke
     public:
       Rotation() = default;
 
-      Rotation(const glm::vec3 &axis, float angle);
+      Rotation(const glm::vec3& axis, float angle);
 
       auto angle() const { return glm::radians(angle_); }
       void angle(const float angle) { angle_ = angle; }
 
       auto axis() const { return glm::normalize(axis_); }
-      void axis(const glm::vec3 &axis) { axis_ = axis; }
+      void axis(const glm::vec3& axis) { axis_ = axis; }
 
     private:
       glm::vec3 axis_{ 0.f, 1.f, 0.f };
@@ -47,19 +47,19 @@ namespace Nuke
     };
 
     template <typename T>
-    void initialize(const std::vector<Vertex> &vertices, const std::vector<T> &indices, std::vector<Attribute> &&attributes)
+    void initialize(const std::vector<Vertex>& vertices, const std::vector<T>& indices, std::vector<Attribute>&& attributes)
     {
       Mesh::initialize(vertices, indices, std::move(attributes));
     }
 
-    void sendInstances(std::vector<glm::mat4> matrices, const std::vector<Motions> &motions, unsigned int location);
+    void sendInstances(std::vector<glm::mat4> matrices, const std::vector<Motions>& motions, unsigned int location);
 
-    void setShader(Shader &shader) { shader_ = shader; };
+    void setShader(Shader& shader) { shader_ = shader; };
 
     void draw();
 
   public:
-    static void update(const Camera &camera, const Window &window);
+    static void update(const Camera& camera, const Window& window);
 
   private:
     VertexBuffer instanceBuffer_{};

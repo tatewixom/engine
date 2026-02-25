@@ -160,48 +160,48 @@ typedef VkFlags VkHeadlessSurfaceCreateFlagsEXT;
 
 typedef struct VkHeadlessSurfaceCreateInfoEXT
 {
-    VkStructureType                 sType;
-    const void*                     pNext;
-    VkHeadlessSurfaceCreateFlagsEXT flags;
+  VkStructureType                 sType;
+  const void* pNext;
+  VkHeadlessSurfaceCreateFlagsEXT flags;
 } VkHeadlessSurfaceCreateInfoEXT;
 
-typedef VkResult (APIENTRY *PFN_vkCreateHeadlessSurfaceEXT)(VkInstance,const VkHeadlessSurfaceCreateInfoEXT*,const VkAllocationCallbacks*,VkSurfaceKHR*);
+typedef VkResult(APIENTRY* PFN_vkCreateHeadlessSurfaceEXT)(VkInstance, const VkHeadlessSurfaceCreateInfoEXT*, const VkAllocationCallbacks*, VkSurfaceKHR*);
 
 // Null-specific per-window data
 //
 typedef struct _GLFWwindowNull
 {
-    int             xpos;
-    int             ypos;
-    int             width;
-    int             height;
-    GLFWbool        visible;
-    GLFWbool        iconified;
-    GLFWbool        maximized;
-    GLFWbool        resizable;
-    GLFWbool        decorated;
-    GLFWbool        floating;
-    GLFWbool        transparent;
-    float           opacity;
+  int             xpos;
+  int             ypos;
+  int             width;
+  int             height;
+  GLFWbool        visible;
+  GLFWbool        iconified;
+  GLFWbool        maximized;
+  GLFWbool        resizable;
+  GLFWbool        decorated;
+  GLFWbool        floating;
+  GLFWbool        transparent;
+  float           opacity;
 } _GLFWwindowNull;
 
 // Null-specific per-monitor data
 //
 typedef struct _GLFWmonitorNull
 {
-    GLFWgammaramp   ramp;
+  GLFWgammaramp   ramp;
 } _GLFWmonitorNull;
 
 // Null-specific global data
 //
 typedef struct _GLFWlibraryNull
 {
-    int             xcursor;
-    int             ycursor;
-    char*           clipboardString;
-    _GLFWwindow*    focusedWindow;
-    uint16_t        keycodes[GLFW_NULL_SC_LAST + 1];
-    uint8_t         scancodes[GLFW_KEY_LAST + 1];
+  int             xcursor;
+  int             ycursor;
+  char* clipboardString;
+  _GLFWwindow* focusedWindow;
+  uint16_t        keycodes[GLFW_NULL_SC_LAST + 1];
+  uint8_t         scancodes[GLFW_KEY_LAST + 1];
 } _GLFWlibraryNull;
 
 void _glfwPollMonitorsNull(void);
@@ -245,7 +245,7 @@ void _glfwSetWindowFloatingNull(_GLFWwindow* window, GLFWbool enabled);
 void _glfwSetWindowMousePassthroughNull(_GLFWwindow* window, GLFWbool enabled);
 float _glfwGetWindowOpacityNull(_GLFWwindow* window);
 void _glfwSetWindowOpacityNull(_GLFWwindow* window, float opacity);
-void _glfwSetRawMouseMotionNull(_GLFWwindow *window, GLFWbool enabled);
+void _glfwSetRawMouseMotionNull(_GLFWwindow* window, GLFWbool enabled);
 GLFWbool _glfwRawMouseMotionSupportedNull(void);
 void _glfwShowWindowNull(_GLFWwindow* window);
 void _glfwRequestWindowAttentionNull(_GLFWwindow* window);

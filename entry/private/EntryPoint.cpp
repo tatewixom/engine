@@ -7,7 +7,7 @@
 
 int main()
 {
-  if (!glfwInit()) 
+  if (!glfwInit())
     throw std::runtime_error{ "ERROR::MAIN.CPP::MAIN()::GLFW_FAILED_TO_INITIALIZE" };
 
   //window is responsible for initializing GLAD

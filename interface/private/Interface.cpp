@@ -20,8 +20,8 @@ namespace Nuke
   }
 
   Interface(State& state, Engine& engine)
-      : IState{ state }
-      , engine_{ engine }
+    : IState{ state }
+    , engine_{ engine }
   {
     initialize();
   }
@@ -34,12 +34,12 @@ namespace Nuke
 
     shader.initialize("interface.vs", "interface.fs");
 
-    grabBar.scalar(glm::vec2{1.f, 0.1f});
+    grabBar.scalar(glm::vec2{ 1.f, 0.1f });
 
-    Window::Dimensions dimensions{m_window.dimensions()};
+    Window::Dimensions dimensions{ m_window.dimensions() };
 
-    background.position(glm::vec2{0.0f, dimensions.height - background.dimensions().height()});
-    grabBar.position(background, glm::vec2{0.0f, background.dimensions().height() - grabBar.dimensions().height()});
+    background.position(glm::vec2{ 0.0f, dimensions.height - background.dimensions().height() });
+    grabBar.position(background, glm::vec2{ 0.0f, background.dimensions().height() - grabBar.dimensions().height() });
   }
 
   void Interface::input()
@@ -52,11 +52,11 @@ namespace Nuke
         m_mouse.viewMode();
     }
 
-    Window::Dimensions dimensions{m_window.dimensions()};
+    Window::Dimensions dimensions{ m_window.dimensions() };
 
     if (!m_mouse.isDisabled() &&
-        m_mouse.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT) &&
-        grabBar.hitbox().isIntersecting(static_cast<float>(m_mouse.position().x), dimensions.height - static_cast<float>(m_mouse.position().y)))
+      m_mouse.isButtonPressed(GLFW_MOUSE_BUTTON_LEFT) &&
+      grabBar.hitbox().isIntersecting(static_cast<float>(m_mouse.position().x), dimensions.height - static_cast<float>(m_mouse.position().y)))
     {
       // TODO: grabbar stopped working after setting up new mouse system, fix it
 
@@ -67,8 +67,8 @@ namespace Nuke
 
       if (lastMousePosition != m_mouse.position())
       {
-        background.position(glm::vec2{background.position().x + direction.x, background.position().y - direction.y});
-        grabBar.position(background, glm::vec2{0.0f, background.dimensions().height() - grabBar.dimensions().height()});
+        background.position(glm::vec2{ background.position().x + direction.x, background.position().y - direction.y });
+        grabBar.position(background, glm::vec2{ 0.0f, background.dimensions().height() - grabBar.dimensions().height() });
         // need to make a set of logic that has the window move in whatever direction the mouse moves in the same amount of units and doesn't lag behind
       }
 
@@ -88,12 +88,12 @@ namespace Nuke
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     shader.activate();
-    shader.set("color", glm::vec4{0.f, 0.f, 0.f, 0.5f});
+    shader.set("color", glm::vec4{ 0.f, 0.f, 0.f, 0.5f });
 
     background.draw(shader);
 
     shader.activate();
-    shader.set("color", glm::vec4{0.28f, 0.29f, 0.30f, 1.0f});
+    shader.set("color", glm::vec4{ 0.28f, 0.29f, 0.30f, 1.0f });
 
     grabBar.draw(shader);
 
@@ -112,7 +112,7 @@ namespace Nuke
   {
   }
 
-  void Interface::Element::dimensions(const Dimension &dimensions)
+  void Interface::Element::dimensions(const Dimension& dimensions)
   {
     m_dimensions = dimensions;
 
@@ -120,14 +120,14 @@ namespace Nuke
     m_hitbox.area.y2 = m_dimensions.height();
   }
 
-  void Interface::Element::draw(const Shader &shader) const
+  void Interface::Element::draw(const Shader& shader) const
   {
-    s_spaces.model = glm::mat4{1.f};
+    s_spaces.model = glm::mat4{ 1.f };
 
-    s_spaces.model = glm::translate(s_spaces.model, glm::vec3{m_position.x, m_position.y, 0.f});
+    s_spaces.model = glm::translate(s_spaces.model, glm::vec3{ m_position.x, m_position.y, 0.f });
     s_spaces.model = glm::scale(s_spaces.model, m_dimensions.scalar);
 
-    s_spaces.mvp = glm::mat4{s_spaces.ortho * s_spaces.model};
+    s_spaces.mvp = glm::mat4{ s_spaces.ortho * s_spaces.model };
 
     shader.activate();
 
@@ -137,35 +137,35 @@ namespace Nuke
     glDrawArrays(GL_TRIANGLES, 0, 6); // 36 is the amount of vertices
   }
 
-  void Interface::Element::position(const glm::vec2 &position)
+  void Interface::Element::position(const glm::vec2& position)
   {
     m_position = position;
 
     m_hitbox.area = Hitbox::Area{ m_position.x, m_position.y, m_position.x + m_dimensions.width(), m_position.y + m_dimensions.height() };
   }
 
-  void Interface::Element::position(Element &element, const glm::vec2 &relativePosition)
+  void Interface::Element::position(Element& element, const glm::vec2& relativePosition)
   {
     m_position.x = element.position().x + relativePosition.x;
     m_position.y = element.position().y + relativePosition.y;
 
-    m_hitbox.area = Hitbox::Area{m_position.x, m_position.y, m_position.x + m_dimensions.width(), m_position.y + m_dimensions.height()};
+    m_hitbox.area = Hitbox::Area{ m_position.x, m_position.y, m_position.x + m_dimensions.width(), m_position.y + m_dimensions.height() };
   }
 
-  void Interface::Element::center(Element &element)
+  void Interface::Element::center(Element& element)
   {
-    position(glm::vec2{element.position().x + ((element.dimensions().width() / 2) * element.scalar().x) - ((dimensions().width() / 2) * m_dimensions.scalar.x),
-                       element.position().y + ((element.dimensions().height() / 2) * element.scalar().y) - ((dimensions().height() / 2) * m_dimensions.scalar.y)});
+    position(glm::vec2{ element.position().x + ((element.dimensions().width() / 2) * element.scalar().x) - ((dimensions().width() / 2) * m_dimensions.scalar.x),
+                       element.position().y + ((element.dimensions().height() / 2) * element.scalar().y) - ((dimensions().height() / 2) * m_dimensions.scalar.y) });
   }
 
-  void Interface::Element::update(Window &window)
+  void Interface::Element::update(Window& window)
   {
-    Window::Dimensions dimensions{window.dimensions()};
+    Window::Dimensions dimensions{ window.dimensions() };
 
     s_spaces.ortho = glm::ortho(0.0f, static_cast<float>(dimensions.width), 0.0f, static_cast<float>(dimensions.height), -1.0f, 1.0f);
   }
 
-  bool Interface::Element::Hitbox::isIntersecting(const glm::vec2 &point) const
+  bool Interface::Element::Hitbox::isIntersecting(const glm::vec2& point) const
   {
     return (point.x > area.x1 && point.x < area.x2) && (point.y > area.y1 && point.y < area.y2);
   }
@@ -175,7 +175,7 @@ namespace Nuke
     return (x > area.x1 && x < area.x2) && (y > area.y1 && y < area.y2);
   }
 
-  bool Interface::Element::Hitbox::isIntersecting(const Element &element)
+  bool Interface::Element::Hitbox::isIntersecting(const Element& element)
   {
     return false;
   }

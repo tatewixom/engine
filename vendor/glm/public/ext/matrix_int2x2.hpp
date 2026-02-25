@@ -21,18 +21,18 @@
 
 namespace glm
 {
-	/// @addtogroup ext_matrix_int2x2
-	/// @{
+  /// @addtogroup ext_matrix_int2x2
+  /// @{
 
-	/// Signed integer 2x2 matrix.
-	///
-	/// @see ext_matrix_int2x2
-	typedef mat<2, 2, int, defaultp>	imat2x2;
+  /// Signed integer 2x2 matrix.
+  ///
+  /// @see ext_matrix_int2x2
+  typedef mat<2, 2, int, defaultp>	imat2x2;
 
-	/// Signed integer 2x2 matrix.
-	///
-	/// @see ext_matrix_int2x2
-	typedef mat<2, 2, int, defaultp>	imat2;
+  /// Signed integer 2x2 matrix.
+  ///
+  /// @see ext_matrix_int2x2
+  typedef mat<2, 2, int, defaultp>	imat2;
 
-	/// @}
+  /// @}
 }//namespace glm

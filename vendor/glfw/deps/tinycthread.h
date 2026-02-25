@@ -49,28 +49,28 @@ freely, subject to the following restrictions:
 
 /* Which platform are we on? */
 #if !defined(_TTHREAD_PLATFORM_DEFINED_)
-  #if defined(_WIN32) || defined(__WIN32__) || defined(__WINDOWS__)
-    #define _TTHREAD_WIN32_
-  #else
-    #define _TTHREAD_POSIX_
-  #endif
-  #define _TTHREAD_PLATFORM_DEFINED_
+#if defined(_WIN32) || defined(__WIN32__) || defined(__WINDOWS__)
+#define _TTHREAD_WIN32_
+#else
+#define _TTHREAD_POSIX_
+#endif
+#define _TTHREAD_PLATFORM_DEFINED_
 #endif
 
 /* Activate some POSIX functionality (e.g. clock_gettime and recursive mutexes) */
 #if defined(_TTHREAD_POSIX_)
-  #undef _FEATURES_H
-  #if !defined(_GNU_SOURCE)
-    #define _GNU_SOURCE
-  #endif
-  #if !defined(_POSIX_C_SOURCE) || ((_POSIX_C_SOURCE - 0) < 199309L)
-    #undef _POSIX_C_SOURCE
-    #define _POSIX_C_SOURCE 199309L
-  #endif
-  #if !defined(_XOPEN_SOURCE) || ((_XOPEN_SOURCE - 0) < 500)
-    #undef _XOPEN_SOURCE
-    #define _XOPEN_SOURCE 500
-  #endif
+#undef _FEATURES_H
+#if !defined(_GNU_SOURCE)
+#define _GNU_SOURCE
+#endif
+#if !defined(_POSIX_C_SOURCE) || ((_POSIX_C_SOURCE - 0) < 199309L)
+#undef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 199309L
+#endif
+#if !defined(_XOPEN_SOURCE) || ((_XOPEN_SOURCE - 0) < 500)
+#undef _XOPEN_SOURCE
+#define _XOPEN_SOURCE 500
+#endif
 #endif
 
 /* Generic includes */
@@ -78,18 +78,18 @@ freely, subject to the following restrictions:
 
 /* Platform specific includes */
 #if defined(_TTHREAD_POSIX_)
-  #include <sys/time.h>
-  #include <pthread.h>
+#include <sys/time.h>
+#include <pthread.h>
 #elif defined(_TTHREAD_WIN32_)
-  #ifndef WIN32_LEAN_AND_MEAN
-    #define WIN32_LEAN_AND_MEAN
-    #define __UNDEF_LEAN_AND_MEAN
-  #endif
-  #include <windows.h>
-  #ifdef __UNDEF_LEAN_AND_MEAN
-    #undef WIN32_LEAN_AND_MEAN
-    #undef __UNDEF_LEAN_AND_MEAN
-  #endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#define __UNDEF_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#ifdef __UNDEF_LEAN_AND_MEAN
+#undef WIN32_LEAN_AND_MEAN
+#undef __UNDEF_LEAN_AND_MEAN
+#endif
 #endif
 
 /* Workaround for missing TIME_UTC: If time.h doesn't provide TIME_UTC,
@@ -97,14 +97,14 @@ freely, subject to the following restrictions:
    the only other supported time specifier: CLOCK_REALTIME (and if that fails,
    we're probably emulating clock_gettime anyway, so anything goes). */
 #ifndef TIME_UTC
-  #ifdef CLOCK_REALTIME
-    #define TIME_UTC CLOCK_REALTIME
-  #else
-    #define TIME_UTC 0
-  #endif
+#ifdef CLOCK_REALTIME
+#define TIME_UTC CLOCK_REALTIME
+#else
+#define TIME_UTC 0
+#endif
 #endif
 
-/* Workaround for missing clock_gettime (most Windows compilers, afaik) */
+   /* Workaround for missing clock_gettime (most Windows compilers, afaik) */
 #if defined(_TTHREAD_WIN32_) || defined(__APPLE_CC__)
 #define _TTHREAD_EMULATE_CLOCK_GETTIME_
 /* Emulate struct timespec */
@@ -121,10 +121,10 @@ typedef int _tthread_clockid_t;
 #define clockid_t _tthread_clockid_t
 
 /* Emulate clock_gettime */
-int _tthread_clock_gettime(clockid_t clk_id, struct timespec *ts);
+int _tthread_clock_gettime(clockid_t clk_id, struct timespec* ts);
 #define clock_gettime _tthread_clock_gettime
 #ifndef CLOCK_REALTIME
-  #define CLOCK_REALTIME 0
+#define CLOCK_REALTIME 0
 #endif
 #endif
 
@@ -157,11 +157,11 @@ int _tthread_clock_gettime(clockid_t clk_id, struct timespec *ts);
 
 /* FIXME: Check for a PROPER value of __STDC_VERSION__ to know if we have C11 */
 #if !(defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 201102L)) && !defined(_Thread_local)
- #if defined(__GNUC__) || defined(__INTEL_COMPILER) || defined(__SUNPRO_CC) || defined(__IBMCPP__)
-  #define _Thread_local __thread
- #else
-  #define _Thread_local __declspec(thread)
- #endif
+#if defined(__GNUC__) || defined(__INTEL_COMPILER) || defined(__SUNPRO_CC) || defined(__IBMCPP__)
+#define _Thread_local __thread
+#else
+#define _Thread_local __declspec(thread)
+#endif
 #endif
 
 /* Macros */
@@ -203,12 +203,12 @@ typedef pthread_mutex_t mtx_t;
 * @return @ref thrd_success on success, or @ref thrd_error if the request could
 * not be honored.
 */
-int mtx_init(mtx_t *mtx, int type);
+int mtx_init(mtx_t* mtx, int type);
 
 /** Release any resources used by the given mutex.
 * @param mtx A mutex object.
 */
-void mtx_destroy(mtx_t *mtx);
+void mtx_destroy(mtx_t* mtx);
 
 /** Lock the given mutex.
 * Blocks until the given mutex can be locked. If the mutex is non-recursive, and
@@ -218,11 +218,11 @@ void mtx_destroy(mtx_t *mtx);
 * @return @ref thrd_success on success, or @ref thrd_error if the request could
 * not be honored.
 */
-int mtx_lock(mtx_t *mtx);
+int mtx_lock(mtx_t* mtx);
 
 /** NOT YET IMPLEMENTED.
 */
-int mtx_timedlock(mtx_t *mtx, const struct timespec *ts);
+int mtx_timedlock(mtx_t* mtx, const struct timespec* ts);
 
 /** Try to lock the given mutex.
 * The specified mutex shall support either test and return or timeout. If the
@@ -232,14 +232,14 @@ int mtx_timedlock(mtx_t *mtx, const struct timespec *ts);
 * requested is already in use, or @ref thrd_error if the request could not be
 * honored.
 */
-int mtx_trylock(mtx_t *mtx);
+int mtx_trylock(mtx_t* mtx);
 
 /** Unlock the given mutex.
 * @param mtx A mutex object.
 * @return @ref thrd_success on success, or @ref thrd_error if the request could
 * not be honored.
 */
-int mtx_unlock(mtx_t *mtx);
+int mtx_unlock(mtx_t* mtx);
 
 /* Condition variable */
 #if defined(_TTHREAD_WIN32_)
@@ -257,12 +257,12 @@ typedef pthread_cond_t cnd_t;
 * @return @ref thrd_success on success, or @ref thrd_error if the request could
 * not be honored.
 */
-int cnd_init(cnd_t *cond);
+int cnd_init(cnd_t* cond);
 
 /** Release any resources used by the given condition variable.
 * @param cond A condition variable object.
 */
-void cnd_destroy(cnd_t *cond);
+void cnd_destroy(cnd_t* cond);
 
 /** Signal a condition variable.
 * Unblocks one of the threads that are blocked on the given condition variable
@@ -272,7 +272,7 @@ void cnd_destroy(cnd_t *cond);
 * @return @ref thrd_success on success, or @ref thrd_error if the request could
 * not be honored.
 */
-int cnd_signal(cnd_t *cond);
+int cnd_signal(cnd_t* cond);
 
 /** Broadcast a condition variable.
 * Unblocks all of the threads that are blocked on the given condition variable
@@ -282,7 +282,7 @@ int cnd_signal(cnd_t *cond);
 * @return @ref thrd_success on success, or @ref thrd_error if the request could
 * not be honored.
 */
-int cnd_broadcast(cnd_t *cond);
+int cnd_broadcast(cnd_t* cond);
 
 /** Wait for a condition variable to become signaled.
 * The function atomically unlocks the given mutex and endeavors to block until
@@ -294,7 +294,7 @@ int cnd_broadcast(cnd_t *cond);
 * @return @ref thrd_success on success, or @ref thrd_error if the request could
 * not be honored.
 */
-int cnd_wait(cnd_t *cond, mtx_t *mtx);
+int cnd_wait(cnd_t* cond, mtx_t* mtx);
 
 /** Wait for a condition variable to become signaled.
 * The function atomically unlocks the given mutex and endeavors to block until
@@ -308,7 +308,7 @@ int cnd_wait(cnd_t *cond, mtx_t *mtx);
 * specified in the call was reached without acquiring the requested resource, or
 * @ref thrd_error if the request could not be honored.
 */
-int cnd_timedwait(cnd_t *cond, mtx_t *mtx, const struct timespec *ts);
+int cnd_timedwait(cnd_t* cond, mtx_t* mtx, const struct timespec* ts);
 
 /* Thread */
 #if defined(_TTHREAD_WIN32_)
@@ -325,7 +325,7 @@ typedef pthread_t thrd_t;
 * @return The thread return value, which can be obtained by another thread
 * by using the @ref thrd_join() function.
 */
-typedef int (*thrd_start_t)(void *arg);
+typedef int (*thrd_start_t)(void* arg);
 
 /** Create a new thread.
 * @param thr Identifier of the newly created thread.
@@ -339,7 +339,7 @@ typedef int (*thrd_start_t)(void *arg);
 * original thread has exited and either been detached or joined to another
 * thread.
 */
-int thrd_create(thrd_t *thr, thrd_start_t func, void *arg);
+int thrd_create(thrd_t* thr, thrd_start_t func, void* arg);
 
 /** Identify the calling thread.
 * @return The identifier of the calling thread.
@@ -371,7 +371,7 @@ void thrd_exit(int res);
 * @return @ref thrd_success on success, or @ref thrd_error if the request could
 * not be honored.
 */
-int thrd_join(thrd_t thr, int *res);
+int thrd_join(thrd_t thr, int* res);
 
 /** Put the calling thread to sleep.
 * Suspend execution of the calling thread.
@@ -383,7 +383,7 @@ int thrd_join(thrd_t thr, int *res);
 *                  time.
 * @return 0 (zero) on successful sleep, or -1 if an interrupt occurred.
 */
-int thrd_sleep(const struct timespec *time_point, struct timespec *remaining);
+int thrd_sleep(const struct timespec* time_point, struct timespec* remaining);
 
 /** Yield execution to another thread.
 * Permit other threads to run, even if the current thread would ordinarily
@@ -401,7 +401,7 @@ typedef pthread_key_t tss_t;
 /** Destructor function for a thread-specific storage.
 * @param val The value of the destructed thread-specific storage.
 */
-typedef void (*tss_dtor_t)(void *val);
+typedef void (*tss_dtor_t)(void* val);
 
 /** Create a thread-specific storage.
 * @param key The unique key identifier that will be set if the function is
@@ -413,7 +413,7 @@ typedef void (*tss_dtor_t)(void *val);
 * not NULL when calling this function under Windows, the function will fail
 * and return @ref thrd_error.
 */
-int tss_create(tss_t *key, tss_dtor_t dtor);
+int tss_create(tss_t* key, tss_dtor_t dtor);
 
 /** Delete a thread-specific storage.
 * The function releases any resources used by the given thread-specific
@@ -427,7 +427,7 @@ void tss_delete(tss_t key);
 * @return The value for the current thread held in the given thread-specific
 * storage.
 */
-void *tss_get(tss_t key);
+void* tss_get(tss_t key);
 
 /** Set the value for a thread-specific storage.
 * @param key The thread-specific storage identifier.
@@ -436,7 +436,7 @@ void *tss_get(tss_t key);
 * @return @ref thrd_success on success, or @ref thrd_error if the request could
 * not be honored.
 */
-int tss_set(tss_t key, void *val);
+int tss_set(tss_t key, void* val);
 
 
 #endif /* _TINYTHREAD_H_ */

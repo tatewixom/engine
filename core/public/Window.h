@@ -15,23 +15,23 @@ namespace Nuke
     };
 
   public:
-    Window(const char *title, const char *path_to_icon, float widthRatio = 2.0f, float heightRatio = 6.0, GLFWmonitor *screenMode = nullptr, GLFWwindow *share = nullptr);
+    Window(const char* title, const char* path_to_icon, float widthRatio = 2.0f, float heightRatio = 6.0, GLFWmonitor* screenMode = nullptr, GLFWwindow* share = nullptr);
 
     ~Window() { glfwTerminate(); }
 
     // implicit conversion from Window to GLFWwindow* (carefully use)
-    operator GLFWwindow *() const { return window_; }
+    operator GLFWwindow* () const { return window_; }
 
-    GLFWwindow *getWindow() { return window_; }
+    GLFWwindow* getWindow() { return window_; }
     Dimensions dimensions() const { return dimensions_; }
     void close() { glfwSetWindowShouldClose(window_, true); }
-    void title(const char *title);
+    void title(const char* title);
     void size(Dimensions dimensions);
 
     void vsync(bool val);
 
   private:
-    GLFWwindow *window_{};
+    GLFWwindow* window_{};
     Dimensions dimensions_{};
   };
 }

@@ -18,19 +18,19 @@ namespace Nuke
   {
   public:
     void initialize(std::string_view gltf_file_path);
-    void initialize_t(std::string_view gltf_file_path, glm::vec3 &&position);
+    void initialize_t(std::string_view gltf_file_path, glm::vec3&& position);
 
-    void loadMeshes(tinygltf::Model &model);
+    void loadMeshes(tinygltf::Model& model);
 
-    void loadNodes(tinygltf::Model &model);
-    Node convert_to_node(tinygltf::Node &node);
+    void loadNodes(tinygltf::Model& model);
+    Node convert_to_node(tinygltf::Node& node);
 
-    glm::mat4 vec_to_mat(const std::vector<double> &vec) noexcept;
+    glm::mat4 vec_to_mat(const std::vector<double>& vec) noexcept;
 
-    void loadRoots(tinygltf::Model &model);
+    void loadRoots(tinygltf::Model& model);
 
-    void drawNode(int nodeIndex, const glm::mat4 &parentWorld, Shader &shader);
-    void draw(Shader &shader);
+    void drawNode(int nodeIndex, const glm::mat4& parentWorld, Shader& shader);
+    void draw(Shader& shader);
 
   private:
     std::vector<Mesh> meshes_{};

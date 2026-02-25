@@ -38,8 +38,8 @@
 
 static const struct
 {
-    float x, y;
-    float r, g, b;
+  float x, y;
+  float r, g, b;
 } vertices[3] =
 {
     { -0.6f, -0.4f, 1.f, 0.f, 0.f },
@@ -69,97 +69,97 @@ static const char* fragment_shader_text =
 
 static void error_callback(int error, const char* description)
 {
-    fprintf(stderr, "Error: %s\n", description);
+  fprintf(stderr, "Error: %s\n", description);
 }
 
 int main(void)
 {
-    GLFWwindow* window;
-    GLuint vertex_buffer, vertex_shader, fragment_shader, program;
-    GLint mvp_location, vpos_location, vcol_location;
-    float ratio;
-    int width, height;
-    mat4x4 mvp;
-    char* buffer;
+  GLFWwindow* window;
+  GLuint vertex_buffer, vertex_shader, fragment_shader, program;
+  GLint mvp_location, vpos_location, vcol_location;
+  float ratio;
+  int width, height;
+  mat4x4 mvp;
+  char* buffer;
 
-    glfwSetErrorCallback(error_callback);
+  glfwSetErrorCallback(error_callback);
 
-    glfwInitHint(GLFW_COCOA_MENUBAR, GLFW_FALSE);
+  glfwInitHint(GLFW_COCOA_MENUBAR, GLFW_FALSE);
 
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
+  if (!glfwInit())
+    exit(EXIT_FAILURE);
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+  glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-    window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-
-    glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
-
-    // NOTE: OpenGL error checks have been omitted for brevity
-
-    glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
-    glCompileShader(vertex_shader);
-
-    fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
-    glCompileShader(fragment_shader);
-
-    program = glCreateProgram();
-    glAttachShader(program, vertex_shader);
-    glAttachShader(program, fragment_shader);
-    glLinkProgram(program);
-
-    mvp_location = glGetUniformLocation(program, "MVP");
-    vpos_location = glGetAttribLocation(program, "vPos");
-    vcol_location = glGetAttribLocation(program, "vCol");
-
-    glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) 0);
-    glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) (sizeof(float) * 2));
-
-    glfwGetFramebufferSize(window, &width, &height);
-    ratio = width / (float) height;
-
-    glViewport(0, 0, width, height);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    mat4x4_ortho(mvp, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-
-    glUseProgram(program);
-    glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-    glFinish();
-
-    buffer = calloc(4, width * height);
-    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-
-    // Write image Y-flipped because OpenGL
-    stbi_write_png("offscreen.png",
-                   width, height, 4,
-                   buffer + (width * 4 * (height - 1)),
-                   -width * 4);
-
-    free(buffer);
-
-    glfwDestroyWindow(window);
-
+  window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
+  if (!window)
+  {
     glfwTerminate();
-    exit(EXIT_SUCCESS);
+    exit(EXIT_FAILURE);
+  }
+
+  glfwMakeContextCurrent(window);
+  gladLoadGL(glfwGetProcAddress);
+
+  // NOTE: OpenGL error checks have been omitted for brevity
+
+  glGenBuffers(1, &vertex_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+  vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
+  glCompileShader(vertex_shader);
+
+  fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
+  glCompileShader(fragment_shader);
+
+  program = glCreateProgram();
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+  glLinkProgram(program);
+
+  mvp_location = glGetUniformLocation(program, "MVP");
+  vpos_location = glGetAttribLocation(program, "vPos");
+  vcol_location = glGetAttribLocation(program, "vCol");
+
+  glEnableVertexAttribArray(vpos_location);
+  glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
+    sizeof(vertices[0]), (void*)0);
+  glEnableVertexAttribArray(vcol_location);
+  glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
+    sizeof(vertices[0]), (void*)(sizeof(float) * 2));
+
+  glfwGetFramebufferSize(window, &width, &height);
+  ratio = width / (float)height;
+
+  glViewport(0, 0, width, height);
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  mat4x4_ortho(mvp, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+
+  glUseProgram(program);
+  glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
+  glDrawArrays(GL_TRIANGLES, 0, 3);
+  glFinish();
+
+  buffer = calloc(4, width * height);
+  glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+
+  // Write image Y-flipped because OpenGL
+  stbi_write_png("offscreen.png",
+    width, height, 4,
+    buffer + (width * 4 * (height - 1)),
+    -width * 4);
+
+  free(buffer);
+
+  glfwDestroyWindow(window);
+
+  glfwTerminate();
+  exit(EXIT_SUCCESS);
 }
 

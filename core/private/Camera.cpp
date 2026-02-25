@@ -7,13 +7,13 @@
 
 namespace Nuke
 {
-  Camera::Camera(Mouse &mouse)
-      : mouse_{mouse}
+  Camera::Camera(Mouse& mouse)
+    : mouse_{ mouse }
   {
   }
 
-  Camera::Camera(Mouse &mouse, float vfov = 120.f, glm::vec3 vposition = glm::vec3{0.0f, 0.0f, 3.f}, float vspeed = 5.0f, float vsensitivity = 0.1f)
-      : position{vposition}, fov{vfov}, speed{vspeed}, sensitivity{vsensitivity}, mouse_{mouse}
+  Camera::Camera(Mouse& mouse, float vfov = 120.f, glm::vec3 vposition = glm::vec3{ 0.0f, 0.0f, 3.f }, float vspeed = 5.0f, float vsensitivity = 0.1f)
+    : position{ vposition }, fov{ vfov }, speed{ vspeed }, sensitivity{ vsensitivity }, mouse_{ mouse }
   {
   }
 
@@ -24,10 +24,10 @@ namespace Nuke
     switch (movement)
     {
     case FORWARD:
-      position += glm::normalize(glm::vec3{front.x, 0.f, front.z}) * velocity;
+      position += glm::normalize(glm::vec3{ front.x, 0.f, front.z }) * velocity;
       break;
     case BACKWARD:
-      position -= glm::normalize(glm::vec3{front.x, 0.f, front.z}) * velocity;
+      position -= glm::normalize(glm::vec3{ front.x, 0.f, front.z }) * velocity;
       break;
     case LEFT:
       position -= right * velocity;
@@ -48,7 +48,7 @@ namespace Nuke
 
   void Camera::update()
   {
-    Mouse::Position cameraMovement{mouse_.poffset()};
+    Mouse::Position cameraMovement{ mouse_.poffset() };
 
     if (mouse_.isDisabled())
     {
@@ -56,8 +56,8 @@ namespace Nuke
       pitch += static_cast<float>(cameraMovement.y * sensitivity);
 
       // constexpr static min and max values for pitch
-      static constexpr float min_pitch{-89.f};
-      static constexpr float max_pitch{89.f};
+      static constexpr float min_pitch{ -89.f };
+      static constexpr float max_pitch{ 89.f };
 
       // constraining the amount you can look up and look down
       pitch = glm::clamp(pitch, min_pitch, max_pitch);
@@ -73,8 +73,8 @@ namespace Nuke
       up = glm::normalize(cross(right, front));
 
       // constexpr static min and max values for fov
-      static constexpr float min_fov{30.f};
-      static constexpr float max_fov{120.f};
+      static constexpr float min_fov{ 30.f };
+      static constexpr float max_fov{ 120.f };
 
       // constraining camera fov based off mouse scroll wheel
       fov -= static_cast<float>(mouse_.soffset().y);

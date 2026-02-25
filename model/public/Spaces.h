@@ -20,7 +20,7 @@ namespace Nuke
   public:
     Rotation() = default;
 
-    Rotation(const glm::vec3 &axis, float angle);
+    Rotation(const glm::vec3& axis, float angle);
 
     auto angle() const { return glm::radians(angle_); }
     auto axis() const { return glm::normalize(axis_); }
@@ -37,7 +37,7 @@ namespace Nuke
   {
   public:
     Spaces() = default;
-    void update(Camera &camera, Window &window);
+    void update(Camera& camera, Window& window);
 
     glm::mat4 model{ 1.0f };
     glm::mat4 projection{ 1.0f };

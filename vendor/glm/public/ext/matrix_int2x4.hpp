@@ -21,13 +21,13 @@
 
 namespace glm
 {
-	/// @addtogroup ext_matrix_int2x4
-	/// @{
+  /// @addtogroup ext_matrix_int2x4
+  /// @{
 
-	/// Signed integer 2x4 matrix.
-	///
-	/// @see ext_matrix_int2x4
-	typedef mat<2, 4, int, defaultp>	imat2x4;
+  /// Signed integer 2x4 matrix.
+  ///
+  /// @see ext_matrix_int2x4
+  typedef mat<2, 4, int, defaultp>	imat2x4;
 
-	/// @}
+  /// @}
 }//namespace glm

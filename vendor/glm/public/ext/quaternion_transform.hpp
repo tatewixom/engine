@@ -28,20 +28,20 @@
 
 namespace glm
 {
-	/// @addtogroup ext_quaternion_transform
-	/// @{
+  /// @addtogroup ext_quaternion_transform
+  /// @{
 
-	/// Rotates a quaternion from a vector of 3 components axis and an angle.
-	///
-	/// @param q Source orientation
-	/// @param angle Angle expressed in radians.
-	/// @param axis Axis of the rotation
-	///
-	/// @tparam T Floating-point scalar types
-	/// @tparam Q Value from qualifier enum
-	template<typename T, qualifier Q>
-	GLM_FUNC_DECL qua<T, Q> rotate(qua<T, Q> const& q, T const& angle, vec<3, T, Q> const& axis);
-	/// @}
+  /// Rotates a quaternion from a vector of 3 components axis and an angle.
+  ///
+  /// @param q Source orientation
+  /// @param angle Angle expressed in radians.
+  /// @param axis Axis of the rotation
+  ///
+  /// @tparam T Floating-point scalar types
+  /// @tparam Q Value from qualifier enum
+  template<typename T, qualifier Q>
+  GLM_FUNC_DECL qua<T, Q> rotate(qua<T, Q> const& q, T const& angle, vec<3, T, Q> const& axis);
+  /// @}
 } //namespace glm
 
 #include "quaternion_transform.inl"

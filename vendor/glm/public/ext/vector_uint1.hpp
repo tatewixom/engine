@@ -21,12 +21,12 @@
 
 namespace glm
 {
-	/// @addtogroup ext_vector_uint1
-	/// @{
+  /// @addtogroup ext_vector_uint1
+  /// @{
 
-	/// 1 component vector of unsigned integer numbers.
-	typedef vec<1, unsigned int, defaultp>			uvec1;
+  /// 1 component vector of unsigned integer numbers.
+  typedef vec<1, unsigned int, defaultp>			uvec1;
 
-	/// @}
+  /// @}
 }//namespace glm
 

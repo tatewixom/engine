@@ -8,12 +8,12 @@ namespace Nuke
 {
   namespace Keyboard
   {
-    bool isKeyPressed(GLFWwindow *window, int key)
+    bool isKeyPressed(GLFWwindow* window, int key)
     {
       return glfwGetKey(window, key) == GLFW_PRESS;
     }
 
-    bool isKeyJustPressed(GLFWwindow *window, int key)
+    bool isKeyJustPressed(GLFWwindow* window, int key)
     {
       // stores previous key state
       static std::unordered_map<int, bool> keyStates;
@@ -34,7 +34,7 @@ namespace Nuke
       return false;
     }
 
-    void processWindowEscape(GLFWwindow *window)
+    void processWindowEscape(GLFWwindow* window)
     {
       if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);

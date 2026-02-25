@@ -28,7 +28,7 @@ namespace Nuke
       int seconds{};
     };
 
-    std::ostream &operator<<(std::ostream &out, const Duration &duration);
+    std::ostream& operator<<(std::ostream& out, const Duration& duration);
 
     class Interval
     {
@@ -38,8 +38,10 @@ namespace Nuke
       Interval(std::chrono::year_month_day date, std::chrono::hours hour, std::chrono::minutes minute);
 
       std::chrono::year_month_day date() const noexcept(std::is_nothrow_copy_constructible_v<std::chrono::year_month_day>) { return date_; }
-      Time time() const noexcept(std::is_nothrow_copy_constructible_v<std::chrono::hours> &&
-                                std::is_nothrow_copy_constructible_v<std::chrono::minutes>) { return time_; }
+      Time time() const noexcept(std::is_nothrow_copy_constructible_v<std::chrono::hours>&&
+        std::is_nothrow_copy_constructible_v<std::chrono::minutes>) {
+        return time_;
+      }
       constexpr Duration dur() const noexcept { return duration_; }
       void setDate(std::chrono::year_month_day date, std::chrono::hours hour, std::chrono::minutes minute);
       void recomp();
@@ -65,7 +67,7 @@ namespace Nuke
       using Second = std::chrono::duration<double, std::ratio<1>>;
 
     private:
-      std::chrono::time_point<Steady_clock> beg_{Steady_clock::now()};
+      std::chrono::time_point<Steady_clock> beg_{ Steady_clock::now() };
     };
   }
 }

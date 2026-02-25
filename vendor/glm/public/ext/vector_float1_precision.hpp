@@ -20,17 +20,17 @@
 
 namespace glm
 {
-	/// @addtogroup ext_vector_float1_precision
-	/// @{
+  /// @addtogroup ext_vector_float1_precision
+  /// @{
 
-	/// 1 component vector of single-precision floating-point numbers using high precision arithmetic in term of ULPs.
-	typedef vec<1, float, highp>		highp_vec1;
+  /// 1 component vector of single-precision floating-point numbers using high precision arithmetic in term of ULPs.
+  typedef vec<1, float, highp>		highp_vec1;
 
-	/// 1 component vector of single-precision floating-point numbers using medium precision arithmetic in term of ULPs.
-	typedef vec<1, float, mediump>		mediump_vec1;
+  /// 1 component vector of single-precision floating-point numbers using medium precision arithmetic in term of ULPs.
+  typedef vec<1, float, mediump>		mediump_vec1;
 
-	/// 1 component vector of single-precision floating-point numbers using low precision arithmetic in term of ULPs.
-	typedef vec<1, float, lowp>			lowp_vec1;
+  /// 1 component vector of single-precision floating-point numbers using low precision arithmetic in term of ULPs.
+  typedef vec<1, float, lowp>			lowp_vec1;
 
-	/// @}
+  /// @}
 }//namespace glm

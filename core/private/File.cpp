@@ -51,7 +51,7 @@ namespace Nuke
       //valid cache
       if (path.empty() || !std::filesystem::exists(path))
         path = std::filesystem::canonical("/proc/self/exe");
-      
+
       return path;
     }
 
@@ -76,7 +76,7 @@ namespace Nuke
       //valid cache
       if (path.empty() || !std::filesystem::exists(path))
         path = std::filesystem::canonical("/proc/self/exe");
-      
+
       return path;
     }
 
@@ -132,7 +132,7 @@ namespace Nuke
         return std::unexpected{ "FAILURE_IN_OPENING_FILE" };
 
       //create string buffer
-       std::ostringstream buffer;
+      std::ostringstream buffer;
 
       //pour contents of file to string buffer
       buffer << in_file.rdbuf();
@@ -245,12 +245,12 @@ namespace Nuke
       //didn't find file with matching name
       if (file_paths.size() < 1)
         return std::unexpected{ "FAILURE_IN_FINDING_FILE" };
-      
+
       //found more than one file with same name
       std::cout << "ERROR: Files with same name in different mounts:\n";
       for (const auto& p : file_paths)
         std::cout << (get_executable_dir() / p) << '\n';
-      
+
       return std::unexpected{ "AMBIGUOUS_FILE_RETRIEVAL" };
     }
   }

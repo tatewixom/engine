@@ -36,33 +36,33 @@ namespace Nuke
       Mouse object.
     */
 
-    void framebuffer(GLFWwindow *window, int width, int height)
+    void framebuffer(GLFWwindow* window, int width, int height)
     {
-      Engine *engine{static_cast<Engine *>(glfwGetWindowUserPointer(window))};
-      engine->getWindow().size(Window::Dimensions{width, height});
+      Engine* engine{ static_cast<Engine*>(glfwGetWindowUserPointer(window)) };
+      engine->getWindow().size(Window::Dimensions{ width, height });
     }
 
-    void mouse(GLFWwindow *window, double xposIn, double yposIn)
+    void mouse(GLFWwindow* window, double xposIn, double yposIn)
     {
-      Engine *engine{static_cast<Engine *>(glfwGetWindowUserPointer(window))};
-      engine->getMouse().position(Mouse::Position{xposIn, yposIn});
+      Engine* engine{ static_cast<Engine*>(glfwGetWindowUserPointer(window)) };
+      engine->getMouse().position(Mouse::Position{ xposIn, yposIn });
     }
 
-    void scroll(GLFWwindow *window, double xoffset, double yoffset)
+    void scroll(GLFWwindow* window, double xoffset, double yoffset)
     {
-      Engine *engine{static_cast<Engine *>(glfwGetWindowUserPointer(window))};
-      engine->getMouse().soffset(Mouse::Position{xoffset, yoffset});
+      Engine* engine{ static_cast<Engine*>(glfwGetWindowUserPointer(window)) };
+      engine->getMouse().soffset(Mouse::Position{ xoffset, yoffset });
     }
 
-    void refresh(GLFWwindow *window)
+    void refresh(GLFWwindow* window)
     {
       // nothing
     }
 
-    void mouseButton(GLFWwindow *window, int button, int action, int mods)
+    void mouseButton(GLFWwindow* window, int button, int action, int mods)
     {
-      Engine *engine{static_cast<Engine *>(glfwGetWindowUserPointer(window))};
-      engine->getMouse().button(Mouse::Button{button, action});
+      Engine* engine{ static_cast<Engine*>(glfwGetWindowUserPointer(window)) };
+      engine->getMouse().button(Mouse::Button{ button, action });
     }
   }
 }

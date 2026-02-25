@@ -35,35 +35,35 @@
  * 20 KB), but the functionality is the same.
  */
 
-/*
- * This module converts keysym values into the corresponding ISO 10646
- * (UCS, Unicode) values.
- *
- * The array keysymtab[] contains pairs of X11 keysym values for graphical
- * characters and the corresponding Unicode value. The function
- * _glfwKeySym2Unicode() maps a keysym onto a Unicode value using a binary
- * search, therefore keysymtab[] must remain SORTED by keysym value.
- *
- * We allow to represent any UCS character in the range U-00000000 to
- * U-00FFFFFF by a keysym value in the range 0x01000000 to 0x01ffffff.
- * This admittedly does not cover the entire 31-bit space of UCS, but
- * it does cover all of the characters up to U-10FFFF, which can be
- * represented by UTF-16, and more, and it is very unlikely that higher
- * UCS codes will ever be assigned by ISO. So to get Unicode character
- * U+ABCD you can directly use keysym 0x0100abcd.
- *
- * Original author: Markus G. Kuhn <mkuhn@acm.org>, University of
- *                  Cambridge, April 2001
- *
- * Special thanks to Richard Verhoeven <river@win.tue.nl> for preparing
- * an initial draft of the mapping table.
- *
- */
+ /*
+  * This module converts keysym values into the corresponding ISO 10646
+  * (UCS, Unicode) values.
+  *
+  * The array keysymtab[] contains pairs of X11 keysym values for graphical
+  * characters and the corresponding Unicode value. The function
+  * _glfwKeySym2Unicode() maps a keysym onto a Unicode value using a binary
+  * search, therefore keysymtab[] must remain SORTED by keysym value.
+  *
+  * We allow to represent any UCS character in the range U-00000000 to
+  * U-00FFFFFF by a keysym value in the range 0x01000000 to 0x01ffffff.
+  * This admittedly does not cover the entire 31-bit space of UCS, but
+  * it does cover all of the characters up to U-10FFFF, which can be
+  * represented by UTF-16, and more, and it is very unlikely that higher
+  * UCS codes will ever be assigned by ISO. So to get Unicode character
+  * U+ABCD you can directly use keysym 0x0100abcd.
+  *
+  * Original author: Markus G. Kuhn <mkuhn@acm.org>, University of
+  *                  Cambridge, April 2001
+  *
+  * Special thanks to Richard Verhoeven <river@win.tue.nl> for preparing
+  * an initial draft of the mapping table.
+  *
+  */
 
 
-//************************************************************************
-//****                KeySym to Unicode mapping table                 ****
-//************************************************************************
+  //************************************************************************
+  //****                KeySym to Unicode mapping table                 ****
+  //************************************************************************
 
 static const struct codepair {
   unsigned short keysym;
@@ -908,35 +908,35 @@ static const struct codepair {
 //
 uint32_t _glfwKeySym2Unicode(unsigned int keysym)
 {
-    int min = 0;
-    int max = sizeof(keysymtab) / sizeof(struct codepair) - 1;
-    int mid;
+  int min = 0;
+  int max = sizeof(keysymtab) / sizeof(struct codepair) - 1;
+  int mid;
 
-    // First check for Latin-1 characters (1:1 mapping)
-    if ((keysym >= 0x0020 && keysym <= 0x007e) ||
-        (keysym >= 0x00a0 && keysym <= 0x00ff))
-    {
-        return keysym;
-    }
+  // First check for Latin-1 characters (1:1 mapping)
+  if ((keysym >= 0x0020 && keysym <= 0x007e) ||
+    (keysym >= 0x00a0 && keysym <= 0x00ff))
+  {
+    return keysym;
+  }
 
-    // Also check for directly encoded 24-bit UCS characters
-    if ((keysym & 0xff000000) == 0x01000000)
-        return keysym & 0x00ffffff;
+  // Also check for directly encoded 24-bit UCS characters
+  if ((keysym & 0xff000000) == 0x01000000)
+    return keysym & 0x00ffffff;
 
-    // Binary search in table
-    while (max >= min)
-    {
-        mid = (min + max) / 2;
-        if (keysymtab[mid].keysym < keysym)
-            min = mid + 1;
-        else if (keysymtab[mid].keysym > keysym)
-            max = mid - 1;
-        else
-            return keysymtab[mid].ucs;
-    }
+  // Binary search in table
+  while (max >= min)
+  {
+    mid = (min + max) / 2;
+    if (keysymtab[mid].keysym < keysym)
+      min = mid + 1;
+    else if (keysymtab[mid].keysym > keysym)
+      max = mid - 1;
+    else
+      return keysymtab[mid].ucs;
+  }
 
-    // No matching Unicode value found
-    return GLFW_INVALID_CODEPOINT;
+  // No matching Unicode value found
+  return GLFW_INVALID_CODEPOINT;
 }
 
 #endif // _GLFW_WAYLAND or _GLFW_X11

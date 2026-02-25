@@ -22,11 +22,11 @@
 
 namespace glm
 {
-	/// @addtogroup ext_scalar_packing
-	/// @{
+  /// @addtogroup ext_scalar_packing
+  /// @{
 
 
-	/// @}
+  /// @}
 }// namespace glm
 
 #include "scalar_packing.inl"

@@ -13,7 +13,7 @@
 
 namespace Nuke
 {
-  Window::Window(const char *title, const char *path_to_icon, float widthRatio, float heightRatio, GLFWmonitor *screenMode, GLFWwindow *share)
+  Window::Window(const char* title, const char* path_to_icon, float widthRatio, float heightRatio, GLFWmonitor* screenMode, GLFWwindow* share)
   {
     // setting window hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -21,20 +21,20 @@ namespace Nuke
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-    const GLFWvidmode *monitor{glfwGetVideoMode(glfwGetPrimaryMonitor())};
+    const GLFWvidmode* monitor{ glfwGetVideoMode(glfwGetPrimaryMonitor()) };
     if (!monitor)
-      throw std::runtime_error{"ERROR::WINDOW.CPP::WINDOW()::FAILED_TO_GET_PRIMARY_MONITOR"};
+      throw std::runtime_error{ "ERROR::WINDOW.CPP::WINDOW()::FAILED_TO_GET_PRIMARY_MONITOR" };
 
     // finding ratio related to screen width
-    int windowWidth{static_cast<int>(monitor->width / widthRatio)};
-    int windowHeight{static_cast<int>(windowWidth - (windowWidth / heightRatio))};
+    int windowWidth{ static_cast<int>(monitor->width / widthRatio) };
+    int windowHeight{ static_cast<int>(windowWidth - (windowWidth / heightRatio)) };
 
     // set window dimensions
-    dimensions_ = Dimensions{windowHeight, windowWidth};
+    dimensions_ = Dimensions{ windowHeight, windowWidth };
 
     // centering window
-    int finalPosX{(monitor->width / 2) - (windowWidth / 2)};
-    int finalPosY{(monitor->height / 2) - (windowHeight / 2)};
+    int finalPosX{ (monitor->width / 2) - (windowWidth / 2) };
+    int finalPosY{ (monitor->height / 2) - (windowHeight / 2) };
 
     glfwWindowHint(GLFW_POSITION_X, finalPosX);
     glfwWindowHint(GLFW_POSITION_Y, finalPosY);
@@ -69,8 +69,8 @@ namespace Nuke
     }
 
     // setting window icon
-    std::string root{std::filesystem::current_path().string() + '/'};
-    std::string path{root + std::string{path_to_icon}};
+    std::string root{ std::filesystem::current_path().string() + '/' };
+    std::string path{ root + std::string{path_to_icon} };
 
     GLFWimage icon{};
     icon.pixels = stbi_load(path.c_str(), &icon.width, &icon.height, 0, 4); // rgba channels
@@ -85,7 +85,7 @@ namespace Nuke
     glfwSetWindowRefreshCallback(window_, Callback::refresh);
   }
 
-  void Window::title(const char *title)
+  void Window::title(const char* title)
   {
     glfwSetWindowTitle(window_, title);
   }

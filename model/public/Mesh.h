@@ -13,9 +13,9 @@ namespace Nuke
 {
   struct Vertex
   {
-    glm::vec3 position{0.0f, 0.0f, 0.0f};
-    glm::vec2 texture{0.0f, 0.0f};
-    glm::vec3 normal{0.0f, 0.0f, 0.0f};
+    glm::vec3 position{ 0.0f, 0.0f, 0.0f };
+    glm::vec2 texture{ 0.0f, 0.0f };
+    glm::vec3 normal{ 0.0f, 0.0f, 0.0f };
   };
 
   struct Attribute
@@ -30,7 +30,7 @@ namespace Nuke
   {
     Layout() = default;
 
-    void initialize(std::vector<Attribute> &&newAttributes);
+    void initialize(std::vector<Attribute>&& newAttributes);
 
     void bind() const { glBindVertexArray(VAO); }
     void unbind() const { glBindVertexArray(0); }
@@ -46,12 +46,12 @@ namespace Nuke
   {
     VertexBuffer() = default;
 
-    void initialize(const std::vector<Vertex> &vertices);
+    void initialize(const std::vector<Vertex>& vertices);
 
     void gen() { glGenBuffers(1, &VBO); }
     void bind() const { glBindBuffer(GL_ARRAY_BUFFER, VBO); }
-    void send(const std::vector<Vertex> &vertices);
-    void send(const std::vector<glm::mat4> &matrices);
+    void send(const std::vector<Vertex>& vertices);
+    void send(const std::vector<glm::mat4>& matrices);
 
     unsigned int VBO{};
     unsigned int vertexCount{};
@@ -62,7 +62,7 @@ namespace Nuke
     Element() = default;
 
     template <typename T>
-    void initialize(const std::vector<T> &indices)
+    void initialize(const std::vector<T>& indices)
     {
       gen();
       bind();
@@ -75,7 +75,7 @@ namespace Nuke
     void bind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); }
 
     template <typename T>
-    void send(const std::vector<T> &indices)
+    void send(const std::vector<T>& indices)
     {
       if (indices.size() > 0)
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(T), indices.data(), GL_STATIC_DRAW);
@@ -85,7 +85,7 @@ namespace Nuke
 
     unsigned int EBO{};
     std::size_t indiceCount{};
-    GLenum indexType{GL_UNSIGNED_INT};
+    GLenum indexType{ GL_UNSIGNED_INT };
   };
 
   class Shader;
@@ -94,7 +94,7 @@ namespace Nuke
   {
   public:
     template <typename T>
-    void initialize(const std::vector<Vertex> &vertices, const std::vector<T> &indices, std::vector<Attribute> &&attributes, std::vector<Texture> &&textures)
+    void initialize(const std::vector<Vertex>& vertices, const std::vector<T>& indices, std::vector<Attribute>&& attributes, std::vector<Texture>&& textures)
     {
       textures_ = std::move(textures);
 
@@ -119,7 +119,7 @@ namespace Nuke
     }
 
     template <typename T>
-    void initialize(const std::vector<Vertex> &vertices, const std::vector<T> &indices, std::vector<Attribute> &&attributes)
+    void initialize(const std::vector<Vertex>& vertices, const std::vector<T>& indices, std::vector<Attribute>&& attributes)
     {
       /*
       order that seems to work is:
@@ -143,7 +143,7 @@ namespace Nuke
 
     void changeIndexType(GLenum e) { element_.indexType = e; }
 
-    void draw(Shader &shader);
+    void draw(Shader& shader);
 
   protected:
     Layout layout_{};
