@@ -8,6 +8,7 @@ set(
   private/Ditto.cpp
   private/Mesh.cpp
   private/Model.cpp
+  private/Models.cpp
   private/Object.cpp
   private/Spaces.cpp
   private/Texture.cpp

@@ -34,7 +34,7 @@ namespace Nuke
 
   void Engine::initialize()
   {
-    states_.push<Ground>(states_, *this);
+    states_.push<Ground>(*this);
     /* openGL context MUST be valid by this point */
   }
 

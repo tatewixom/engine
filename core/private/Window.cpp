@@ -60,17 +60,9 @@ namespace Nuke
     // turning on v-sync by default
     glfwSwapInterval(1);
 
-    // loading GLAD
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-      std::cerr << "ERROR::WINDOW.CPP::WINDOW()::FAILURE_IN_INITIALIZING_GLAD\n";
-      glfwTerminate();
-      return;
-    }
-
     // setting window icon
     std::string root{ std::filesystem::current_path().string() + '/' };
-    std::string path{ root + std::string{path_to_icon} };
+    std::string path{ root + std::string{ path_to_icon } };
 
     GLFWimage icon{};
     icon.pixels = stbi_load(path.c_str(), &icon.width, &icon.height, 0, 4); // rgba channels

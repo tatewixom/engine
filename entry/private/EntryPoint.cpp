@@ -8,13 +8,20 @@
 int main()
 {
   if (!glfwInit())
-    throw std::runtime_error{ "ERROR::MAIN.CPP::MAIN()::GLFW_FAILED_TO_INITIALIZE" };
+    return -1;
 
-  //window is responsible for initializing GLAD
+  //initialize window (glfw needs initialized and valid)
   Nuke::Window window{ "LearnOpenGL", "assets/icon/container.jpg" };
   window.vsync(false);
 
-  //Engine MUST have a window object in order to run
+  //initialize glad
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+  {
+    glfwTerminate();
+    return -1;
+  }
+
+  //Engine MUST have a window object and glad MUST be valid
   Nuke::Engine engine{ window };
   engine.run();
 

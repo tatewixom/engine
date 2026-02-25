@@ -19,6 +19,7 @@ namespace Nuke
     Window& getWindow() noexcept { return window_; }
     Mouse& getMouse() noexcept { return mouse_; }
     Camera& getCamera() noexcept { return camera_; }
+    States& getStates() noexcept { return states_; }
     Spaces& getSpaces() noexcept { return spaces_; }
 
   private:

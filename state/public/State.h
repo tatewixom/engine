@@ -6,22 +6,14 @@
 
 namespace Nuke
 {
-  class States;
-
   class State
   {
   public:
-    explicit State(States& states)
-      : state_{ states }
-    {
-    }
+    State() = default;
 
     virtual ~State() = default;
 
     virtual void loop() = 0;
-
-  protected:
-    States& state_;
   };
 
   class States
@@ -47,31 +39,12 @@ namespace Nuke
     std::deque<std::unique_ptr<State>> states_{};
   };
 
-  class Temporary final : public State
-  {
-  public:
-    Temporary(States& states)
-      : State{ states }
-    {
-    }
-
-    ~Temporary() override = default;
-
-    void loop() override {}
-  };
-
   /*
   Example derived class:
 
-  class Example final : public IState
+  class Example final : public State
   {
   public:
-    Example(State& state)
-      : IState{ state }
-    {
-      initialize();
-    }
-
     ~Example() override = default;
 
     void initialize() override {}

@@ -12,7 +12,7 @@ namespace Nuke
   class Ground final : public State
   {
   public:
-    Ground(States& states, Engine& engine);
+    Ground(Engine& engine);
 
     ~Ground() override;
 
