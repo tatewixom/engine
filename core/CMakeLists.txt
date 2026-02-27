@@ -33,7 +33,6 @@ set(
   glad
   glm
   glfw
-  stb
   nuke_time
   nuke_state
 )

@@ -14,6 +14,8 @@ namespace Nuke
 {
   Model torus{};
   Model alien{};
+  Model tigerhumvee{};
+  Model sea{};
   Shader model_basic_loader{};
   Shader model_loader{};
 
@@ -39,7 +41,9 @@ namespace Nuke
     std::string root{ std::filesystem::current_path().string() + '/' };
 
     torus.initialize_t("assets/models/torus/basic_torus_00.gltf", glm::vec3{ 0.f, 0.f, 0.f });
+    tigerhumvee.initialize_t("assets/models/vehicles/tigerhumvee.glb", glm::vec3{ -20.f, 0.f, 0.f });
     alien.initialize_t("assets/models/alien/t7t_terapod.glb", glm::vec3{ 20.f, 0.f, 0.f });
+    sea.initialize_t("assets/models/architecture/sea_keep_lonely_watcher.glb", glm::vec3{ 40.f, 0.f, 0.f });
   }
 
   void Ground::input()
@@ -79,6 +83,12 @@ namespace Nuke
       else
         mouse.viewMode();
     }
+
+    //debugging
+    if (Keyboard::isKeyJustPressed(window, GLFW_KEY_1))
+      ++model_loader.unit;
+    if (Keyboard::isKeyJustPressed(window, GLFW_KEY_2) && (model_loader.unit > 0))
+      --model_loader.unit;
   }
 
   void Ground::clear()
@@ -106,8 +116,10 @@ namespace Nuke
 
   void Ground::render()
   {
-    torus.draw(model_basic_loader);
+    torus.draw(model_loader);
     alien.draw(model_loader);
+    tigerhumvee.draw(model_loader);
+    sea.draw(model_loader);
 
     glfwSwapBuffers(engine_.getWindow());
   }

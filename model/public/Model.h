@@ -3,7 +3,6 @@
 #include "Mesh.h"
 
 #include <tiny_gltf.h>
-#include <stb_image.h>
 
 namespace Nuke
 {

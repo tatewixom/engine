@@ -21,15 +21,3 @@ target_include_directories(
   PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/public
 )
-
-# dependencies
-set(
-  TINYGLTF_DEPENDENCIES
-  stb
-)
-
-target_link_libraries(
-  tinygltf
-  PUBLIC
-  ${TINYGLTF_DEPENDENCIES}
-)

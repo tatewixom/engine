@@ -4,8 +4,7 @@
 #include <deque>
 
 #include <glad/glad.h>
-
-#include <stb_image.h>
+#include <glm.hpp>
 
 namespace Nuke
 {
@@ -43,8 +42,67 @@ namespace Nuke
     Type type_{};
 
   private:
-    static std::deque<Texture*> s_textureQueue;
-    static int s_activeUnits;
     static constexpr int s_null_tex{ 0 };
   };
+
+  namespace Experimental
+  {
+    enum class Type
+    {
+      none,
+      base,
+      normal,
+      metallic,
+      roughness,
+      emissive,
+      occlusion,
+    };
+
+    struct Image
+    {
+      std::vector<unsigned char> data{};
+      int width{};
+      int height{};
+      std::string format{};
+      int channels{};
+      int layout{};
+      int bits{};
+    };
+
+    struct Sampler
+    {
+      int min{};
+      int mag{};
+      int ws{};
+      int wt{};
+    };
+
+    using Factor = glm::vec4;
+
+    struct Material
+    {
+      Image image{};
+      Type type{};
+      Factor factor{};
+    };
+
+    //TODO: flip Material and Texture names. Material is more encapsulating and texture doesn't make sense for the whole
+
+    class Texture
+    {
+    public:
+      Texture(const Material& material, const Sampler& sampler) noexcept;
+      //~Texture() noexcept { glDeleteTextures(1, &id_); }
+
+      unsigned int id() const noexcept { return id_; }
+      Type type() const noexcept { return material_.type; }
+    private:
+      void load() noexcept;
+
+    private:
+      Material material_{};
+      Sampler sampler_{};
+      unsigned int id_{};
+    };
+  }
 }

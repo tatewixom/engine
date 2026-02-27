@@ -28,13 +28,13 @@ namespace Nuke
 
   Shader::~Shader()
   {
-    deactivate();
+    //deactivate();
 
     // deleting vertex and fragment objects
-    glDeleteShader(vertex_);
-    glDeleteShader(fragment_);
+    //glDeleteShader(vertex_);
+    //glDeleteShader(fragment_);
 
-    glDeleteProgram(program_);
+    //glDeleteProgram(program_);
   }
 
   void Shader::initialize(std::string_view vertex, std::string_view fragment)

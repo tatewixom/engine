@@ -9,8 +9,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <stb_image.h>
-
 #include <string>
 #include <iostream>
 
@@ -22,14 +20,13 @@ namespace Nuke
     // setting glfw pointer to engine for callbacks
     glfwSetWindowUserPointer(window_, this);
 
-    // stbi init
-    stbi_set_flip_vertically_on_load(true);
-
     // initially setting user to view mode
     // that is, using the mouse to control the camera
     mouse_.viewMode();
 
+    //options that should reside in the renderer/model class when its implemented
     glEnable(GL_DEPTH_TEST);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   }
 
   void Engine::initialize()

@@ -55,6 +55,8 @@ namespace Nuke
     void activate() const { glUseProgram(program_); }
     void deactivate() const { glUseProgram(0); }
 
+    int unit{};
+
   private:
     GLuint program_{};
     GLuint vertex_{};

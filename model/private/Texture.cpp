@@ -1,230 +1,13 @@
 #include "Texture.h"
+#include <map>
+#include <filesystem>
+#include <exception>
+
+#include <tiny_gltf.h>
+
 
 namespace Nuke
 {
-  std::deque<Texture*> Texture::s_textureQueue{};
-  int Texture::s_activeUnits{};
-
-  void Texture::initialize(std::string_view path, Type type)
-  {
-    // assigning type
-    type_ = type;
-
-    // look into adding a guard for double initialization
-    // or perhaps make another initialization perceived as changing texture to new one
-
-    if (s_textureQueue.size() < getMaxUnits())
-    {
-      // assigning current texture to current units active + 1
-      assignedUnit_ = static_cast<int>(GL_TEXTURE0) + s_activeUnits;
-      ++s_activeUnits;
-    }
-    else
-    {
-      // assigning current texture to back-of-queue's texture unit
-      assignedUnit_ = s_textureQueue.back()->assignedUnit_;
-
-      // nullifying back-of-queue's texture
-      s_textureQueue.back()->assignedUnit_ = s_null_tex;
-
-      // removing unused texture from queue
-      s_textureQueue.pop_back();
-    }
-
-    // load texture based off path
-    load(path);
-
-    // add current texture to front of queue
-    s_textureQueue.push_front(this);
-  }
-
-  void Texture::initialize(const unsigned char* data, int width, int height, std::string_view format, Type type)
-  {
-    // assigning type
-    type_ = type;
-
-    // look into adding a guard for double initialization
-    // or perhaps make another initialization perceived as changing texture to new one
-
-    if (s_textureQueue.size() < getMaxUnits())
-    {
-      // assigning current texture to current units active + 1
-      assignedUnit_ = static_cast<int>(GL_TEXTURE0) + s_activeUnits;
-      ++s_activeUnits;
-    }
-    else
-    {
-      // assigning current texture to back-of-queue's texture unit
-      assignedUnit_ = s_textureQueue.back()->assignedUnit_;
-
-      // nullifying back-of-queue's texture
-      s_textureQueue.back()->assignedUnit_ = s_null_tex;
-
-      // removing unused texture from queue
-      s_textureQueue.pop_back();
-    }
-
-    // load texture based off raw data from gltf
-    loadFromGLTF(data, width, height, format);
-
-    // add current texture to front of queue
-    s_textureQueue.push_front(this);
-  }
-
-  int Texture::use()
-  {
-    // check to see if texture is currently tied to a unit
-    if (assignedUnit_ != s_null_tex)
-    {
-      glActiveTexture(static_cast<GLenum>(assignedUnit_));
-      glBindTexture(GL_TEXTURE_2D, id_);                    // bind texture just in case
-      return assignedUnit_ - static_cast<int>(GL_TEXTURE0); // return if not null
-    }
-    else
-    {
-      // assigning current texture the back-of-queue's texture unit
-      assignedUnit_ = s_textureQueue.back()->assignedUnit_;
-
-      // binding current textures id to new unit
-      glActiveTexture(static_cast<GLenum>(assignedUnit_));
-      glBindTexture(GL_TEXTURE_2D, id_);
-      glActiveTexture(GL_TEXTURE0); // setting to default
-
-      // nullifying back-of-queue's texture
-      s_textureQueue.back()->assignedUnit_ = s_null_tex;
-
-      // popping null texture at back of queue
-      s_textureQueue.pop_back();
-
-      // pushing current texture to front of queue
-      s_textureQueue.push_front(this);
-
-      // reuturning assigned texture unit
-      return assignedUnit_ - static_cast<int>(GL_TEXTURE0);
-    }
-  }
-
-  bool Texture::isRGBA(std::string_view sv) const
-  {
-    // initially look for '.' char
-    std::string_view::size_type sv_pos{ sv.find_last_of('.') };
-
-    // check if it wasn't found
-    if (sv_pos == std::string_view::npos)
-    {
-      // instead look for last of '/' char
-      sv_pos = sv.find_last_of('/');
-
-      // check if it was also not found
-      if (sv_pos == std::string_view::npos)
-      {
-        std::cerr << "ERROR::TEXTURE.CPP::ISRGBA()::UNABLE_TO_IDENTIFY_IMAGE_TYPE\n"
-          << "WARNING::TEXTURE.CPP::ISRGBA()::RESORTING_TO_RGBA\n";
-
-        // resort to RGBA format
-        return true;
-      }
-    }
-
-    // get string_view of characters after last of chosen chars ('.', '/')
-    std::string_view format{ sv.substr(sv_pos + 1) };
-
-    // constant static "png" string for detecting RGBA format
-    static constexpr std::string_view png{ "png" };
-
-    // return whether its a .png or not
-    return format == png;
-    /* THIS ASSUMES THAT .PNG IS THE ONLY FORMAT THAT IS RGBA */
-  }
-
-  void Texture::load(const std::string_view format)
-  {
-    // activating assigned texture unit
-    glActiveTexture(static_cast<GLenum>(assignedUnit_));
-
-    // generating texture, assigning texture id, and binding texture
-    glGenTextures(1, &id_);
-    glBindTexture(GL_TEXTURE_2D, id_);
-
-    // specifying image wrapping to gl
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-
-    // specifying mipmap filter to gl
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    int width{}, height{}, channels{};
-    unsigned char* data{ stbi_load(format.data(), &width, &height, &channels, 0) };
-
-    if (!data)
-      std::cerr << "ERROR::TEXTURE.CPP::LOAD()::DATA_CHAR_ARRAY_EMPTY\n";
-    else
-    {
-      if (isRGBA(format))
-      {
-        // send image data to gl with RGBA format
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-      }
-      else
-      {
-        // send image data to gl with RGB format
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-      }
-    }
-
-    stbi_image_free(data);
-  }
-
-  void Texture::loadFromGLTF(const unsigned char* data, int width, int height, std::string_view format)
-  {
-    // activating assigned texture unit
-    glActiveTexture(static_cast<GLenum>(assignedUnit_));
-
-    // generating texture, assigning texture id, and binding texture
-    glGenTextures(1, &id_);
-    glBindTexture(GL_TEXTURE_2D, id_);
-
-    // specifying image wrapping to gl
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-
-    // specifying mipmap filter to gl
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    // check if data is empty (null)
-    if (!data)
-      std::cerr << "ERROR::TEXTURE.CPP::LOAD()::DATA_CHAR_ARRAY_EMPTY\n";
-    else
-    {
-      if (isRGBA(format))
-      {
-        // send image data to gl with RGBA format
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-      }
-      else
-      {
-        // send image data to gl with RGB format
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-      }
-    }
-  }
-
-  GLint Texture::getMaxUnits() const
-  {
-    GLint maxUnits{};
-
-    // gl function made for accessing max texture units on system
-    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxUnits);
-
-    return maxUnits;
-  }
-
   /*
     last session summary:
 
@@ -263,4 +46,472 @@ namespace Nuke
     base color map across meshes. It wasteful as of right now, but it works (at least, I
     assume).
   */
+
+  namespace Experimental
+  {
+    struct Channel
+    {
+      GLenum internal{};
+      GLenum upload{};
+      GLenum type{};
+    };
+
+    bool isRGBA(std::string_view sv) noexcept
+    {
+      // initially look for '.' char
+      std::string_view::size_type sv_pos{ sv.find_last_of('.') };
+
+      // check if it wasn't found
+      if (sv_pos == std::string_view::npos)
+      {
+        // instead look for last of '/' char
+        sv_pos = sv.find_last_of('/');
+
+        // check if it was also not found
+        if (sv_pos == std::string_view::npos)
+        {
+          std::cerr << "[texture] unable to determine image format of '"
+            << sv << "'\n[texture] Resorting to RGBA format...\n";
+
+          // resort to RGBA format
+          return true;
+        }
+      }
+
+      // get string_view of characters after last of chosen chars ('.', '/')
+      std::string_view format{ sv.substr(sv_pos + 1) };
+
+      // constant static "png" string for detecting RGBA format
+      static constexpr std::string_view png{ "png" };
+
+      // return whether its a .png or not
+      return format == png;
+      /* THIS ASSUMES THAT .PNG IS THE ONLY FORMAT THAT IS RGBA */
+    }
+
+    GLenum gltf_wrap_to_gl(int wrap) noexcept
+    {
+      switch (wrap)
+      {
+      case TINYGLTF_TEXTURE_WRAP_REPEAT:
+        return GL_REPEAT;
+      case TINYGLTF_TEXTURE_WRAP_CLAMP_TO_EDGE:
+        return GL_CLAMP_TO_EDGE;
+      case TINYGLTF_TEXTURE_WRAP_MIRRORED_REPEAT:
+        return GL_MIRRORED_REPEAT;
+      default:
+        return GL_REPEAT;
+      }
+    }
+
+    GLenum gltf_filter_to_gl(int filter) noexcept
+    {
+      switch (filter)
+      {
+      case TINYGLTF_TEXTURE_FILTER_NEAREST: //using mipmaps
+      case TINYGLTF_TEXTURE_FILTER_NEAREST_MIPMAP_LINEAR:
+        return GL_NEAREST_MIPMAP_LINEAR;
+      case TINYGLTF_TEXTURE_FILTER_NEAREST_MIPMAP_NEAREST:
+        return GL_NEAREST_MIPMAP_NEAREST;
+      case -1: //default to linear filter mipmap if not specified (-1 is unspecified via tinygltf spec)
+      case TINYGLTF_TEXTURE_FILTER_LINEAR: //using mipmaps
+      case TINYGLTF_TEXTURE_FILTER_LINEAR_MIPMAP_LINEAR:
+        return GL_LINEAR_MIPMAP_LINEAR;
+      case TINYGLTF_TEXTURE_FILTER_LINEAR_MIPMAP_NEAREST:
+        return GL_LINEAR_MIPMAP_NEAREST;
+      default:
+        return GL_LINEAR_MIPMAP_LINEAR;
+      }
+    }
+
+    GLenum gltf_pixel_type_to_gl(int type) noexcept
+    {
+      switch (type)
+      {
+      case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
+        return GL_UNSIGNED_BYTE;
+      case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
+        return GL_UNSIGNED_SHORT;
+      case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
+        return GL_UNSIGNED_INT;
+      case TINYGLTF_COMPONENT_TYPE_BYTE:
+        return GL_BYTE;
+      case TINYGLTF_COMPONENT_TYPE_SHORT:
+        return GL_SHORT;
+      case TINYGLTF_COMPONENT_TYPE_INT:
+        return GL_INT;
+      case TINYGLTF_COMPONENT_TYPE_FLOAT:
+        return GL_FLOAT;
+      case TINYGLTF_COMPONENT_TYPE_DOUBLE:
+        return GL_DOUBLE;
+      default:
+        return GL_UNSIGNED_BYTE;
+      }
+    }
+
+    Channel get_channel_format(const Material& material) noexcept
+    {
+      Channel channel{};
+      channel.type = gltf_pixel_type_to_gl(material.image.layout);
+
+      //check if sRGB
+      if (material.type == Type::base)
+      {
+        channel.upload = GL_RGBA;
+
+        if (material.image.channels == 4)
+          channel.internal = GL_SRGB8_ALPHA8;
+        else
+          channel.internal = GL_SRGB8;
+
+        return channel;
+      }
+
+      //get upload format first
+      const Image& image{ material.image };
+      switch (image.channels)
+      {
+      case 1:
+        channel.upload = GL_RED;
+        break;
+      case 2:
+        channel.upload = GL_RG;
+        break;
+      case 3:
+        channel.upload = GL_RGB;
+        break;
+      case 4:
+        channel.upload = GL_RGBA;
+        break;
+      default:
+        std::cerr << "[texture] unrecognized upload channel format\n[texture] Resorting to GL_RGBA...\n";
+        channel.upload = GL_RGBA;
+        break;
+      }
+
+      int bits{ image.bits };
+      if (bits == 0)
+      {
+        switch (channel.type)
+        {
+        case GL_UNSIGNED_BYTE:
+        case GL_UNSIGNED_SHORT:
+        case GL_BYTE:
+        case GL_SHORT:
+          bits = 8;
+          break;
+        case GL_UNSIGNED_INT:
+        case GL_INT:
+        case GL_FLOAT:
+          bits = 32;
+          break;
+        case GL_DOUBLE:
+          bits = 64;
+          break;
+        default:
+          bits = 8;
+          break;
+        }
+      }
+
+      if (bits == 8) //8-bit storage mechanism
+      {
+        if ((channel.type == GL_UNSIGNED_BYTE) || (channel.type == GL_BYTE) || (channel.type == GL_UNSIGNED_SHORT) || (channel.type == GL_SHORT))
+        {
+          switch (image.channels)
+          {
+          case 1:
+            channel.internal = GL_R8;
+            break;
+          case 2:
+            channel.internal = GL_RG8;
+            break;
+          case 3:
+            channel.internal = GL_RGB8;
+            break;
+          case 4:
+            channel.internal = GL_RGBA8;
+            break;
+          default:
+            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA8...\n";
+            channel.internal = GL_RGBA8;
+            break;
+          }
+        }
+        else if (channel.type == GL_UNSIGNED_INT)
+        {
+          switch (image.channels)
+          {
+          case 1:
+            channel.internal = GL_R8UI;
+            break;
+          case 2:
+            channel.internal = GL_RG8UI;
+            break;
+          case 3:
+            channel.internal = GL_RGB8UI;
+            break;
+          case 4:
+            channel.internal = GL_RGBA8UI;
+            break;
+          default:
+            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA8UI...\n";
+            channel.internal = GL_RGBA8UI;
+            break;
+          }
+        }
+        else if (channel.type == GL_INT)
+        {
+          switch (image.channels)
+          {
+          case 1:
+            channel.internal = GL_R8I;
+            break;
+          case 2:
+            channel.internal = GL_RG8I;
+            break;
+          case 3:
+            channel.internal = GL_RGB8;
+            break;
+          case 4:
+            channel.internal = GL_RGBA8I;
+            break;
+          default:
+            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA8I...\n";
+            channel.internal = GL_RGBA8I;
+            break;
+          }
+        }
+        else
+        {
+          std::cerr << "[texture] unsupported 8-bit type\n[texture] defaulting to GL_RGBA8\n";
+          channel.internal = GL_RGBA8;
+        }
+      }
+      else if (bits == 16) //16-bit storage mechanism
+      {
+        if ((channel.type == GL_UNSIGNED_SHORT) || (channel.type == GL_SHORT))
+        {
+          switch (image.channels)
+          {
+          case 1:
+            channel.internal = GL_R16;
+            break;
+          case 2:
+            channel.internal = GL_RG16;
+            break;
+          case 3:
+            channel.internal = GL_RGB16;
+            break;
+          case 4:
+            channel.internal = GL_RGBA16;
+            break;
+          default:
+            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA16...\n";
+            channel.internal = GL_RGBA16;
+            break;
+          }
+        }
+        else if (channel.type == GL_UNSIGNED_INT)
+        {
+          switch (image.channels)
+          {
+          case 1:
+            channel.internal = GL_R16UI;
+            break;
+          case 2:
+            channel.internal = GL_RG16UI;
+            break;
+          case 3:
+            channel.internal = GL_RGB16UI;
+            break;
+          case 4:
+            channel.internal = GL_RGBA16UI;
+            break;
+          default:
+            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA16UI...\n";
+            channel.internal = GL_RGBA16UI;
+            break;
+          }
+        }
+        else if (channel.type == GL_INT)
+        {
+          switch (image.channels)
+          {
+          case 1:
+            channel.internal = GL_R16I;
+            break;
+          case 2:
+            channel.internal = GL_RG16I;
+            break;
+          case 3:
+            channel.internal = GL_RGB16I;
+            break;
+          case 4:
+            channel.internal = GL_RGBA16I;
+            break;
+          default:
+            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA16I...\n";
+            channel.internal = GL_RGBA16I;
+            break;
+          }
+        }
+        else if (channel.type == GL_FLOAT)
+        {
+          switch (image.channels)
+          {
+          case 1:
+            channel.internal = GL_R16F;
+            break;
+          case 2:
+            channel.internal = GL_RG16F;
+            break;
+          case 3:
+            channel.internal = GL_RGB16F;
+            break;
+          case 4:
+            channel.internal = GL_RGBA16F;
+            break;
+          default:
+            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA16F...\n";
+            channel.internal = GL_RGBA16F;
+            break;
+          }
+        }
+        else
+        {
+          std::cerr << "[texture] unsupported 16-bit type\n[texture] defaulting to GL_RGBA16\n";
+          channel.internal = GL_RGBA16;
+        }
+      }
+      else if (bits == 32) //32-bit storage mechanism
+      {
+        if (channel.type == GL_UNSIGNED_INT)
+        {
+          switch (image.channels)
+          {
+          case 1:
+            channel.internal = GL_R32UI;
+            break;
+          case 2:
+            channel.internal = GL_RG32UI;
+            break;
+          case 3:
+            channel.internal = GL_RGB32UI;
+            break;
+          case 4:
+            channel.internal = GL_RGBA32UI;
+            break;
+          default:
+            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA32UI...\n";
+            channel.internal = GL_RGBA32UI;
+            break;
+          }
+        }
+        else if (channel.type == GL_FLOAT)
+        {
+          switch (image.channels)
+          {
+          case 1:
+            channel.internal = GL_R32F;
+            break;
+          case 2:
+            channel.internal = GL_RG32F;
+            break;
+          case 3:
+            channel.internal = GL_RGB32F;
+            break;
+          case 4:
+            channel.internal = GL_RGBA32F;
+            break;
+          default:
+            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA32F...\n";
+            channel.internal = GL_RGBA32F;
+            break;
+          }
+        }
+        else if (channel.type == GL_INT)
+        {
+          switch (image.channels)
+          {
+          case 1:
+            channel.internal = GL_R32I;
+            break;
+          case 2:
+            channel.internal = GL_RG32I;
+            break;
+          case 3:
+            channel.internal = GL_RGB32I;
+            break;
+          case 4:
+            channel.internal = GL_RGBA32I;
+            break;
+          default:
+            std::cerr << "[texture] unrecognized internal channel format\n[texture] resorting to GL_RGBA32I...\n";
+            channel.internal = GL_RGBA32I;
+            break;
+          }
+        }
+        else
+        {
+          std::cerr << "[texture] unsupported 32-bit format\n[texture] defaulting to GL_RGBA32UI";
+          channel.internal = GL_RGBA32UI;
+        }
+      }
+      else
+      {
+        std::cerr << "[texture] unsupported bit count. supported bit counts are 8, 16, and 32\n[texture] defaulting to GL_RGBA8\n";
+        channel.internal = GL_RGBA8;
+      }
+
+      return channel;
+    }
+
+    Texture::Texture(const Material& material, const Sampler& sampler) noexcept
+      : material_{ material }
+      , sampler_{ sampler }
+    {
+      // load texture based off raw data from gltf
+      load();
+    }
+
+    void Texture::load() noexcept
+    {
+      // generating texture, assigning texture id, and binding texture
+      glGenTextures(1, &id_);
+      glBindTexture(GL_TEXTURE_2D, id_);
+
+      // specifying image wrapping to gl
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gltf_wrap_to_gl(sampler_.ws));
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gltf_wrap_to_gl(sampler_.wt));
+
+      // specifying mipmap filter to gl
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gltf_filter_to_gl(sampler_.min));
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gltf_filter_to_gl(sampler_.mag));
+
+      // check if data is empty (null)
+      if (!material_.image.data.data())
+        std::cerr << "[texture] error in loading image data; image data pointer null\n";
+      else
+      {
+        if (const Image& image{ material_.image }; isRGBA(image.format))
+        {
+          Channel channel{ get_channel_format(material_) };
+          // send image data to gl with RGBA format
+          glTexImage2D(GL_TEXTURE_2D, 0, channel.internal, image.width, image.height, 0, channel.upload, channel.type, image.data.data());
+          glGenerateMipmap(GL_TEXTURE_2D);
+        }
+        else
+        {
+          Channel channel{ get_channel_format(material_) };
+          // send image data to gl with RGB format
+          glTexImage2D(GL_TEXTURE_2D, 0, channel.internal, image.width, image.height, 0, channel.upload, channel.type, image.data.data());
+          glGenerateMipmap(GL_TEXTURE_2D);
+        }
+      }
+
+      //unbinding for safety; allowed to removed in release builds.
+      glBindTexture(GL_TEXTURE_2D, 0);
+    }
+  }
 }

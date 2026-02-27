@@ -2,6 +2,7 @@
 #include "File.h"
 #include "Shader.h"
 
+#include <set>
 #include <variant>
 
 namespace Nuke
@@ -38,6 +39,14 @@ namespace Nuke
     const unsigned char* dataPtr = buffer.data.data() + bufferView.byteOffset + accessor.byteOffset;
 
     return reinterpret_cast<const T*>(dataPtr);
+  }
+
+  glm::vec4 vec_to_vec(const std::vector<double>& vec) noexcept
+  {
+    if (vec.size() == 4)
+      return glm::vec4{ vec[0], vec[1], vec[2], vec[3] };
+
+    return glm::vec4{ 1.f };
   }
 
   static tinygltf::Model make_gltf_model(std::string_view gltf_file_path)
@@ -160,115 +169,6 @@ namespace Nuke
     }
   }
 
-  std::vector<Texture> load_textures(const tinygltf::Model& model, const tinygltf::Primitive& primitive)
-  {
-    std::vector<Texture> textures{};
-
-    int materialIndex{ primitive.material };
-    const tinygltf::Image* image{};
-    if (materialIndex > 0)
-    {
-      const tinygltf::Material& mat = model.materials[materialIndex];
-
-      // extracting base color
-      int baseColorTexIndex{ mat.pbrMetallicRoughness.baseColorTexture.index };
-      if (baseColorTexIndex >= 0)
-      {
-        const tinygltf::Texture& tex{ model.textures[baseColorTexIndex] };
-        int imageIndex{ tex.source };
-
-        image = &model.images[imageIndex];
-      }
-
-      if (image)
-      {
-        Texture temptex{};
-        temptex.initialize(image->image.data(), image->width, image->height, image->mimeType, Texture::Type::base);
-        textures.push_back(temptex);
-      }
-
-      // extracting normal map
-      image = nullptr;
-      int normalTexIndex = mat.normalTexture.index;
-      if (normalTexIndex >= 0)
-      {
-        const tinygltf::Texture& tex = model.textures[normalTexIndex];
-        image = &model.images[tex.source];
-      }
-
-      if (image)
-      {
-        Texture temptex{};
-        temptex.initialize(image->image.data(), image->width, image->height, image->mimeType, Texture::Type::normal);
-        textures.push_back(temptex);
-      }
-    }
-
-    return textures;
-  }
-
-  std::vector<Mesh> load_meshes(tinygltf::Model& model)
-  {
-    std::vector<Mesh> meshes{};
-
-    for (auto& mesh : model.meshes)
-    {
-      std::vector<Vertex> vertices{};
-      std::vector<std::uint32_t> indices{};
-      std::vector<Texture> textures{};
-      GLenum indexType{};
-
-      for (auto& primitive : mesh.primitives)
-      {
-        /* load vertices */
-        /*
-          1. load positions
-          2. load normals (optional)
-          3. load texture coords (optional)
-        */
-
-        vertices = load_vertices(model, primitive);
-
-        /* load indices */
-        /*
-          1. load indices with correct byte size
-          2. get type information
-        */
-
-        indices = load_indices<std::uint32_t>(model, primitive);
-
-        /* load textures */
-
-        textures = load_textures(model, primitive);
-      }
-
-      Mesh tempMesh{};
-      tempMesh.initialize(vertices, indices,
-        std::vector<Attribute>{ Attribute{ 0u, 3, sizeof(Vertex), offsetof(Vertex, Vertex::position) },
-        Attribute{ 2u, 2, sizeof(Vertex), offsetof(Vertex, Vertex::texture) },
-        Attribute{ 3u, 3, sizeof(Vertex), offsetof(Vertex, Vertex::normal) } },
-        std::move(textures));
-
-      /*
-        GOAL FOR NEXT SESSION:
-        get to work on making the function more general as to work
-        with the three supported index types.
-
-        this could be achieved by possibly adding three paths
-        depending on a switch case to a for loop that uses the
-        right index type. It sucks because it seems that template
-        metaprogramming doesn't work well here and only leads to
-        more issues.
-      */
-
-      tempMesh.changeIndexType(GL_UNSIGNED_INT);
-
-      meshes.push_back(tempMesh);
-    }
-
-    return meshes;
-  }
-
   void Model::loadMeshes(tinygltf::Model& model)
   {
     // loading meshes from model file
@@ -278,7 +178,7 @@ namespace Nuke
 
       std::vector<Vertex> vertices{};
       std::vector<std::uint16_t> indices{};
-      std::vector<Texture> textures{};
+      std::vector<Experimental::Texture> textures{};
       GLenum indexType{};
 
       for (auto& primitive : mesh.primitives)
@@ -405,6 +305,7 @@ namespace Nuke
         /* extracting textures */
         int materialIndex{ primitive.material };
         const tinygltf::Image* image{};
+        const tinygltf::Sampler* sampler{};
         if (materialIndex >= 0)
         {
           const tinygltf::Material& mat = model.materials[materialIndex];
@@ -415,15 +316,39 @@ namespace Nuke
           {
             const tinygltf::Texture& tex{ model.textures[baseColorTexIndex] };
             int imageIndex{ tex.source };
+            int samplerIndex{ tex.sampler };
 
             image = &model.images[imageIndex];
+            sampler = &model.samplers[samplerIndex];
           }
+
+          /*
+          Assumption being made here. This assumes all images have a mimeType, and that they aren't using URI instead
+          (or if they even have a URI)
+          */
 
           if (image)
           {
-            Texture temptex{};
-            temptex.initialize(image->image.data(), image->width, image->height, image->mimeType, Texture::Type::base);
-            textures.push_back(temptex);
+            textures.emplace_back(
+              Experimental::Material
+              {
+                Experimental::Image{ image->image, image->width, image->height, !image->uri.empty() ? image->uri : image->mimeType, image->component, image->pixel_type, image->bits },
+                Experimental::Type::base,
+                Experimental::Factor{ vec_to_vec(mat.pbrMetallicRoughness.baseColorFactor) }
+              },
+              Experimental::Sampler
+              {
+                sampler
+                ? Experimental::Sampler
+                {
+                sampler->minFilter,
+                sampler->magFilter,
+                sampler->wrapS,
+                sampler->wrapT
+                }
+                : Experimental::Sampler{}
+              }
+            );
           }
 
           // extracting normal map
@@ -437,9 +362,15 @@ namespace Nuke
 
           if (image)
           {
-            Texture temptex{};
-            temptex.initialize(image->image.data(), image->width, image->height, image->mimeType, Texture::Type::normal);
-            textures.push_back(temptex);
+            textures.emplace_back(
+              Experimental::Material
+              {
+                Experimental::Image{ image->image, image->width, image->height, image->mimeType },
+                Experimental::Type::normal,
+                Experimental::Factor{ vec_to_vec(mat.pbrMetallicRoughness.baseColorFactor) }
+              },
+              Experimental::Sampler{}
+            );
           }
 
           /*
@@ -480,7 +411,7 @@ namespace Nuke
       },
         std::move(textures));
       temp.changeIndexType(indexType);
-      meshes_.emplace_back(std::move(temp));
+      meshes_.push_back(std::move(temp));
 
       // preparing vectors for next mesh run
       vertices.clear();
@@ -530,8 +461,7 @@ namespace Nuke
 
     if (vec.size() != 16)
     {
-      std::cerr << "ERROR::MODEL.CPP::VEC_TO_MAT()::SIZE_MUST_BE_"
-        "SIXTEEN\n";
+      std::cerr << "ERROR::MODEL.CPP::VEC_TO_MAT()::SIZE_MUST_BE_SIXTEEN\n";
       return glm::mat4{ 1.0f };
     }
 

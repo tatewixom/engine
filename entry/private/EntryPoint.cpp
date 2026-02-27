@@ -25,5 +25,8 @@ int main()
   Nuke::Engine engine{ window };
   engine.run();
 
+  glfwDestroyWindow(window);
+  glfwTerminate();
+
   return 0;
 }

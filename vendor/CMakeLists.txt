@@ -22,8 +22,8 @@ add_subdirectory(glm)
 # random (learncpp)
 add_subdirectory(random)
 
-# stb
-add_subdirectory(stb)
+# stb (deprecating due to tinygltf providing access to textures)
+# add_subdirectory(stb)
 
 # tinygltf
 add_subdirectory(tinygltf)

@@ -94,7 +94,7 @@ namespace Nuke
   {
   public:
     template <typename T>
-    void initialize(const std::vector<Vertex>& vertices, const std::vector<T>& indices, std::vector<Attribute>&& attributes, std::vector<Texture>&& textures)
+    void initialize(const std::vector<Vertex>& vertices, const std::vector<T>& indices, std::vector<Attribute>&& attributes, std::vector<Experimental::Texture>&& textures)
     {
       textures_ = std::move(textures);
 
@@ -149,6 +149,6 @@ namespace Nuke
     Layout layout_{};
     VertexBuffer buffer_{};
     Element element_{};
-    std::vector<Texture> textures_{};
+    std::vector<Experimental::Texture> textures_{};
   };
 }

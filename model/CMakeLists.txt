@@ -4,8 +4,6 @@ include(nuketargets)
 
 set(
   NUKE_SOURCE_FILES
-  private/Collection.cpp
-  private/Ditto.cpp
   private/Mesh.cpp
   private/Model.cpp
   private/Models.cpp

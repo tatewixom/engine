@@ -174,35 +174,77 @@ namespace Nuke
       std::cerr << "ERROR::MESH.CPP::VERTEXBUFFER::SEND()::MATRICE_ARRAY_WITH_SIZE_BELOW_ONE\n";
   }
 
+  static int get_max_units() noexcept
+  {
+    static int max{};
+
+    if (max == 0)
+      glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &max);
+
+    if ((max < 0) && (max > 32))
+      std::cerr << "[texture] max texture units outside of range\n";
+
+    return max;
+  }
+
+  using Unit = unsigned int;
+
+  static GLenum to_texture_unit(Unit unit) noexcept
+  {
+    return unit + static_cast<Unit>(GL_TEXTURE0);
+  }
+
+  static int unit_to_int(GLenum unit) noexcept
+  {
+    return unit - static_cast<Unit>(GL_TEXTURE0);
+  }
+
   void Mesh::draw(Shader& shader)
   {
     shader.activate();
 
-    std::size_t baseNum{ 1 };
-    std::size_t normNum{ 1 };
-    for (auto& t : textures_)
+    if (textures_.size() != 0)
     {
-      int unit{ t.use() };
+      if (textures_.size() < get_max_units())
+      {
+        GLenum current_unit{ to_texture_unit(0) };
+        std::size_t baseNum{ 1 };
+        std::size_t normNum{ 1 };
+        for (auto& t : textures_)
+        {
+          int id{ t.id() };
 
-      switch (t.type())
-      {
-      case Texture::Type::base:
-      {
-        std::string str{ "texture_base_" + std::to_string(baseNum) };
-        shader.set(str, unit);
-        ++baseNum;
-        break;
+          switch (t.type())
+          {
+          case Experimental::Type::base:
+          {
+            std::string str{ "texture_base_" + std::to_string(baseNum) };
+            glActiveTexture(current_unit);
+            glBindTexture(GL_TEXTURE_2D, t.id());
+            shader.set(str, unit_to_int(current_unit));
+            ++baseNum;
+            break;
+          }
+          case Experimental::Type::normal:
+          {
+            std::string str{ "texture_norm_" + std::to_string(normNum) };
+            glActiveTexture(current_unit);
+            glBindTexture(GL_TEXTURE_2D, t.id());
+            shader.set(str, unit_to_int(current_unit));
+            ++normNum;
+            break;
+          }
+          default:
+            std::cerr << "ERROR::MESH.CPP::DRAW()::NEED_TO_IMPLEMENT_NEW_TEXTURE_TYPE\n";
+            break;
+          }
+
+          ++current_unit;
+        }
       }
-      case Texture::Type::normal:
+      else
       {
-        std::string str{ "texture_norm_" + std::to_string(normNum) };
-        shader.set(str, unit);
-        ++normNum;
-        break;
-      }
-      default:
-        std::cerr << "ERROR::MESH.CPP::DRAW()::NEED_TO_IMPLEMENT_NEW_TEXTURE_TYPE\n";
-        break;
+        std::cerr << "[mesh] too many textures to be drawn\n";
       }
     }
 
