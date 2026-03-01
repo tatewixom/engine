@@ -13,58 +13,46 @@
 
 namespace Nuke
 {
-  Window::Window(const char* title, const char* path_to_icon, float widthRatio, float heightRatio, GLFWmonitor* screenMode, GLFWwindow* share)
+  /*
+    The old mindset was to try and set the window and frame buffer size to something
+    nice looking, however, this doesn't work portably.
+
+    So, it is best to have a "reaction-based" approach, where we just rely on the user
+    to set the window size to what they please. 
+
+    In the future, it would be nice to add a mechanism where the engine remembers the 
+    previous window size and settings (fullscreen, width & height, etc).
+  */
+
+  Window::Window(const char* title, const char* path_to_icon, float widthRatio, float heightRatio)
   {
     // setting window hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-
-    const GLFWvidmode* monitor{ glfwGetVideoMode(glfwGetPrimaryMonitor()) };
-    if (!monitor)
-      throw std::runtime_error{ "ERROR::WINDOW.CPP::WINDOW()::FAILED_TO_GET_PRIMARY_MONITOR" };
-
-    // finding ratio related to screen width
-    int windowWidth{ static_cast<int>(monitor->width / widthRatio) };
-    int windowHeight{ static_cast<int>(windowWidth - (windowWidth / heightRatio)) };
-
-    std::cout << "[window] width and height: " << windowWidth << ", " << windowHeight << '\n';
-
-    // set window dimensions
-    dimensions_ = Dimensions{ windowWidth, windowHeight };
-
-    // centering window
-    int finalPosX{ (monitor->width / 2) - (windowWidth / 2) };
-    int finalPosY{ (monitor->height / 2) - (windowHeight / 2) };
-
-    glfwWindowHint(GLFW_POSITION_X, finalPosX);
-    glfwWindowHint(GLFW_POSITION_Y, finalPosY);
-
-#ifdef __APPLE__
+  #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
+  #endif
 
-    // creating window
-    window_ = glfwCreateWindow(windowWidth, windowHeight, title, screenMode, share);
-
-    // checking if window was created successfully
+    // create "basic" window
+    // meaning, this is the default values if other options arent found
+    window_ = glfwCreateWindow(800, 600, title, nullptr, nullptr);
     if (!window_)
     {
-      std::cerr << "ERROR::WINDOW.CPP::WINDOW()::FAILURE_IN_WINDOW_CREATION\n";
+      std::cerr << "[window] fatal: window failed to create\n";
       glfwTerminate();
-      return;
+      return; 
     }
 
-    // setting current context to window
     glfwMakeContextCurrent(window_);
 
-    // turning on v-sync by default
-    glfwSwapInterval(1);
-
+    //get window size from FRAMEBUFFER, not WINDOW. 
+    glfwGetFramebufferSize(window_, &dimensions_.width, &dimensions_.height);
+    glfwSetFramebufferSizeCallback(window_, Callback::framebuffer);
+      
     // setting window icon
     std::filesystem::path path{ File::get_executable_dir() / std::filesystem::path{ path_to_icon } };
-
     GLFWimage icon{};
     icon.pixels = stbi_load(path.c_str(), &icon.width, &icon.height, 0, 4); // rgba channels
     if (icon.pixels)
@@ -72,24 +60,22 @@ namespace Nuke
       glfwSetWindowIcon(window_, 1, &icon);
       stbi_image_free(icon.pixels);
     }
-
-    // setting window callbacks
-    glfwSetFramebufferSizeCallback(window_, Callback::framebuffer);
-    glfwSetWindowRefreshCallback(window_, Callback::refresh);
+    else
+      std::cerr << "[window] unable to load or locate window icon\n[window] file path: " << path << '\n';
   }
 
-  void Window::title(const char* title)
+  void Window::title(const char* title) const 
   {
     glfwSetWindowTitle(window_, title);
   }
 
-  void Window::size(Dimensions dimensions)
+  void Window::size(Dimensions dimensions) noexcept
   {
     dimensions_ = dimensions;
     glViewport(0, 0, dimensions.width, dimensions.height);
   }
 
-  void Window::vsync(bool val)
+  void Window::vsync(bool val) const
   {
     if (val)
       glfwSwapInterval(1);

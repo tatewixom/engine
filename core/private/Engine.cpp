@@ -23,6 +23,7 @@ namespace Nuke
     // initially setting user to view mode
     // that is, using the mouse to control the camera
     mouse_.viewMode();
+    window_.refresh();
 
     //options that should reside in the renderer/model class when its implemented
     glEnable(GL_DEPTH_TEST);
