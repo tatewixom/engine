@@ -16,6 +16,7 @@ namespace Nuke
   Model alien{};
   Model tigerhumvee{};
   Model sea{};
+  Model backpack{};
   Shader model_basic_loader{};
   Shader model_loader{};
 
@@ -44,6 +45,7 @@ namespace Nuke
     tigerhumvee.initialize_t("assets/models/vehicles/tigerhumvee.glb", glm::vec3{ -20.f, 0.f, 0.f });
     alien.initialize_t("assets/models/alien/t7t_terapod.glb", glm::vec3{ 20.f, 0.f, 0.f });
     sea.initialize_t("assets/models/architecture/sea_keep_lonely_watcher.glb", glm::vec3{ 40.f, 0.f, 0.f });
+    //backpack.initialize_t("assets/models/backpack/survival_guitar_backpack.glb", glm::vec3{ 40.f, 0.f, 0.f });
   }
 
   void Ground::input()
@@ -120,6 +122,7 @@ namespace Nuke
     alien.draw(model_loader);
     tigerhumvee.draw(model_loader);
     sea.draw(model_loader);
+    //backpack.draw(model_loader);
 
     glfwSwapBuffers(engine_.getWindow());
   }

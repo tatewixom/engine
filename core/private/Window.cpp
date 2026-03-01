@@ -1,9 +1,9 @@
 #include "Window.h"
 #include "Callback.h"
+#include "File.h"
 
 #include <iostream>
 #include <stdexcept>
-#include <filesystem>
 #include <string>
 
 #include <glad/glad.h>
@@ -29,8 +29,10 @@ namespace Nuke
     int windowWidth{ static_cast<int>(monitor->width / widthRatio) };
     int windowHeight{ static_cast<int>(windowWidth - (windowWidth / heightRatio)) };
 
+    std::cout << "[window] width and height: " << windowWidth << ", " << windowHeight << '\n';
+
     // set window dimensions
-    dimensions_ = Dimensions{ windowHeight, windowWidth };
+    dimensions_ = Dimensions{ windowWidth, windowHeight };
 
     // centering window
     int finalPosX{ (monitor->width / 2) - (windowWidth / 2) };
@@ -61,8 +63,7 @@ namespace Nuke
     glfwSwapInterval(1);
 
     // setting window icon
-    std::string root{ std::filesystem::current_path().string() + '/' };
-    std::string path{ root + std::string{ path_to_icon } };
+    std::filesystem::path path{ File::get_executable_dir() / std::filesystem::path{ path_to_icon } };
 
     GLFWimage icon{};
     icon.pixels = stbi_load(path.c_str(), &icon.width, &icon.height, 0, 4); // rgba channels

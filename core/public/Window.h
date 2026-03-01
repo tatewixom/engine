@@ -15,7 +15,7 @@ namespace Nuke
     };
 
   public:
-    Window(const char* title, const char* path_to_icon, float widthRatio = 2.0f, float heightRatio = 6.0, GLFWmonitor* screenMode = nullptr, GLFWwindow* share = nullptr);
+    Window(const char* title, const char* path_to_icon, float widthRatio = 2.0f, float heightRatio = 3.0, GLFWmonitor* screenMode = nullptr, GLFWwindow* share = nullptr);
 
     ~Window() { glfwTerminate(); }
 

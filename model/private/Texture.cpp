@@ -184,7 +184,6 @@ namespace Nuke
         channel.upload = GL_RGBA;
         break;
       default:
-        std::cerr << "[texture] unrecognized upload channel format\n[texture] Resorting to GL_RGBA...\n";
         channel.upload = GL_RGBA;
         break;
       }
@@ -233,7 +232,6 @@ namespace Nuke
             channel.internal = GL_RGBA8;
             break;
           default:
-            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA8...\n";
             channel.internal = GL_RGBA8;
             break;
           }
@@ -255,7 +253,6 @@ namespace Nuke
             channel.internal = GL_RGBA8UI;
             break;
           default:
-            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA8UI...\n";
             channel.internal = GL_RGBA8UI;
             break;
           }
@@ -277,15 +274,15 @@ namespace Nuke
             channel.internal = GL_RGBA8I;
             break;
           default:
-            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA8I...\n";
             channel.internal = GL_RGBA8I;
             break;
           }
         }
         else
         {
-          std::cerr << "[texture] unsupported 8-bit type\n[texture] defaulting to GL_RGBA8\n";
-          channel.internal = GL_RGBA8;
+          std::cerr << "[texture] unsupported 8-bit format (GL enum): " << channel.type << '\n';
+          std::cerr << "[texture] defaulting to GL_RGBA8UI\n";
+          channel.internal = GL_RGBA8UI;
         }
       }
       else if (bits == 16) //16-bit storage mechanism
@@ -307,7 +304,6 @@ namespace Nuke
             channel.internal = GL_RGBA16;
             break;
           default:
-            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA16...\n";
             channel.internal = GL_RGBA16;
             break;
           }
@@ -329,7 +325,6 @@ namespace Nuke
             channel.internal = GL_RGBA16UI;
             break;
           default:
-            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA16UI...\n";
             channel.internal = GL_RGBA16UI;
             break;
           }
@@ -351,7 +346,6 @@ namespace Nuke
             channel.internal = GL_RGBA16I;
             break;
           default:
-            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA16I...\n";
             channel.internal = GL_RGBA16I;
             break;
           }
@@ -373,15 +367,15 @@ namespace Nuke
             channel.internal = GL_RGBA16F;
             break;
           default:
-            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA16F...\n";
             channel.internal = GL_RGBA16F;
             break;
           }
         }
         else
         {
-          std::cerr << "[texture] unsupported 16-bit type\n[texture] defaulting to GL_RGBA16\n";
-          channel.internal = GL_RGBA16;
+          std::cerr << "[texture] unsupported 16-bit format (GL enum): " << channel.type << '\n';
+          std::cerr << "[texture] defaulting to GL_RGBA16UI\n";
+          channel.internal = GL_RGBA16UI;
         }
       }
       else if (bits == 32) //32-bit storage mechanism
@@ -403,7 +397,6 @@ namespace Nuke
             channel.internal = GL_RGBA32UI;
             break;
           default:
-            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA32UI...\n";
             channel.internal = GL_RGBA32UI;
             break;
           }
@@ -425,7 +418,6 @@ namespace Nuke
             channel.internal = GL_RGBA32F;
             break;
           default:
-            std::cerr << "[texture] unrecognized internal channel format\n[texture] Resorting to GL_RGBA32F...\n";
             channel.internal = GL_RGBA32F;
             break;
           }
@@ -447,20 +439,21 @@ namespace Nuke
             channel.internal = GL_RGBA32I;
             break;
           default:
-            std::cerr << "[texture] unrecognized internal channel format\n[texture] resorting to GL_RGBA32I...\n";
             channel.internal = GL_RGBA32I;
             break;
           }
         }
         else
         {
-          std::cerr << "[texture] unsupported 32-bit format\n[texture] defaulting to GL_RGBA32UI";
+          std::cerr << "[texture] unsupported 32-bit format (GL enum): " << channel.type << '\n';
+          std::cerr << "[texture] defaulting to GL_RGBA32UI\n";
           channel.internal = GL_RGBA32UI;
         }
       }
       else
       {
-        std::cerr << "[texture] unsupported bit count. supported bit counts are 8, 16, and 32\n[texture] defaulting to GL_RGBA8\n";
+        std::cerr << "[texture] unsupported bit count: " << bits << '\n';
+        std::cerr << "[texture] supported bit counts are 8, 16, and 32\n[texture] defaulting to GL_RGBA8\n";
         channel.internal = GL_RGBA8;
       }
 

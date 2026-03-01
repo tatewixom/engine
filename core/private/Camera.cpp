@@ -70,7 +70,7 @@ namespace Nuke
       front = glm::normalize(frontDirection);
 
       right = glm::normalize(glm::cross(front, worldUp));
-      up = glm::normalize(cross(right, front));
+      up = glm::normalize(glm::cross(right, front));
 
       // constexpr static min and max values for fov
       static constexpr float min_fov{ 30.f };
