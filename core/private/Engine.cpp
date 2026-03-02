@@ -47,8 +47,8 @@ namespace Nuke
 
       // process events
       mouse_.update();
-      spaces_.update(camera_, window_);
       camera_.update();
+      spaces_.update(camera_, window_);
 
       // looping one time through the state's loop function
       states_.loop();

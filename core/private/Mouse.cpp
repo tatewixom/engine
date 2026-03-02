@@ -4,6 +4,21 @@
 
 namespace Nuke
 {
+  /*
+    HOT FIX:
+    On Wayland (which is what Asahi uses), if you mix polling with callbacks,
+    it'll starve some of the inputs. Which is why the camera/mouse (at the time of writing)
+    won't move unless you stop pressing a key.
+
+    Keyboard namespace uses glfwGetKey(), while the mouse position has a callback.
+
+    SOLUTION:
+    I need to pick a model, either only use polling, or only use callbacks. callbacks
+    seem more attractive at the time of writing due to predictable behavior.
+
+    It's easier to see exactly when an input was set via glfwPollEvents().
+  */
+
   Mouse::Mouse(Window& window)
     : window_{ window }
   {
