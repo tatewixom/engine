@@ -210,9 +210,10 @@ namespace Nuke
         GLenum current_unit{ to_texture_unit(0) };
         std::size_t baseNum{ 1 };
         std::size_t normNum{ 1 };
+        std::size_t metaNum{ 1 };
         for (auto& t : textures_)
         {
-          int id{ t.id() };
+          int id{ static_cast<int>(t.id()) };
 
           switch (t.type())
           {
@@ -232,6 +233,15 @@ namespace Nuke
             glBindTexture(GL_TEXTURE_2D, t.id());
             shader.set(str, unit_to_int(current_unit));
             ++normNum;
+            break;
+          }
+          case Experimental::Type::metallic:
+          {
+            std::string str{ "texture_meta_" + std::to_string(metaNum) };
+            glActiveTexture(current_unit);
+            glBindTexture(GL_TEXTURE_2D, t.id());
+            shader.set(str, unit_to_int(current_unit));
+            ++metaNum;
             break;
           }
           default:

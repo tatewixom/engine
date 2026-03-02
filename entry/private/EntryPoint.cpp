@@ -21,6 +21,9 @@ int main()
     return -1;
   }
 
+  //window couldn't make gl calls until glad was valid
+  window.refresh();
+
   //Engine MUST have a window object and glad MUST be valid
   Nuke::Engine engine{ window };
   engine.run();

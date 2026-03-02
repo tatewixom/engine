@@ -16,7 +16,17 @@ namespace Nuke
   class Model
   {
   public:
-    void initialize(std::string_view gltf_file_path);
+    enum class Movement
+    {
+      FORWARD,
+      BACKWARD,
+      LEFT,
+      RIGHT,
+      UP,
+      DOWN,
+    };
+
+  public:
     void initialize_t(std::string_view gltf_file_path, glm::vec3&& position);
 
     void loadMeshes(tinygltf::Model& model);
@@ -31,6 +41,8 @@ namespace Nuke
     void drawNode(int nodeIndex, const glm::mat4& parentWorld, Shader& shader);
     void draw(Shader& shader);
 
+    void move(Movement movement, float deltaTime);
+    const glm::vec3& position() const noexcept { return position_; }
   private:
     std::vector<Mesh> meshes_{};
     std::vector<Node> nodes_{};

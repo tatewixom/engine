@@ -15,10 +15,11 @@ namespace Nuke
   Model torus{};
   Model alien{};
   Model tigerhumvee{};
-  Model sea{};
-  Model backpack{};
+
   Shader model_basic_loader{};
   Shader model_loader{};
+  Shader model_light{};
+  Shader model_reflector{};
 
   float deltaTime{};
   float lastFrame{};
@@ -38,14 +39,23 @@ namespace Nuke
   {
     model_basic_loader.initialize("shaders/model_basic_loading.vs", "shaders/model_basic_loading.fs");
     model_loader.initialize("shaders/model_loading.vs", "shaders/model_loading.fs");
+    model_light.initialize("shaders/model_light.vs", "shaders/model_light.fs");
+    model_reflector.initialize("shaders/model_reflector.vs", "shaders/model_reflector.fs");
 
     std::string root{ std::filesystem::current_path().string() + '/' };
 
     torus.initialize_t("assets/models/torus/basic_torus_00.gltf", glm::vec3{ 0.f, 0.f, 0.f });
-    tigerhumvee.initialize_t("assets/models/vehicles/tigerhumvee.glb", glm::vec3{ -20.f, 0.f, 0.f });
+    tigerhumvee.initialize_t("assets/models/vehicles/tigerhumvee1k.glb", glm::vec3{ -20.f, 0.f, 0.f });
     alien.initialize_t("assets/models/alien/t7t_terapod.glb", glm::vec3{ 20.f, 0.f, 0.f });
-    sea.initialize_t("assets/models/architecture/sea_keep_lonely_watcher.glb", glm::vec3{ 40.f, 0.f, 0.f });
-    //backpack.initialize_t("assets/models/backpack/survival_guitar_backpack.glb", glm::vec3{ 40.f, 0.f, 0.f });
+
+    //shader constants
+    model_reflector.activate();
+    model_reflector.set("u_light.ambient", glm::vec3{ 0.2f });
+    model_reflector.set("u_light.diffuse", glm::vec3{ 2.0f });
+    model_reflector.set("u_light.specular", glm::vec3{ 1.0f });
+    model_reflector.set("u_light.constant", 1.f);
+    model_reflector.set("u_light.linear", 0.00022f);
+    model_reflector.set("u_light.quadratic", 0.000019f);
   }
 
   void Ground::input()
@@ -86,11 +96,19 @@ namespace Nuke
         mouse.viewMode();
     }
 
-    //debugging
-    if (Keyboard::isKeyJustPressed(window, GLFW_KEY_1))
-      ++model_loader.unit;
-    if (Keyboard::isKeyJustPressed(window, GLFW_KEY_2) && (model_loader.unit > 0))
-      --model_loader.unit;
+    //moving light source
+    if (Keyboard::isKeyPressed(window, GLFW_KEY_UP))
+      torus.move(Model::Movement::FORWARD, deltaTime);
+    if (Keyboard::isKeyPressed(window, GLFW_KEY_DOWN))
+      torus.move(Model::Movement::BACKWARD, deltaTime);
+    if (Keyboard::isKeyPressed(window, GLFW_KEY_LEFT))
+      torus.move(Model::Movement::LEFT, deltaTime);
+    if (Keyboard::isKeyPressed(window, GLFW_KEY_RIGHT))
+      torus.move(Model::Movement::RIGHT, deltaTime);
+    if (Keyboard::isKeyPressed(window, GLFW_KEY_Z))
+      torus.move(Model::Movement::UP, deltaTime);
+    if (Keyboard::isKeyPressed(window, GLFW_KEY_X))
+      torus.move(Model::Movement::DOWN, deltaTime);
   }
 
   void Ground::clear()
@@ -105,8 +123,8 @@ namespace Nuke
   {
     Window& window{ engine_.getWindow() };
     Camera& camera{ engine_.getCamera() };
-
     Spaces& spaces{ engine_.getSpaces() };
+
     model_basic_loader.activate();
     model_basic_loader.set("view", spaces.view);
     model_basic_loader.set("projection", spaces.projection);
@@ -114,15 +132,24 @@ namespace Nuke
     model_loader.activate();
     model_loader.set("view", spaces.view);
     model_loader.set("projection", spaces.projection);
+
+    model_light.activate();
+    model_light.set("view", spaces.view);
+    model_light.set("projection", spaces.projection);
+
+    model_reflector.activate();
+    model_reflector.set("view", spaces.view);
+    model_reflector.set("projection", spaces.projection);
+    model_reflector.set("u_viewPos", camera.position);
+    model_reflector.set("u_light.position", camera.position);
+
   }
 
   void Ground::render()
   {
-    torus.draw(model_loader);
-    alien.draw(model_loader);
-    tigerhumvee.draw(model_loader);
-    sea.draw(model_loader);
-    //backpack.draw(model_loader);
+    torus.draw(model_light);
+    alien.draw(model_reflector);
+    tigerhumvee.draw(model_reflector);
 
     glfwSwapBuffers(engine_.getWindow());
   }

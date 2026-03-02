@@ -353,11 +353,13 @@ namespace Nuke
 
           // extracting normal map
           image = nullptr;
+          sampler = nullptr;
           int normalTexIndex = mat.normalTexture.index;
           if (normalTexIndex >= 0)
           {
             const tinygltf::Texture& tex = model.textures[normalTexIndex];
             image = &model.images[tex.source];
+            sampler = &model.samplers[tex.sampler];
           }
 
           if (image)
@@ -365,36 +367,60 @@ namespace Nuke
             textures.emplace_back(
               Experimental::Material
               {
-                Experimental::Image{ image->image, image->width, image->height, image->mimeType },
+                Experimental::Image{ image->image, image->width, image->height, !image->uri.empty() ? image->uri : image->mimeType, image->component, image->pixel_type, image->bits },
                 Experimental::Type::normal,
-                Experimental::Factor{ vec_to_vec(mat.pbrMetallicRoughness.baseColorFactor) }
+                Experimental::Factor{ glm::vec4{ mat.normalTexture.scale } }
               },
-              Experimental::Sampler{}
+              Experimental::Sampler
+              {
+                sampler
+                ? Experimental::Sampler
+                {
+                sampler->minFilter,
+                sampler->magFilter,
+                sampler->wrapS,
+                sampler->wrapT
+                }
+                : Experimental::Sampler{}
+              }
             );
           }
 
-          /*
+
           //extracting metallic roughness
           image = nullptr;
-          int mrTexIndex =
-          mat.pbrMetallicRoughness.metallicRoughnessTexture.index;
-          if (mrTexIndex >= 0)
+          sampler = nullptr;
+          int metallicTexIndex = mat.pbrMetallicRoughness.metallicRoughnessTexture.index;
+          if (metallicTexIndex >= 0)
           {
-            const tinygltf::Texture& tex{
-          model.textures[mrTexIndex] }; int
-          imageIndex{ tex.source }; image =
-          &model.images[imageIndex];
+            const tinygltf::Texture& tex = model.textures[metallicTexIndex];
+            image = &model.images[tex.source];
+            sampler = &model.samplers[tex.sampler];
           }
 
           if (image)
           {
-            Texture temptex{};
-            temptex.initialize(image->image.data(),
-          image->width, image->height,
-          image->mimeType);
-            textures.push_back(temptex);
+            textures.emplace_back(
+              Experimental::Material
+              {
+                Experimental::Image{ image->image, image->width, image->height, !image->uri.empty() ? image->uri : image->mimeType, image->component, image->pixel_type, image->bits },
+                Experimental::Type::metallic,
+                Experimental::Factor{ glm::vec4{ mat.pbrMetallicRoughness.metallicFactor } }
+              },
+              Experimental::Sampler
+              {
+                sampler
+                ? Experimental::Sampler
+                {
+                sampler->minFilter,
+                sampler->magFilter,
+                sampler->wrapS,
+                sampler->wrapT
+                }
+                : Experimental::Sampler{}
+              }
+            );
           }
-          */
         }
       }
 
@@ -529,5 +555,34 @@ namespace Nuke
 
     for (int root : roots_)
       drawNode(root, identity, shader);
+  }
+
+  void Model::move(Movement movement, float deltaTime)
+  {
+    float velocity = 5.f * deltaTime;
+
+    switch (movement)
+    {
+    case Movement::FORWARD:
+      position_ += glm::vec3{ 0.f, 0.f, 1.f } * velocity;
+      break;
+    case Movement::BACKWARD:
+      position_ -= glm::vec3{ 0.f, 0.f, 1.f } * velocity;
+      break;
+    case Movement::LEFT:
+      position_ -= glm::vec3{ 1.f, 0.f, 0.f } * velocity;
+      break;
+    case Movement::RIGHT:
+      position_ += glm::vec3{ 1.f, 0.f, 0.f } * velocity;
+      break;
+    case Movement::UP:
+      position_ += glm::vec3{ 0.f, 1.f, 0.f } * velocity;
+      break;
+    case Movement::DOWN:
+      position_ -= glm::vec3{ 0.f, 1.f, 0.f } * velocity;
+      break;
+    default:
+      break;
+    }
   }
 } // namespace Nuke
