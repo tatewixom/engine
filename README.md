@@ -8,12 +8,12 @@ Anyone is free to use any code provided by this open-source engine as it is unde
 
 ## Building 
 
-This project uses CMake as its build system. Simply configure and build the project from the root **CMakeLists.txt** file (steps shown below). This is targeted to work on macOS, Linux (Debian), or Windows. That covers (very) roughly 91% of operating systems people use on desktops. If you aren't on those, don't lose hope
+This project uses CMake as its build system. Simply configure and build the project from the root **CMakeLists.txt** file (steps shown below). This is targeted to work on Linux (Debian) and Windows. If you aren't on those, don't lose hope.
 
-You _could_ try and compile this on different distributions of linux or other operating systems that work with:  
+You _could_ try and compile this on different distributions of linux or other operating systems that work with
 
-* A modern **C++ compiler** (C++23)
-* **OpenGL**
+* a **modern C++ compiler (C++23)**
+* and **modern OpenGL (4.6)**
 
 _But of course_, keep in mind that there's currently no future of support outside of the aforementioned scope.
 
@@ -43,4 +43,4 @@ Now you have successfully configured and built the engine!
 
 ## Other
 
-if you are interested in the internals or are wanting to learn more about how to use the engine, head over to the **docs** directory! Start with the **introduction** file to get an idea of where to navigate. Thanks for using _Nuke Engine_!
+if you are interested in the internals or are wanting to learn more about how to use the engine, head over to the **docs** directory! Start with the `Introduction.md` file to get an idea of where to navigate. Thanks for using _Nuke Engine_!

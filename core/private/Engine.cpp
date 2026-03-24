@@ -5,6 +5,7 @@
 #include "State.h"
 #include "Phase.h"
 #include "Ground.h"
+#include "Callback.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -19,6 +20,7 @@ namespace Nuke
   {
     // setting glfw pointer to engine for callbacks
     glfwSetWindowUserPointer(window_, this);
+    glfwSetKeyCallback(window_, Callback::key);
 
     //options that should reside in the renderer/model class when its implemented
     glEnable(GL_DEPTH_TEST);

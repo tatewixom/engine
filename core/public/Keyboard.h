@@ -1,19 +1,93 @@
 #pragma once
 
+#include "Containers.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Nuke
 {
-  namespace Keyboard
+  class Window;
+
+  class Keyboard
   {
-    // checks if the key is currently being pressed and will allow for repeat of input
-    bool isKeyPressed(GLFWwindow* window, int key);
+  public:
+    enum class Keys : int
+    {
+      none,
+      A,
+      B,
+      C,
+      D,
+      E,
+      F,
+      G,
+      H,
+      I,
+      J,
+      K,
+      L,
+      M,
+      N,
+      O,
+      P,
+      Q,
+      R,
+      S,
+      T,
+      U,
+      V,
+      W,
+      X,
+      Y,
+      Z,
+      SPACE,
+      LEFT_SHIFT,
+      RIGHT_SHIFT,
+      UP,
+      DOWN,
+      LEFT,
+      RIGHT,
+      ZERO,
+      ONE,
+      TWO,
+      THREE,
+      FOUR,
+      FIVE,
+      SIX,
+      SEVEN,
+      EIGHT,
+      NINE,
+      ESCAPE,
+      max,
+    };
 
-    // checks if the key was just released, doesn't allow for repeat input
-    bool isKeyJustPressed(GLFWwindow* window, int key);
+    enum class Action : int
+    {
+      none,
+      PRESSED,
+      RELEASED,
+      REPEATING,
+      max,
+    };
 
-    // checks if the user has pressed the escape key to close window
-    void processWindowEscape(GLFWwindow* window);
-  }
+    struct Key
+    {
+      Keys key{};
+      Action action{};
+
+      Key() = default;
+      Key(int code, int action);
+    };
+
+  public:
+    Keyboard(Window& window);
+
+    void action(Key key);
+    bool is(Keys key);
+    bool now(Keys key);
+  private:
+    Window& window_;
+    Itemizer<Keys, Action> keys_{};
+  };
 }

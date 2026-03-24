@@ -64,5 +64,11 @@ namespace Nuke
       Engine* engine{ static_cast<Engine*>(glfwGetWindowUserPointer(window)) };
       engine->getMouse().button(Mouse::Button{ button, action });
     }
+
+    void key(GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+      Engine* engine{ static_cast<Engine*>(glfwGetWindowUserPointer(window)) };
+      engine->getKeyboard().action(Keyboard::Keyboard::Key{ key, action });
+    }
   }
 }

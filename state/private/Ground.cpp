@@ -4,6 +4,7 @@
 #include "Spaces.h"
 #include "Keyboard.h"
 #include "Object.h"
+#include "Callback.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -60,9 +61,6 @@ namespace Nuke
 
   void Ground::input()
   {
-    Window& window{ engine_.getWindow() };
-    Keyboard::processWindowEscape(window);
-
     // delta time
     float currentFrame{ static_cast<float>(glfwGetTime()) };
     deltaTime = currentFrame - lastFrame;
@@ -72,42 +70,47 @@ namespace Nuke
     Camera& camera{ engine_.getCamera() };
     camera.speed = 20.f; // adjust accordingly
 
-    if (Keyboard::isKeyPressed(window, GLFW_KEY_W))
+    //keyboard input
+    Keyboard& keyboard{ engine_.getKeyboard() };
+
+    if (keyboard.now(Keyboard::Keys::ESCAPE))
+      glfwSetWindowShouldClose(engine_.getWindow(), true);
+    if (keyboard.is(Keyboard::Keys::W))
       camera.move(Camera::FORWARD, deltaTime);
-    if (Keyboard::isKeyPressed(window, GLFW_KEY_S))
+    if (keyboard.is(Keyboard::Keys::S))
       camera.move(Camera::BACKWARD, deltaTime);
-    if (Keyboard::isKeyPressed(window, GLFW_KEY_A))
+    if (keyboard.is(Keyboard::Keys::A))
       camera.move(Camera::LEFT, deltaTime);
-    if (Keyboard::isKeyPressed(window, GLFW_KEY_D))
+    if (keyboard.is(Keyboard::Keys::D))
       camera.move(Camera::RIGHT, deltaTime);
-    if (Keyboard::isKeyPressed(window, GLFW_KEY_SPACE))
+    if (keyboard.is(Keyboard::Keys::SPACE))
       camera.move(Camera::UP, deltaTime);
-    if (Keyboard::isKeyPressed(window, GLFW_KEY_LEFT_SHIFT))
+    if (keyboard.is(Keyboard::Keys::LEFT_SHIFT))
       camera.move(Camera::DOWN, deltaTime);
 
     // handling view mode
     Mouse& mouse{ engine_.getMouse() };
 
-    if (Keyboard::isKeyJustPressed(window, GLFW_KEY_0))
+    if (keyboard.now(Keyboard::Keys::ZERO))
     {
-      if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
+      if (glfwGetInputMode(engine_.getWindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
         mouse.selectionMode();
       else
         mouse.viewMode();
     }
 
     //moving light source
-    if (Keyboard::isKeyPressed(window, GLFW_KEY_UP))
-      torus.move(Model::Movement::FORWARD, deltaTime);
-    if (Keyboard::isKeyPressed(window, GLFW_KEY_DOWN))
+    if (keyboard.is(Keyboard::Keys::UP))
       torus.move(Model::Movement::BACKWARD, deltaTime);
-    if (Keyboard::isKeyPressed(window, GLFW_KEY_LEFT))
+    if (keyboard.is(Keyboard::Keys::DOWN))
+      torus.move(Model::Movement::FORWARD, deltaTime);
+    if (keyboard.is(Keyboard::Keys::LEFT))
       torus.move(Model::Movement::LEFT, deltaTime);
-    if (Keyboard::isKeyPressed(window, GLFW_KEY_RIGHT))
+    if (keyboard.is(Keyboard::Keys::RIGHT))
       torus.move(Model::Movement::RIGHT, deltaTime);
-    if (Keyboard::isKeyPressed(window, GLFW_KEY_Z))
+    if (keyboard.is(Keyboard::Keys::R))
       torus.move(Model::Movement::UP, deltaTime);
-    if (Keyboard::isKeyPressed(window, GLFW_KEY_X))
+    if (keyboard.is(Keyboard::Keys::F))
       torus.move(Model::Movement::DOWN, deltaTime);
   }
 

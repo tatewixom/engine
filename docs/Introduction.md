@@ -2,21 +2,20 @@
 
 Welcome to the documentation of _Nuke Engine_! If you were searching for a place to learn, contribute, or are just curious about the engine, this is the right place.
 
-In case you didn't read the **README**, _Nuke Engine_ is a light-weight 3D and 2D game engine intended for the developement of a game I am personally making (_Stairs to Hell_), but is open source for other game developers to use. It is under an MIT license, which basically means you can do whatever you want with this code, but I am not liable for anything you do with it (read the LICENSE file in the root of the directory for wordy lawyer-language). 
+In case you didn't read the `README.md`, _Nuke Engine_ is a light-weight 3D and 2D game engine intended for the developement of a game I am personally making (_Stairs to Hell_), but is open source for other game developers to use. It is under an MIT license, which basically means you can do whatever you want with this code, but I am not liable for anything you do with it (read the LICENSE file in the root of the directory for wordy lawyer-language). 
 
 ### Platforms
 
 This engine is targeted for:
 * Linux (Debian)
 * Windows
-* MacOS
 
 If your platform isn't on this list, don't panic. As long as your platform supports
 
-* A modern **C++ compiler** (C++23)
-* and **OpenGL**
+* a **modern C++ compiler (C++23)**
+* and **modern OpenGL (4.6)**
 
-then you should be able to use this engine. Even if your platform truly can't be supported (possibly macOS in the future), you could still benefit greatly from the data structures and algorithms there is in store. The only real hindrance for full compatability to all platforms is anything **graphics** related (shaders, buffers, model drawing, etc).
+then you should be able to use this engine. Even if your platform truly can't be supported (macOS), you could still benefit greatly from the data structures and algorithms there is in store. The only real hindrance for full compatability to all platforms is anything **graphics** related (shaders, buffers, model drawing, etc).
 
 Here's a brief list of functionality provided that might pique your interest:
 
@@ -56,7 +55,7 @@ Now knowing the philosophy behind the engine, what should you do now?
 
 ### Prequisites
 
-As with anything complicated in life, you are going to need prerequisites for using this engine. As you should already know, this engine is completely based on C++. It is the backbone that supports the entire structure and you will definitely need to be literate in it. You will also need to be literate in CMake and Git. So, the three recommend prerequisites are:
+As with anything complicated in life, you are going to need prerequisites for using this engine. As you should already know, this engine is completely based on C++. It is the backbone that supports the entire structure and you will definitely need to be literate in it. You will also need to be literate in CMake and Git. So, the three recommended prerequisites are:
 
 * C++
 * CMake
@@ -86,19 +85,13 @@ Just ignore the AI profile pictures, apparently the creator got carried away whe
 
 ### Paths
 
-There are two ways you can start with using this engine. You can go down the path of learning how to _use_ the engine, or how to _contribute_ or _extend_ it. 
+There are two ways you can start using this engine. You can go down the path of learning how to _use_ the engine, or how to _contribute_ or _extend_ it. 
 
-If you are more interesting in the just using the functionality and don't care much for contributing to it, I would advise you to go to the **learning** directory within the docs directory (the one you're in now).
+If you are more interesting in the just using the functionality and don't care much for contributing to it, I would advise you to go to the **learning** directory within the docs directory (the one you're in now) and navigate to the `Introduction.md` file.
 
 If you are instead more interested in contributing to the engine, then it depends on what you're level of understanding is with the engine. For newcomers, I'd still heavily recommend going through the learning docs and only then continuing into the internals. If you have no clue _how_ to use the engine, then knowing _why_ certain things are the way they are is going to be troublesome.
 
-Let's say you came back to this page because you just finished learning how to use the engine, then I would immediately head to the internals and start with the **introduction** document inside the **internals** directory.
-
-Or perhaps you are already experienced with engine or are just simply curious how it works. If so, I'd tell you to head over to the **internals** directory.
-
-My advise for newcomers that haven't an inkling of how to use the engine or what the internals are like, is to start with the **learning** docs. From there you'll be able to gain a high-level understanding of how it works and connect the dots more easily when it comes to learning the internals.
-
-If you want to contribute to the engine, then I'd heavily recommend still starting with the learning path, and only then reading into the internals. Once you have a good grasp of the internals, try and fix problems with the engine that you encountered when learning that weren't intuitive, or that were downright wrong/buggy.
+Let's say you came back to this page because you just finished learning how to use the engine, then I would immediately head to the **internals** directory and start with the `Introduction.md` document.
 
 ## Conclusion
 

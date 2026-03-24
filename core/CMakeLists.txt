@@ -6,6 +6,7 @@ set(
   NUKE_SOURCE_FILES 
   private/Callback.cpp
   private/Camera.cpp
+  private/Containers.cpp
   private/Engine.cpp
   private/File.cpp
   private/Keyboard.cpp

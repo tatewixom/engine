@@ -12,5 +12,6 @@ namespace Nuke
     void scroll(GLFWwindow* window, double xoffset, double yoffset);
     void refresh(GLFWwindow* window);
     void mouseButton(GLFWwindow* window, int button, int action, int mods);
+    void key(GLFWwindow* window, int key, int scancode, int action, int mods);
   }
 }
