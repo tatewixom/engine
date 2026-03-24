@@ -178,7 +178,7 @@ namespace Nuke
 
       std::vector<Vertex> vertices{};
       std::vector<std::uint16_t> indices{};
-      std::vector<Experimental::Texture> textures{};
+      std::vector<Matter::Material> materials{};
       GLenum indexType{};
 
       for (auto& primitive : mesh.primitives)
@@ -302,7 +302,7 @@ namespace Nuke
         }
         }
 
-        /* extracting textures */
+        /* extracting materials */
         int materialIndex{ primitive.material };
         const tinygltf::Image* image{};
         const tinygltf::Sampler* sampler{};
@@ -329,24 +329,25 @@ namespace Nuke
 
           if (image)
           {
-            textures.emplace_back(
-              Experimental::Material
+            materials.emplace_back
+            (
+              Matter::Texture
               {
-                Experimental::Image{ image->image, image->width, image->height, !image->uri.empty() ? image->uri : image->mimeType, image->component, image->pixel_type, image->bits },
-                Experimental::Type::base,
-                Experimental::Factor{ vec_to_vec(mat.pbrMetallicRoughness.baseColorFactor) }
+                Matter::Image{ image->image, image->width, image->height, !image->uri.empty() ? image->uri : image->mimeType, image->component, image->pixel_type, image->bits },
+                Matter::Type::base,
+                Matter::Factor{ vec_to_vec(mat.pbrMetallicRoughness.baseColorFactor) }
               },
-              Experimental::Sampler
+              Matter::Sampler
               {
                 sampler
-                ? Experimental::Sampler
+                ? Matter::Sampler
                 {
                 sampler->minFilter,
                 sampler->magFilter,
                 sampler->wrapS,
                 sampler->wrapT
                 }
-                : Experimental::Sampler{}
+                : Matter::Sampler{}
               }
             );
           }
@@ -364,24 +365,25 @@ namespace Nuke
 
           if (image)
           {
-            textures.emplace_back(
-              Experimental::Material
+            materials.emplace_back
+            (
+              Matter::Texture
               {
-                Experimental::Image{ image->image, image->width, image->height, !image->uri.empty() ? image->uri : image->mimeType, image->component, image->pixel_type, image->bits },
-                Experimental::Type::normal,
-                Experimental::Factor{ glm::vec4{ mat.normalTexture.scale } }
+                Matter::Image{ image->image, image->width, image->height, !image->uri.empty() ? image->uri : image->mimeType, image->component, image->pixel_type, image->bits },
+                Matter::Type::normal,
+                Matter::Factor{ glm::vec4{ mat.normalTexture.scale } }
               },
-              Experimental::Sampler
+              Matter::Sampler
               {
                 sampler
-                ? Experimental::Sampler
+                ? Matter::Sampler
                 {
                 sampler->minFilter,
                 sampler->magFilter,
                 sampler->wrapS,
                 sampler->wrapT
                 }
-                : Experimental::Sampler{}
+                : Matter::Sampler{}
               }
             );
           }
@@ -400,24 +402,25 @@ namespace Nuke
 
           if (image)
           {
-            textures.emplace_back(
-              Experimental::Material
+            materials.emplace_back
+            (
+              Matter::Texture
               {
-                Experimental::Image{ image->image, image->width, image->height, !image->uri.empty() ? image->uri : image->mimeType, image->component, image->pixel_type, image->bits },
-                Experimental::Type::metallic,
-                Experimental::Factor{ glm::vec4{ mat.pbrMetallicRoughness.metallicFactor } }
+                Matter::Image{ image->image, image->width, image->height, !image->uri.empty() ? image->uri : image->mimeType, image->component, image->pixel_type, image->bits },
+                Matter::Type::metallic,
+                Matter::Factor{ glm::vec4{ mat.pbrMetallicRoughness.metallicFactor } }
               },
-              Experimental::Sampler
+              Matter::Sampler
               {
                 sampler
-                ? Experimental::Sampler
+                ? Matter::Sampler
                 {
                 sampler->minFilter,
                 sampler->magFilter,
                 sampler->wrapS,
                 sampler->wrapT
                 }
-                : Experimental::Sampler{}
+                : Matter::Sampler{}
               }
             );
           }
@@ -435,14 +438,14 @@ namespace Nuke
           Attribute{ 2u, 2, sizeof(Vertex), offsetof(Vertex, Vertex::texture) },
           Attribute{ 3u, 3, sizeof(Vertex), offsetof(Vertex, Vertex::normal) }
       },
-        std::move(textures));
+        std::move(materials));
       temp.changeIndexType(indexType);
       meshes_.push_back(std::move(temp));
 
       // preparing vectors for next mesh run
       vertices.clear();
       indices.clear();
-      textures.clear();
+      materials.clear();
     }
   }
 
@@ -585,4 +588,4 @@ namespace Nuke
       break;
     }
   }
-} // namespace Nuke
+}

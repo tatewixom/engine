@@ -217,7 +217,7 @@ namespace Nuke
 
           switch (t.type())
           {
-          case Experimental::Type::base:
+          case Matter::Type::base:
           {
             std::string str{ "texture_base_" + std::to_string(baseNum) };
             glActiveTexture(current_unit);
@@ -226,7 +226,7 @@ namespace Nuke
             ++baseNum;
             break;
           }
-          case Experimental::Type::normal:
+          case Matter::Type::normal:
           {
             std::string str{ "texture_norm_" + std::to_string(normNum) };
             glActiveTexture(current_unit);
@@ -235,7 +235,7 @@ namespace Nuke
             ++normNum;
             break;
           }
-          case Experimental::Type::metallic:
+          case Matter::Type::metallic:
           {
             std::string str{ "texture_meta_" + std::to_string(metaNum) };
             glActiveTexture(current_unit);

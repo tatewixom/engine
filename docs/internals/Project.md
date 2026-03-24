@@ -6,13 +6,9 @@ This will be divided into epics, issues, and tickets respectively. There should 
 
 ## Epics
 
-### Texture
-
-Need to confirm all formats are either excluded or supported, no undefined behavior.
-
 ### Model
 
-In `Model.cpp`, there needs to be a huge redesign of everything, mostly having to do with the recursiveness of how models are loaded. This is a problem because if a large model is loaded in, there ius a possibility of stack-overflow. This obviously isn't acceptable runtime behavior, so an implementation with _iteration_ is desirable. 
+In `Model.cpp`, there needs to be a huge redesign of everything, mostly having to do with the recursiveness of how models are loaded. This is a problem because if a large model is loaded in, there is a possibility of stack-overflow. This obviously isn't acceptable runtime behavior, so an implementation with _iteration_ is desirable. 
 
 ## Tickets
 

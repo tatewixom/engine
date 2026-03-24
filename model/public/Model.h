@@ -47,7 +47,6 @@ namespace Nuke
     std::vector<Mesh> meshes_{};
     std::vector<Node> nodes_{};
     std::vector<int> roots_{}; // scene root nodes
-    std::vector<Texture> textures_{};
     glm::vec3 position_{};
   };
 }

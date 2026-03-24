@@ -8,46 +8,7 @@
 
 namespace Nuke
 {
-  /*
-    last session summary:
-
-    1. when loading the alien model, for some reason the component type is
-    GL_UNSIGNED_INT when it actually renders with GL_UNSIGNED_SHORT. As I'm
-    typing this, I realize that it's most likely caused by the container that
-    I use to store indices. The container is locked at std::vector<std::uint16_t>
-    Note that I still need to add 3-pathway system for accepting the three
-    supported data types for indices.
-
-    2. I tried getting the texture for the backpack to work but it ended up as is.
-    I realized that the texture extrapolator was messed up as the range for the
-    materialIndex on the if statement didn't include zero ([expr] > 0), which
-    didn't include first material (often the only one). The RGB striped pattern
-    is very specific and I guess that it still has to do with the way I'm getting
-    the texture. Every other texture works except the backpack.
-
-    3. I believe that the issue resides in two places.
-    One, again, I think the way
-    I am extracting the textures is bad and there's definitely an error (or
-    assumption) being made. The best remedy for that would be to document the ENTIRE
-    load process.
-    Second, I think there is a problem with how the textures are actually being called.
-    The alien mesh draws totally fine when the vehicle hasn't been initialized or drawn.
-    If the vehicle is initialized but not drawn, both the backpack's and alien's texture
-    is the normal map of the vehicle. When the vehicle is also drawn however, the alien and
-    backpack have the same camo-pattern as the vehicle. I feel as if the logic surrounding
-    the Texture class is misguided and/or is making false assumptions.
-
-    All in all, I need to check the texture class to make sure it is assinging the correct
-    units to each texture and is also returning the correct information to the caller when
-    the use() function is called.
-
-    Only when this is fixed could I make optimizations to the way the Texture and Model class
-    interact as the Mesh class owns the texture-vector, but the model obviously shares the
-    base color map across meshes. It wasteful as of right now, but it works (at least, I
-    assume).
-  */
-
-  namespace Experimental
+  namespace Matter
   {
     struct Channel
     {
@@ -149,17 +110,17 @@ namespace Nuke
       }
     }
 
-    Channel get_channel_format(const Material& material) noexcept
+    Channel get_channel_format(const Texture& texture) noexcept
     {
       Channel channel{};
-      channel.type = gltf_pixel_type_to_gl(material.image.layout);
+      channel.type = gltf_pixel_type_to_gl(texture.image.layout);
 
       //check if sRGB
-      if (material.type == Type::base)
+      if (texture.type == Type::base)
       {
         channel.upload = GL_RGBA;
 
-        if (material.image.channels == 4)
+        if (texture.image.channels == 4)
           channel.internal = GL_SRGB8_ALPHA8;
         else
           channel.internal = GL_SRGB8;
@@ -168,7 +129,7 @@ namespace Nuke
       }
 
       //get upload format first
-      const Image& image{ material.image };
+      const Image& image{ texture.image };
       switch (image.channels)
       {
       case 1:
@@ -460,15 +421,15 @@ namespace Nuke
       return channel;
     }
 
-    Texture::Texture(const Material& material, const Sampler& sampler) noexcept
-      : material_{ material }
+    Material::Material(const Texture& texture, const Sampler& sampler) noexcept
+      : texture_{ texture }
       , sampler_{ sampler }
     {
       // load texture based off raw data from gltf
       load();
     }
 
-    void Texture::load() noexcept
+    void Material::load() noexcept
     {
       // generating texture, assigning texture id, and binding texture
       glGenTextures(1, &id_);
@@ -483,20 +444,20 @@ namespace Nuke
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gltf_filter_to_gl(sampler_.mag));
 
       // check if data is empty (null)
-      if (!material_.image.data.data())
+      if (!texture_.image.data.data())
         std::cerr << "[texture] error in loading image data; image data pointer null\n";
       else
       {
-        if (const Image& image{ material_.image }; isRGBA(image.format))
+        if (const Image& image{ texture_.image }; isRGBA(image.format))
         {
-          Channel channel{ get_channel_format(material_) };
+          Channel channel{ get_channel_format(texture_) };
           // send image data to gl with RGBA format
           glTexImage2D(GL_TEXTURE_2D, 0, channel.internal, image.width, image.height, 0, channel.upload, channel.type, image.data.data());
           glGenerateMipmap(GL_TEXTURE_2D);
         }
         else
         {
-          Channel channel{ get_channel_format(material_) };
+          Channel channel{ get_channel_format(texture_) };
           // send image data to gl with RGB format
           glTexImage2D(GL_TEXTURE_2D, 0, channel.internal, image.width, image.height, 0, channel.upload, channel.type, image.data.data());
           glGenerateMipmap(GL_TEXTURE_2D);
@@ -508,3 +469,42 @@ namespace Nuke
     }
   }
 }
+
+/*
+    last session summary:
+
+    1. when loading the alien model, for some reason the component type is
+    GL_UNSIGNED_INT when it actually renders with GL_UNSIGNED_SHORT. As I'm
+    typing this, I realize that it's most likely caused by the container that
+    I use to store indices. The container is locked at std::vector<std::uint16_t>
+    Note that I still need to add 3-pathway system for accepting the three
+    supported data types for indices.
+
+    2. I tried getting the texture for the backpack to work but it ended up as is.
+    I realized that the texture extrapolator was messed up as the range for the
+    materialIndex on the if statement didn't include zero ([expr] > 0), which
+    didn't include first material (often the only one). The RGB striped pattern
+    is very specific and I guess that it still has to do with the way I'm getting
+    the texture. Every other texture works except the backpack.
+
+    3. I believe that the issue resides in two places.
+    One, again, I think the way
+    I am extracting the textures is bad and there's definitely an error (or
+    assumption) being made. The best remedy for that would be to document the ENTIRE
+    load process.
+    Second, I think there is a problem with how the textures are actually being called.
+    The alien mesh draws totally fine when the vehicle hasn't been initialized or drawn.
+    If the vehicle is initialized but not drawn, both the backpack's and alien's texture
+    is the normal map of the vehicle. When the vehicle is also drawn however, the alien and
+    backpack have the same camo-pattern as the vehicle. I feel as if the logic surrounding
+    the Texture class is misguided and/or is making false assumptions.
+
+    All in all, I need to check the texture class to make sure it is assinging the correct
+    units to each texture and is also returning the correct information to the caller when
+    the use() function is called.
+
+    Only when this is fixed could I make optimizations to the way the Texture and Model class
+    interact as the Mesh class owns the texture-vector, but the model obviously shares the
+    base color map across meshes. It wasteful as of right now, but it works (at least, I
+    assume).
+  */
